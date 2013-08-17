@@ -1,0 +1,22 @@
+---
+layout: default
+---
+
+<script type="text/javascript">
+$(document).ready(function() {
+  var redirect_url = "http://blog.davidchelimsky.net" + window.location.pathname;
+  $('#url').text(redirect_url);
+  setTimeout(function() { window.location = redirect_url;}, 1500);
+});
+</script>
+
+<div class="blog-index">
+  <article>
+    The page you're looking for is probably on my old blog site: <a href="http://oldblog.davidchelimsky.net">http://oldblog.davidchelimsky.net</a>
+    <br/>
+    <br/>
+    Redirecting you just a second ...
+    <br/>
+    <br/>
+  </article>
+</div>
