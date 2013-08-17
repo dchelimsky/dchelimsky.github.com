@@ -1,19 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://yoursite.com/404.html</loc>
+        <loc>http://blog.davidchelimsky.net/404.html</loc>
         <lastmod>2013-08-17T22:20:17+02:00</lastmod>
     </url>
     <url>
-        <loc>http://yoursite.com/blog/archives/</loc>
+        <loc>http://blog.davidchelimsky.net/blog/archives/</loc>
         <lastmod>2013-08-17T21:27:50+02:00</lastmod>
     </url>
     <url>
-        <loc>http://yoursite.com/</loc>
+        <loc>http://blog.davidchelimsky.net/</loc>
         <lastmod>2013-08-17T21:27:50+02:00</lastmod>
     </url>
     <url>
-        <loc>http://yoursite.com/robots.txt</loc>
+        <loc>http://blog.davidchelimsky.net/robots.txt</loc>
         <lastmod>2013-08-17T21:27:50+02:00</lastmod>
     </url>
 </urlset>
