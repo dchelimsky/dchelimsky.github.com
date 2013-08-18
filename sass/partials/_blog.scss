@@ -1,7 +1,9 @@
 article {
+  padding-top: 1em;
   a { @extend .force-wrap; }
   header {
     position: relative;
+    padding-top: 2em;
     padding-bottom: 1em;
     margin-bottom: 1em;
     background: $img-border bottom left repeat-x;
