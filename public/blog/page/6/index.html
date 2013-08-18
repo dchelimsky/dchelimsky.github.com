@@ -221,7 +221,31 @@ selenium-client-0.2.18
 
 <p>When you declare a gem in a Gemfile, Bundler loads up a file with the same name as the gem, in our case <a href="http://github.com/rspec/rspec-rails/blob/master/lib/rspec-rails.rb"><code>rspec-rails.rb</code></a>.</p>
 
-<script src="http://gist.github.com/471892.js?file=rspec-rails.rb"></script>
+<figure class='code'><figcaption><span>rspec-rails.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">RSpec</span>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">Rails</span>
+</span><span class='line'>    <span class="k">class</span> <span class="nc">Railtie</span> <span class="o">&lt;</span> <span class="o">::</span><span class="ss">Rails</span><span class="p">:</span><span class="ss">:Railtie</span>
+</span><span class='line'>      <span class="n">config</span><span class="o">.</span><span class="n">generators</span><span class="o">.</span><span class="n">integration_tool</span> <span class="ss">:rspec</span>
+</span><span class='line'>      <span class="n">config</span><span class="o">.</span><span class="n">generators</span><span class="o">.</span><span class="n">test_framework</span>   <span class="ss">:rspec</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">rake_tasks</span> <span class="k">do</span>
+</span><span class='line'>        <span class="nb">load</span> <span class="s2">&quot;rspec/rails/tasks/rspec.rake&quot;</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>The generator configs are only invoked when running <code>rails generate</code>, which is when you want them.  The <code>require</code> statement is only invoked when running <code>rake</code>, which is when you want it. If you&rsquo;re not running <code>rake</code> or <code>rails generate</code>, then no other files from rspec-rails or any of its dependencies are loaded, <em>unless you load them explicitly from elsewhere in your app</em>.</p>
@@ -234,12 +258,14 @@ selenium-client-0.2.18
 
 <h3>OK, but now I see all of the <code>test_unit</code> generators. What&rsquo;s up with those?</h3>
 
-<p>Because RSpec is the test framework of record, Rails doesn&rsquo;t know to hide the test_unit generators. <strike>If you want to hide them, just add this to one of your config files:</p>
+<p>Because RSpec is the test framework of record, Rails doesn&rsquo;t know to hide the
+test_unit generators. <strike>If you want to hide them, just add this to one of
+your config files</strike>:</p>
 
-<pre><code>Rails::Generators.hide_namespace("test_unit")
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Rails</span><span class="p">:</span><span class="ss">:Generators</span><span class="o">.</span><span class="n">hide_namespace</span><span class="p">(</span><span class="s2">&quot;test_unit&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p></strike></p>
 
 <p>[Updated on 7//14]</p>
 

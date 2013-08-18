@@ -111,7 +111,15 @@ Associations are structure, and need not &hellip;">
 <p>ActiveRecord provides a declarative interface for describing the structure and
 behavior of a model:</p>
 
-<script src="https://gist.github.com/2359140.js?file=article.rb"></script>
+<figure class='code'><figcaption><span>article.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Article</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">validates_presence_of</span> <span class="ss">:title</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:comments</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>While syntactically similar, these two declarations do fundamentally different
@@ -123,7 +131,13 @@ things.</p>
 the <code>save</code> method (and other methods that use <code>save</code>), and should be specified
 explicitly. Here&rsquo;s an example using shoulda matchers:</p>
 
-<script src="https://gist.github.com/2359140.js?file=validate_presence_of_title.rb"></script>
+<figure class='code'><figcaption><span>validate_presence_of_title.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Article</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">validate_presence_of</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Even though the matcher&rsquo;s name looks just like the likely implementation, the
@@ -137,7 +151,25 @@ without a non-nil value for <code>title</code>, not that the
 to be a collection of <code>Comment</code> objects. Doing Test-Driven Development, you
 would add this declaration when a specified behavior requires it e.g.</p>
 
-<script src="https://gist.github.com/2359140.js?file=with_comments_by.rb"></script>
+<figure class='code'><figcaption><span>with_comments_by.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Article</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;#with_comments_by&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;finds articles with comments by the submitted comment_author&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">article</span> <span class="o">=</span> <span class="no">Factory</span><span class="p">(</span><span class="ss">:article</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">article</span><span class="o">.</span><span class="n">comments</span> <span class="o">&lt;&lt;</span> <span class="no">Factory</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="ss">:comment</span><span class="p">,</span> <span class="ss">:author</span> <span class="o">=&gt;</span> <span class="s2">&quot;jdoe&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="no">Article</span><span class="o">.</span><span class="n">with_comments_by</span><span class="p">(</span><span class="s2">&quot;jdoe&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="o">[</span><span class="n">article</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>This example needs a <code>comments</code> method that returns a collection in order to
@@ -167,7 +199,27 @@ to include either of those declarations in the <code>Postable</code> module.</p>
 can look at <code>rental_contract.rb</code> and know that it validates the presence of
 <code>:rentable</code>:</p>
 
-<script src="https://gist.github.com/2359140.js?file=rental_contract.rb"></script>
+<figure class='code'><figcaption><span>rental_contract.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">RentalContract</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:monthly_charges</span>
+</span><span class='line'>  <span class="n">has_one</span> <span class="ss">:rentable</span><span class="p">,</span> <span class="ss">:polymorphic</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">validates_presence_of</span> <span class="ss">:rentable</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">default_monthly_charge</span>
+</span><span class='line'>    <span class="n">price</span> <span class="o">/</span> <span class="n">months_applied</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>This is an interesting argument that I think has some merit, but I think it
@@ -175,7 +227,17 @@ would require an extraordinarily disciplined and consistent approach of using
 declarations 100% of the time in model files such that each one <em>is the spec</em>
 for that model, e.g.</p>
 
-<script src="https://gist.github.com/2359140.js?file=contract.rb"></script>
+<figure class='code'><figcaption><span>contract.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Contract</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">validates_presence_of</span> <span class="ss">:name</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:monthly_expenses</span>
+</span><span class='line'>  <span class="n">calculates_default_monthly_charge</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>100% may sound extreme, but as soon as we define a single method body in any

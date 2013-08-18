@@ -677,12 +677,30 @@ refactored to use a more intention revealing name whenever possible.</p>
 <p>rspec-core supports a one-liner syntax to reduce the noise of common
 requirements like validations:</p>
 
-<script src="https://gist.github.com/2691548.js?file=example-1.rb"></script>
+<figure class='code'><figcaption><span>article_spec.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Article</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">validate_presence_of</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Without support for this syntax, the same example might look like this:</p>
 
-<script src="https://gist.github.com/2691548.js?file=example-2.rb"></script>
+<figure class='code'><figcaption><span>article_spec.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Article</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;validates presence of :title&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">article</span> <span class="o">=</span> <span class="no">Article</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>    <span class="n">article</span><span class="o">.</span><span class="n">should</span> <span class="n">validate_presence_of</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>The benefit of this more verbose example is that it we can read it and
@@ -700,7 +718,15 @@ failure.</p>
 methods named <code>subject</code>. One is a class method on <code>ExampleGroup</code>, used to
 declare the &ldquo;subject&rdquo; of all of the examples in the group:</p>
 
-<script src="https://gist.github.com/2691548.js?file=example-3.rb"></script>
+<figure class='code'><figcaption><span>article_spec.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Article</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">subject</span> <span class="p">{</span> <span class="no">Article</span><span class="o">.</span><span class="n">new</span> <span class="p">}</span>
+</span><span class='line'>  <span class="c1"># ...</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>The other is an instance method on <code>ExampleGroup</code>. The first time it is called
@@ -708,12 +734,40 @@ within an example the block passed to the class&#8217; <code>subject</code> meth
 and its result memoized, returning the same value from that and each subsequent
 <code>subject</code> call:</p>
 
-<script src="https://gist.github.com/2691548.js?file=example-4.rb"></script>
+<figure class='code'><figcaption><span>article_spec.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Article</span> <span class="k">do</span>
+</span><span class='line'>  <span class="c1"># ...</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;validates presence of :title&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">subject</span><span class="o">.</span><span class="n">should</span> <span class="n">validate_presence_of</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Here is what they look like together:</p>
 
-<script src="https://gist.github.com/2691548.js?file=example-5.rb"></script>
+<figure class='code'><figcaption><span>article_spec.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># not recommended</span>
+</span><span class='line'><span class="n">describe</span> <span class="no">Article</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">subject</span> <span class="p">{</span> <span class="no">Article</span><span class="o">.</span><span class="n">new</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;validates presence of :title&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">subject</span><span class="o">.</span><span class="n">should</span> <span class="n">validate_presence_of</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>The problem with this example is that the word &ldquo;subject&rdquo; is not very intention
@@ -726,7 +780,21 @@ understanding and slows you down.</p>
 <p>In this case, we&rsquo;d be better served by using a method (or a <code>let</code> declaration)
 with an intention revealing name:</p>
 
-<script src="https://gist.github.com/2691548.js?file=example-6.rb"></script>
+<figure class='code'><figcaption><span>article_spec.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Article</span> <span class="k">do</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">article</span><span class="p">;</span> <span class="no">Article</span><span class="o">.</span><span class="n">new</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;validates presence of :title&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">article</span><span class="o">.</span><span class="n">should</span> <span class="n">validate_presence_of</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>If we can do that, you might wonder why we have &ldquo;subject&rdquo; at all.  Well, it was
@@ -739,7 +807,19 @@ originally designed to never be seen:</p>
 <code>describe</code> is the <code>Article</code> class, it can store a similar block in the
 background as a default, implicit subject declaration, leaving us with:</p>
 
-<script src="https://gist.github.com/2691548.js?file=example-7.rb"></script>
+<figure class='code'><figcaption><span>article_spec.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># refactoring toward implicit step 1</span>
+</span><span class='line'><span class="n">describe</span> <span class="no">Article</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;validates presence of :title&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">subject</span><span class="o">.</span><span class="n">should</span> <span class="n">validate_presence_of</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>That&rsquo;s a little better, but now <code>subject</code> appears out of nowhere in the
@@ -747,13 +827,31 @@ example, leaving the reader to wonder where it came from.  To remove the need
 for explicitly referencing <code>subject</code>, the example delegates <code>should</code> and
 <code>should_not</code> to <code>subject</code> when it is, itself, the receiver:</p>
 
-<script src="https://gist.github.com/2691548.js?file=example-8.rb"></script>
+<figure class='code'><figcaption><span>article_spec.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># refactoring toward implicit step 2</span>
+</span><span class='line'><span class="n">describe</span> <span class="no">Article</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;validates presence of :title&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">should</span> <span class="n">validate_presence_of</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Starting that line with &ldquo;should&rdquo; seems a bit odd though, so the final step is to
 do it all in one line:</p>
 
-<script src="https://gist.github.com/2691548.js?file=example-1.rb"></script>
+<figure class='code'><figcaption><span>article_spec.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Article</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">validate_presence_of</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Now we have a completely implicit subject, and the result reads quite nicely in
@@ -782,7 +880,23 @@ a reasonable way to use an intention revealing name instead of &ldquo;subject&rd
 should. The only use case I can think of in RSpec in which another name can&rsquo;t
 be used is the one liner syntax:</p>
 
-<script src="https://gist.github.com/2698271.js?file=example-13.rb"></script>
+<figure class='code'><figcaption><span>american_citizen_spec.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">AmericanCitizen</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">context</span> <span class="s2">&quot;18 years of age&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">subject</span> <span class="p">{</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:birthdate</span> <span class="o">=&gt;</span> <span class="mi">18</span><span class="o">.</span><span class="n">years</span><span class="o">.</span><span class="n">ago</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span>     <span class="n">be_able_to</span><span class="p">(</span><span class="ss">:vote</span><span class="p">)</span>   <span class="p">}</span>
+</span><span class='line'>    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span>     <span class="n">be_able_to</span><span class="p">(</span><span class="ss">:enlist</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>    <span class="n">it</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">be_able_to</span><span class="p">(</span><span class="ss">:drink</span><span class="p">)</span>  <span class="p">}</span> <span class="c1"># srsly?</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Here we <em>have</em> to use <code>subject</code> because that&rsquo;s the only way to tell RSpec where
@@ -795,7 +909,21 @@ of <code>subject</code> can and should be refactored to use an intention reveali
 lets you reference the declared subject implicitly in one-liners and with an
 intention revealing name in standard examples:</p>
 
-<script src="https://gist.github.com/2698271.js?file=example-14.rb"></script>
+<figure class='code'><figcaption><span>checking_account_spec.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">CheckingAccount</span><span class="p">,</span> <span class="s2">&quot;with a non-zero starting balance&quot;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">subject</span><span class="p">(</span><span class="ss">:account</span><span class="p">)</span> <span class="p">{</span> <span class="no">CheckingAccount</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Money</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="ss">:USD</span><span class="p">))</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">it</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">be_overdrawn</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;has a balance equal to the starting balance&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">account</span><span class="o">.</span><span class="n">balance</span><span class="o">.</span><span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="no">Money</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="ss">:USD</span><span class="p">))</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>This will be released with rspec-core-2.11. Keep your eyes out for it!</p>
@@ -1247,7 +1375,15 @@ schema format is &ldquo;:sql&rdquo;. (Andrey Voronkov)</li>
 <p>ActiveRecord provides a declarative interface for describing the structure and
 behavior of a model:</p>
 
-<script src="https://gist.github.com/2359140.js?file=article.rb"></script>
+<figure class='code'><figcaption><span>article.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Article</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">validates_presence_of</span> <span class="ss">:title</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:comments</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>While syntactically similar, these two declarations do fundamentally different
@@ -1259,7 +1395,13 @@ things.</p>
 the <code>save</code> method (and other methods that use <code>save</code>), and should be specified
 explicitly. Here&rsquo;s an example using shoulda matchers:</p>
 
-<script src="https://gist.github.com/2359140.js?file=validate_presence_of_title.rb"></script>
+<figure class='code'><figcaption><span>validate_presence_of_title.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Article</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">validate_presence_of</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Even though the matcher&rsquo;s name looks just like the likely implementation, the
@@ -1273,7 +1415,25 @@ without a non-nil value for <code>title</code>, not that the
 to be a collection of <code>Comment</code> objects. Doing Test-Driven Development, you
 would add this declaration when a specified behavior requires it e.g.</p>
 
-<script src="https://gist.github.com/2359140.js?file=with_comments_by.rb"></script>
+<figure class='code'><figcaption><span>with_comments_by.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Article</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;#with_comments_by&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;finds articles with comments by the submitted comment_author&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">article</span> <span class="o">=</span> <span class="no">Factory</span><span class="p">(</span><span class="ss">:article</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">article</span><span class="o">.</span><span class="n">comments</span> <span class="o">&lt;&lt;</span> <span class="no">Factory</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="ss">:comment</span><span class="p">,</span> <span class="ss">:author</span> <span class="o">=&gt;</span> <span class="s2">&quot;jdoe&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="no">Article</span><span class="o">.</span><span class="n">with_comments_by</span><span class="p">(</span><span class="s2">&quot;jdoe&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="o">[</span><span class="n">article</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>This example needs a <code>comments</code> method that returns a collection in order to
@@ -1303,7 +1463,27 @@ to include either of those declarations in the <code>Postable</code> module.</p>
 can look at <code>rental_contract.rb</code> and know that it validates the presence of
 <code>:rentable</code>:</p>
 
-<script src="https://gist.github.com/2359140.js?file=rental_contract.rb"></script>
+<figure class='code'><figcaption><span>rental_contract.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">RentalContract</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:monthly_charges</span>
+</span><span class='line'>  <span class="n">has_one</span> <span class="ss">:rentable</span><span class="p">,</span> <span class="ss">:polymorphic</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">validates_presence_of</span> <span class="ss">:rentable</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">default_monthly_charge</span>
+</span><span class='line'>    <span class="n">price</span> <span class="o">/</span> <span class="n">months_applied</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>This is an interesting argument that I think has some merit, but I think it
@@ -1311,7 +1491,17 @@ would require an extraordinarily disciplined and consistent approach of using
 declarations 100% of the time in model files such that each one <em>is the spec</em>
 for that model, e.g.</p>
 
-<script src="https://gist.github.com/2359140.js?file=contract.rb"></script>
+<figure class='code'><figcaption><span>contract.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Contract</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">validates_presence_of</span> <span class="ss">:name</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:monthly_expenses</span>
+</span><span class='line'>  <span class="n">calculates_default_monthly_charge</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>100% may sound extreme, but as soon as we define a single method body in any

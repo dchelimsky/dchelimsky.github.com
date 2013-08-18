@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | David Chelimsky]]></title>
   <link href="http://blog.davidchelimsky.net/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://blog.davidchelimsky.net/"/>
-  <updated>2013-08-18T11:35:42+02:00</updated>
+  <updated>2013-08-18T17:09:18+02:00</updated>
   <id>http://blog.davidchelimsky.net/</id>
   <author>
     <name><![CDATA[David]]></name>
@@ -165,8 +165,12 @@ schema format is &ldquo;:sql&rdquo;. (Andrey Voronkov)</li>
 <p>ActiveRecord provides a declarative interface for describing the structure and
 behavior of a model:</p>
 
-<script src="https://gist.github.com/2359140.js?file=article.rb"></script>
-
+<p><code>ruby article.rb
+class Article &lt; ActiveRecord::Base
+  validates_presence_of :title
+  has_many :comments
+end
+</code></p>
 
 <p>While syntactically similar, these two declarations do fundamentally different
 things.</p>
@@ -177,8 +181,11 @@ things.</p>
 the <code>save</code> method (and other methods that use <code>save</code>), and should be specified
 explicitly. Here&rsquo;s an example using shoulda matchers:</p>
 
-<script src="https://gist.github.com/2359140.js?file=validate_presence_of_title.rb"></script>
-
+<p><code>ruby validate_presence_of_title.rb
+describe Article do
+  it { should validate_presence_of(:title) }
+end
+</code></p>
 
 <p>Even though the matcher&rsquo;s name looks just like the likely implementation, the
 <code>validate_presence_of</code> matcher specifies that you can not save an <code>Article</code>
@@ -191,8 +198,20 @@ without a non-nil value for <code>title</code>, not that the
 to be a collection of <code>Comment</code> objects. Doing Test-Driven Development, you
 would add this declaration when a specified behavior requires it e.g.</p>
 
-<script src="https://gist.github.com/2359140.js?file=with_comments_by.rb"></script>
+<p>```ruby with_comments_by.rb
+describe Article do
+  describe &ldquo;#with_comments_by&rdquo; do</p>
 
+<pre><code>it "finds articles with comments by the submitted comment_author" do
+  article = Factory(:article)
+  article.comments &lt;&lt; Factory.build(:comment, :author =&gt; "jdoe")
+  Article.with_comments_by("jdoe").should eq([article])
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
 
 <p>This example needs a <code>comments</code> method that returns a collection in order to
 pass.  If it doesn&rsquo;t exist already (because no other example drove you to add
@@ -221,16 +240,34 @@ to include either of those declarations in the <code>Postable</code> module.</p>
 can look at <code>rental_contract.rb</code> and know that it validates the presence of
 <code>:rentable</code>:</p>
 
-<script src="https://gist.github.com/2359140.js?file=rental_contract.rb"></script>
+<p>```ruby rental_contract.rb
+class RentalContract &lt; ActiveRecord::Base
+  has_many :monthly_charges
+  has_one :rentable, :polymorphic => true</p>
 
+<p>  validates_presence_of :rentable</p>
+
+<p>  def default_monthly_charge</p>
+
+<pre><code>price / months_applied
+</code></pre>
+
+<p>  end
+end
+```</p>
 
 <p>This is an interesting argument that I think has some merit, but I think it
 would require an extraordinarily disciplined and consistent approach of using
 declarations 100% of the time in model files such that each one <em>is the spec</em>
 for that model, e.g.</p>
 
-<script src="https://gist.github.com/2359140.js?file=contract.rb"></script>
-
+<p><code>ruby contract.rb
+class Contract &lt; ActiveRecord::Base
+  validates_presence_of :name
+  has_many :monthly_expenses
+  calculates_default_monthly_charge
+end
+</code></p>
 
 <p>100% may sound extreme, but as soon as we define a single method body in any
 one of the models, the declarative nature of the file begins to degrade, and so
@@ -305,7 +342,7 @@ full changelogs at:</p>
 
 
 <p><a href="http://rspec.info">http://rspec.info</a> is now just a one pager (desperate for
-some design love &ndash; volunteers please email <a href="&#109;&#x61;&#105;&#108;&#x74;&#111;&#x3a;&#x72;&#x73;&#x70;&#101;&#x63;&#45;&#x75;&#115;&#x65;&#114;&#115;&#64;&#114;&#117;&#98;&#x79;&#102;&#111;&#x72;&#x67;&#x65;&#46;&#111;&#114;&#x67;">&#x72;&#115;&#x70;&#101;&#99;&#45;&#117;&#x73;&#101;&#114;&#115;&#64;&#x72;&#117;&#98;&#121;&#x66;&#111;&#114;&#x67;&#101;&#x2e;&#111;&#114;&#103;</a>). All the
+some design love &ndash; volunteers please email <a href="&#x6d;&#97;&#x69;&#108;&#116;&#x6f;&#58;&#114;&#115;&#x70;&#x65;&#x63;&#45;&#x75;&#x73;&#101;&#114;&#x73;&#x40;&#114;&#117;&#98;&#x79;&#x66;&#x6f;&#114;&#103;&#101;&#46;&#111;&#x72;&#x67;">&#114;&#115;&#x70;&#101;&#99;&#45;&#117;&#115;&#x65;&#114;&#115;&#x40;&#x72;&#x75;&#x62;&#x79;&#102;&#x6f;&#114;&#103;&#x65;&#x2e;&#x6f;&#114;&#x67;</a>). All the
 old pages are redirects to the relevant RDoc at <a href="http://rubydoc.info.">http://rubydoc.info.</a> RSpec-1
 info is still available at <a href="http://old.rspec.info">http://old.rspec.info</a>.</p>
 
