@@ -3,17 +3,21 @@ layout: default
 ---
 
 <script type="text/javascript">
-if (window.location.pathname.match(/^\/blog/)) {
-  $(document).ready(function() {
-    $('#message').text("Oops!");
-  });
-} else {
+if (!window.location.pathname.match(/^\/blog/)) {
   window.location = "/blog" + window.location.pathname;
 };
 </script>
 
 <div class="blog-index">
   <article>
-    <div id="message"></div>
+    Unfortunately, the page you are looking for does not exist on this site.
   </article>
 </div>
+
+<aside class="sidebar">
+  {% if site.blog_index_asides.size %}
+    {% include_array blog_index_asides %}
+  {% else %}
+    {% include_array default_asides %}
+  {% endif %}
+</aside>
