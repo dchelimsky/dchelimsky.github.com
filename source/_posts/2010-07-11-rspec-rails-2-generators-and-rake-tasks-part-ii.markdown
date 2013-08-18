@@ -35,7 +35,20 @@ No, and herein lies the benefit of using a Railtie for this.
 
 When you declare a gem in a Gemfile, Bundler loads up a file with the same name as the gem, in our case [`rspec-rails.rb`](http://github.com/rspec/rspec-rails/blob/master/lib/rspec-rails.rb).
 
-<script src="http://gist.github.com/471892.js?file=rspec-rails.rb"></script>
+```ruby rspec-rails.rb
+module RSpec
+  module Rails
+    class Railtie < ::Rails::Railtie
+      config.generators.integration_tool :rspec
+      config.generators.test_framework   :rspec
+ 
+      rake_tasks do
+        load "rspec/rails/tasks/rspec.rake"
+      end
+    end
+  end
+end
+```
 
 The generator configs are only invoked when running `rails generate`, which is when you want them.  The `require` statement is only invoked when running `rake`, which is when you want it. If you're not running `rake` or `rails generate`, then no other files from rspec-rails or any of its dependencies are loaded, _unless you load them explicitly from elsewhere in your app_.
 
@@ -47,17 +60,13 @@ Because these are intended to be implicit, Rails hides them from you in order to
 
 ### OK, but now I see all of the `test_unit` generators. What's up with those?
 
-Because RSpec is the test framework of record, Rails doesn't know to hide the test_unit generators. <strike>If you want to hide them, just add this to one of your config files:
+Because RSpec is the test framework of record, Rails doesn't know to hide the
+test_unit generators. <strike>If you want to hide them, just add this to one of
+your config files</strike>:
 
-
-    
-    
-    Rails::Generators.hide_namespace("test_unit")
-    
-
-
-
-</strike>
+```ruby
+Rails::Generators.hide_namespace("test_unit")
+```
 
 [Updated on 7//14]
 

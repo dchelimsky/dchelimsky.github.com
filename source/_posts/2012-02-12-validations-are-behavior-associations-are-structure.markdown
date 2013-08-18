@@ -26,7 +26,12 @@ This is my personal viewpoint, though it is not mine alone. YMMV.
 ActiveRecord provides a declarative interface for describing the structure and
 behavior of a model:
 
-<script src="https://gist.github.com/2359140.js?file=article.rb"></script>
+```ruby article.rb
+class Article < ActiveRecord::Base
+  validates_presence_of :title
+  has_many :comments
+end
+```
 
 While syntactically similar, these two declarations do fundamentally different
 things.
@@ -37,7 +42,11 @@ The `validates_presence_of :title` declaration changes the behavior of
 the `save` method (and other methods that use `save`), and should be specified
 explicitly. Here's an example using shoulda matchers:
 
-<script src="https://gist.github.com/2359140.js?file=validate_presence_of_title.rb"></script>
+```ruby validate_presence_of_title.rb
+describe Article do
+  it { should validate_presence_of(:title) }
+end
+```
 
 Even though the matcher's name looks just like the likely implementation, the
 `validate_presence_of` matcher specifies that you can not save an `Article`
@@ -50,7 +59,17 @@ The `has_many` declaration exposes a `comments` method to clients that appears
 to be a collection of `Comment` objects. Doing Test-Driven Development, you
 would add this declaration when a specified behavior requires it e.g.
 
-<script src="https://gist.github.com/2359140.js?file=with_comments_by.rb"></script>
+```ruby with_comments_by.rb
+describe Article do
+  describe "#with_comments_by" do
+    it "finds articles with comments by the submitted comment_author" do
+      article = Factory(:article)
+      article.comments << Factory.build(:comment, :author => "jdoe")
+      Article.with_comments_by("jdoe").should eq([article])
+    end
+  end
+end
+```
 
 This example needs a `comments` method that returns a collection in order to
 pass.  If it doesn't exist already (because no other example drove you to add
@@ -79,14 +98,31 @@ Another argument is that declarations supply sufficient documentation. e.g. we
 can look at `rental_contract.rb` and know that it validates the presence of
 `:rentable`:
 
-<script src="https://gist.github.com/2359140.js?file=rental_contract.rb"></script>
+```ruby rental_contract.rb
+class RentalContract < ActiveRecord::Base
+  has_many :monthly_charges
+  has_one :rentable, :polymorphic => true
+ 
+  validates_presence_of :rentable
+ 
+  def default_monthly_charge
+    price / months_applied
+  end
+end
+```
 
 This is an interesting argument that I think has some merit, but I think it
 would require an extraordinarily disciplined and consistent approach of using
 declarations 100% of the time in model files such that each one _is the spec_
 for that model, e.g.
 
-<script src="https://gist.github.com/2359140.js?file=contract.rb"></script>
+```ruby contract.rb
+class Contract < ActiveRecord::Base
+  validates_presence_of :name
+  has_many :monthly_expenses
+  calculates_default_monthly_charge
+end
+```
 
 100% may sound extreme, but as soon as we define a single method body in any
 one of the models, the declarative nature of the file begins to degrade, and so

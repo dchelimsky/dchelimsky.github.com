@@ -19,11 +19,22 @@ refactored to use a more intention revealing name whenever possible.
 rspec-core supports a one-liner syntax to reduce the noise of common
 requirements like validations:
 
-<script src="https://gist.github.com/2691548.js?file=example-1.rb"></script>
+```ruby article_spec.rb
+describe Article do
+  it { should validate_presence_of(:title) }
+end
+```
 
 Without support for this syntax, the same example might look like this:
 
-<script src="https://gist.github.com/2691548.js?file=example-2.rb"></script>
+```ruby article_spec.rb
+describe Article do
+  it "validates presence of :title" do
+    article = Article.new
+    article.should validate_presence_of(:title)
+  end
+end
+```
 
 The benefit of this more verbose example is that it we can read it and
 understand all the parts right away: an object is initialized and assigned to a
@@ -40,18 +51,39 @@ Behind the scenes, the one-liner uses a "subject" abstraction supported by two
 methods named `subject`. One is a class method on `ExampleGroup`, used to
 declare the "subject" of all of the examples in the group:
 
-<script src="https://gist.github.com/2691548.js?file=example-3.rb"></script>
+```ruby article_spec.rb
+describe Article do
+  subject { Article.new }
+  # ...
+end
+```
 
 The other is an instance method on `ExampleGroup`. The first time it is called
 within an example the block passed to the class' `subject` method is evaluated
 and its result memoized, returning the same value from that and each subsequent
 `subject` call:
 
-<script src="https://gist.github.com/2691548.js?file=example-4.rb"></script>
+```ruby article_spec.rb
+describe Article do
+  # ...
+  it "validates presence of :title" do
+    subject.should validate_presence_of(:title)
+  end
+end
+```
 
 Here is what they look like together:
 
-<script src="https://gist.github.com/2691548.js?file=example-5.rb"></script>
+```ruby article_spec.rb
+# not recommended
+describe Article do
+  subject { Article.new }
+ 
+  it "validates presence of :title" do
+    subject.should validate_presence_of(:title)
+  end
+end
+```
 
 The problem with this example is that the word "subject" is not very intention
 revealing.  That might not appear problematic in this small example because you
@@ -63,7 +95,15 @@ understanding and slows you down.
 In this case, we'd be better served by using a method (or a `let` declaration)
 with an intention revealing name:
 
-<script src="https://gist.github.com/2691548.js?file=example-6.rb"></script>
+```ruby article_spec.rb
+describe Article do
+  def article; Article.new; end
+ 
+  it "validates presence of :title" do
+    article.should validate_presence_of(:title)
+  end
+end
+```
 
 If we can do that, you might wonder why we have "subject" at all.  Well, it was
 originally designed to never be seen:
@@ -75,19 +115,37 @@ Note in the example with `subject { Article.new }`, that the `subject` declarati
 `describe` is the `Article` class, it can store a similar block in the
 background as a default, implicit subject declaration, leaving us with:
 
-<script src="https://gist.github.com/2691548.js?file=example-7.rb"></script>
+```ruby article_spec.rb
+# refactoring toward implicit step 1
+describe Article do
+  it "validates presence of :title" do
+    subject.should validate_presence_of(:title)
+  end
+end
+```
 
 That's a little better, but now `subject` appears out of nowhere in the
 example, leaving the reader to wonder where it came from.  To remove the need
 for explicitly referencing `subject`, the example delegates `should` and
 `should_not` to `subject` when it is, itself, the receiver:
 
-<script src="https://gist.github.com/2691548.js?file=example-8.rb"></script>
+```ruby article_spec.rb
+# refactoring toward implicit step 2
+describe Article do
+  it "validates presence of :title" do
+    should validate_presence_of(:title)
+  end
+end
+```
 
 Starting that line with "should" seems a bit odd though, so the final step is to
 do it all in one line:
 
-<script src="https://gist.github.com/2691548.js?file=example-1.rb"></script>
+```ruby article_spec.rb
+describe Article do
+  it { should validate_presence_of(:title) }
+end
+```
 
 Now we have a completely implicit subject, and the result reads quite nicely in
 both the code and the output when run with `--format documentation`: 
@@ -114,7 +172,16 @@ a reasonable way to use an intention revealing name instead of "subject", you
 should. The only use case I can think of in RSpec in which another name can't
 be used is the one liner syntax:
 
-<script src="https://gist.github.com/2698271.js?file=example-13.rb"></script>
+```ruby american_citizen_spec.rb
+describe AmericanCitizen do
+  context "18 years of age" do
+    subject { Person.new(:birthdate => 18.years.ago) }
+    it { should     be_able_to(:vote)   }
+    it { should     be_able_to(:enlist) }
+    it { should_not be_able_to(:drink)  } # srsly?
+  end
+end
+```
 
 Here we _have_ to use `subject` because that's the only way to tell RSpec where
 to send `should` and `should_not`. In my opinion, any other explicit appearance
@@ -126,7 +193,15 @@ Based on feedback on this post, I added support for a "named subject," which
 lets you reference the declared subject implicitly in one-liners and with an
 intention revealing name in standard examples:
 
-<script src="https://gist.github.com/2698271.js?file=example-14.rb"></script>
+```ruby checking_account_spec.rb
+describe CheckingAccount, "with a non-zero starting balance" do
+  subject(:account) { CheckingAccount.new(Money.new(50, :USD)) }
+  it { should_not be_overdrawn }
+  it "has a balance equal to the starting balance" do
+    account.balance.should eq(Money.new(50, :USD))
+  end
+end
+```
 
 This will be released with rspec-core-2.11. Keep your eyes out for it!
 
