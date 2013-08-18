@@ -450,7 +450,53 @@ thing.msg(5)
   </header>
 
 
-  <div class="entry-content">
+  <div class="entry-content"><p>[Updated on 2/25]</p>
+
+<p>Have you seen this show up in your specs?</p>
+
+<pre><code>specify "should be empty" do
+  @group.should be_empty
+end
+</code></pre>
+
+<p>As of rev 1519, RSpec will now take (almost) all of the stock expectations and auto-generate spec names for you. So this:</p>
+
+<pre><code>context "A Group" do
+  ...
+  specify do
+    @group.should be_empty
+  end
+end
+</code></pre>
+
+<p>A Group
+&ndash; should be empty
+This works for all of the standard expectations except those that take blocks, which would result in names like “should satisfy block”, which doesn’t seem that helpful.</p>
+
+<p>Custom Expectation Matchers
+Getting this to work w/ your custom matchers is a snap. Just implement #to_s in the matcher to return a String with everything after “should ” or “should not ”. For example, Equal#to_s in RSpec looks like this:</p>
+
+<pre><code>def description
+  "equal #{@expected.inspect}"
+end
+</code></pre>
+
+<p>So the following specs:</p>
+
+<pre><code>specify do
+  result.should equal(3)
+end
+
+specify do
+  result.should_not equal("this string")
+end
+</code></pre>
+
+<p>would result in the following output:</p>
+
+<pre><code>- should equal(3)
+- should not equal(\"this string\")
+</code></pre>
 </div>
   
   
@@ -542,7 +588,7 @@ end
 &lt;/code&gt;
 </code></pre>
 
-<p>Then #matches? could assign nil to the attr and expect #valid? to return false and then assign valid_value to the attr and expect #valid? to return true. The failure message could say something like &ldquo;model was not valid even when email was assigned &lsquo;<a href="&#109;&#x61;&#x69;&#108;&#116;&#111;&#58;&#x61;&#64;&#x62;&#x2e;&#99;&#111;&#x6d;">&#97;&#x40;&#x62;&#x2e;&#x63;&#x6f;&#109;</a>&rsquo;. You must ensure that all required attributes are assigned values before calling #should require.&rdquo;</p>
+<p>Then #matches? could assign nil to the attr and expect #valid? to return false and then assign valid_value to the attr and expect #valid? to return true. The failure message could say something like &ldquo;model was not valid even when email was assigned &lsquo;<a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#111;&#58;&#x61;&#x40;&#x62;&#x2e;&#x63;&#x6f;&#109;">&#x61;&#x40;&#x62;&#46;&#x63;&#x6f;&#109;</a>&rsquo;. You must ensure that all required attributes are assigned values before calling #should require.&rdquo;</p>
 
 <p>Making that change would be cake! Again, the point here is to show how easy custom matchers are to implement. Coming up w/ the right syntax and messaging is another problem, but RSpec does its best to stay out of your way as you explore that problem.</p>
 

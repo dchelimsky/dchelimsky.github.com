@@ -9,8 +9,8 @@
   <meta name="author" content="David">
 
   
-  <meta name="description" content="if (window.location.pathname.match(/^\/blog/)) { $(document).ready(function() { $('#message').text("Oops!"); });
-} else { window.location = "/blog &hellip;">
+  <meta name="description" content="if (!window.location.pathname.match(/^\/blog/)) { window.location = "/blog" + window.location.pathname;
+}; Unfortunately, the page you are looking &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,20 +65,60 @@
   <div id="main">
     <div id="content">
       <script type="text/javascript">
-if (window.location.pathname.match(/^\/blog/)) {
-  $(document).ready(function() {
-    $('#message').text("Oops!");
-  });
-} else {
+if (!window.location.pathname.match(/^\/blog/)) {
   window.location = "/blog" + window.location.pathname;
 };
 </script>
 
 <div class="blog-index">
   <article>
-    <div id="message"></div>
+    Unfortunately, the page you are looking for does not exist on this site.
   </article>
 </div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec&#8217;s new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
 
     </div>
   </div>
