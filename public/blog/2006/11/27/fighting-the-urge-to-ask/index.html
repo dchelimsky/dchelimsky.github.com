@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Fighting the Urge to Ask - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="ActiveRecord provides a lot of magic methods that let us get at the properties of a given AR subclass. This is absolutely fantastic news! Except for &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/2006/11/27/fighting-the-urge-to-ask">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Fighting the Urge to Ask</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-11-27T09:19:19+01:00" pubdate data-updated="true">Nov 27<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>ActiveRecord provides a lot of magic methods that let us get at the properties of a given AR subclass. This is absolutely fantastic news!</p>
+
+<p>Except for one thing.<!-- more --></p>
+
+<p>Because the resulting getters are public, the entire world of Rails applications (including those that I have written) is infested with violations of encapsulation, TDA (Tell, Don&rsquo;t Ask), Feature Envy and Inappropriate Intimacy. Wow. That&rsquo;s some stinky &amp;^#(.</p>
+
+<p>So what can be done about this? We don&rsquo;t want to encourage the Rails core team to make all the getters private for two reasons. One, there are so many apps in existence already that would break, the entire community would rightfully have my head for even joking about it! Two, it&rsquo;s not THEIR responsibility. It&rsquo;s OURS.</p>
+
+<p>Think of Ruby and the awesome power that we&rsquo;ve been granted by open classes. If you want to screw up the coding world you live in by abusing this ability, then have at it. We&rsquo;ve done that in RSpec, and are learning the lessons from having done so (don&rsquo;t invade other people&rsquo;s classes so much in a framework!).</p>
+
+<p>The responsibility is ours, as users of the Rails framework, to use it in responsible ways, adhering to the principles of Object Oriented Design that have guided us through the morass of java and .NET applications that have come before.</p>
+
+<p>One example comes from a recent discussion on the RSpec list. The names here have been changed to protect the innocent. Imagine you&rsquo;re writing an app for a Veterinarian&rsquo;s office in which each Pet belongs to a Person. When you&rsquo;re registering a new Pet you want to be able to create the Pet and the Person (pet owner) in one action. So you might have something like this:</p>
+
+<pre><code>&lt;code&gt;
+def create
+@person = Person.new(params[:person])
+@pet = Pet.new(params[:pet])
+@person.pets &lt;&lt; @pet
+@person.save
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>Anybody see the violation of TDA? Anybody smell any Feature Envy? For those who don&rsquo;t, the problem is in this line:</p>
+
+<pre><code>&lt;code&gt;
+@person.pets &lt;&lt; @pet
+&lt;/code&gt;
+</code></pre>
+
+<p>The problem is that this controller code now depends on the internal structure of the Person &ndash; the fact that it keeps a collection of Pets. Now imagine that as this app evolved, we realized that we had the relationship backwards. That, since we are a Pet Health Clinic, after all, everything should revolve around the animal, not the owner. This code (and all the other code in the application like it) will have to change.</p>
+
+<p>We can avoid that change, or any other change to how the Person and Pet relate to each other, by adding an add_pet method to Person:</p>
+
+<pre><code>&lt;code&gt;
+@person.add_pet @pet
+&lt;/code&gt;
+</code></pre>
+
+<p>Now, if we decided to reverse the relationship, we could do by having the implementation of add_pet to turn around and add the Person to the Pet:</p>
+
+<pre><code>&lt;code&gt;
+class Person &lt; ActiveRecord::Base
+  def add_pet pet
+    pet.add_person(self)
+  end
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>Now you could argue that the code that deals w/ People and Pets <strong>should</strong> change to correctly reflect the new model. But by applying Tell, Don&rsquo;t Ask in this case, we can decide when to make that change based on priorities, not based on urgency.</p>
+
+<p>So I urge you to pay attention to these little traps that AR provides for us, and fight the urge to Ask. Just Tell the Other Guy. It&rsquo;ll save your ass some day.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-11-27T09:19:19+01:00" pubdate data-updated="true">Nov 27<span>th</span>, 2006</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.davidchelimsky.net/blog/2006/11/27/fighting-the-urge-to-ask/" data-via="dchelimsky" data-counturl="http://blog.davidchelimsky.net/blog/2006/11/27/fighting-the-urge-to-ask/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2006/11/15/cohesive-models/" title="Previous Post: Cohesive Models">&laquo; Cohesive Models</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2006/12/22/clean-out-init-rb-in-rspec_on_rails-plugin/" title="Next Post: clean out init.rb in rspec_on_rails plugin">clean out init.rb in rspec_on_rails plugin &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,936 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="The Pragmatic Bookshelf has just released Beta-14 of The RSpec Book. This is the first beta release since we made the rather ambitious decision to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/page/6">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/24/the-rspec-book-beta-14/">The RSpec Book - Beta 14</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-24T03:58:41+02:00" pubdate data-updated="true">Jul 24<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://www.pragprog.com/">The Pragmatic Bookshelf</a> has just released Beta-14 of <a href="http://www.pragprog.com/titles/achbd/the-rspec-book">The RSpec Book</a>.</p>
+
+<p>This is the first beta release since we made the rather ambitious decision to update the book for RSpec-2 and Rails-3, and includes updates to the tutorial in Part I of the book, as well as the first chapter in Part III: Code Examples.</p>
+
+<p>We&rsquo;re planning two more beta releases over the next couple of weeks. One to update the rest of Part III, and then a final beta release with Part V (the Rails section) updated to RSpec-2 and Rails-3.</p>
+
+<p>What this means for the short run is that &frac12; of the beta book uses newer gem versions, while the rest uses the old versions. We thought for a long time about whether to delay this beta until it was all up to date, but decided in the end that beta readers had waited long enough&mdash;-now that RSpec 2 and Rails 3 release candidates are just around the corner, we wanted to get this new content out as soon as we could. Keep in mind that this is only for a week or two, while we put the finishing touches on the book.</p>
+
+<p>With that in mind, here is some information that will help you navigate the beta book:</p>
+
+<h3>Ruby 1.8.7</h3>
+
+<p>The code examples in the book were written using Ruby 1.8.7. Most of them, but not all, will work with 1.9.2-rc2.</p>
+
+<h3>Code for the updated chapters in beta-14</h3>
+
+<p>While we&rsquo;re getting these last few beta releases out, the updated chapters all have red headers, like this:</p>
+
+<p><img src="http://blog.davidchelimsky.net/wp-content/uploads/2010/07/screen-shot-2010-07-23-at-75308-pm.png" alt="Updated Section Header" /></p>
+
+<p>The examples in these chapters work with the following gem versions:</p>
+
+<pre><code>rspec-2.0.0.beta.18
+cucumber-0.8.5
+</code></pre>
+
+<h3>Code for the rest of the chapters in beta-14</h3>
+
+<p>The chapters that have not been updated yet have gray headers, like this:</p>
+
+<p><img src="http://blog.davidchelimsky.net/wp-content/uploads/2010/07/screen-shot-2010-07-23-at-75430-pm.png" alt="Non-updated Section Header" /></p>
+
+<p>The examples in these chapters work with the following gem versions:</p>
+
+<pre><code>rspec-1.3.0
+rspec-rails-1.3.2
+rails-2.3.5
+cucumber-0.6.2
+cucumber-rails-0.2.4
+database_cleaner-0.4.3
+webrat-0.7.0
+selenium-client-0.2.18
+</code></pre>
+
+<h3>Reporting Errata</h3>
+
+<h4>Technical errors in the updated chapters</h4>
+
+<p>We are now in the final phases of preparing the book for print. For those of you reading the beta book, we are very interested in <em>technical errata in the updated chapters</em>. If the behaviour of any examples in the updated chapters differs from what the book tells you to expect <em>with the versions listed above</em>, please report that to <a href="http://www.pragprog.com/titles/achbd/errata">http://www.pragprog.com/titles/achbd/errata</a>.</p>
+
+<h4>Copyedit issues</h4>
+
+<p>The book has not been through copyedit yet (that&rsquo;s next), so please don&rsquo;t worry about spelling, grammar, or phrasing. That will all be addressed by our very able copyeditor.</p>
+
+<h4>Typesetting issues</h4>
+
+<p>The book has not been formally typeset yet (that&rsquo;s last), so please don&rsquo;t worry about code examples that span page turns, or issues with syntax highlighting.</p>
+
+<h4>Other technical errors</h4>
+
+<p>If you find that the behaviour works differently with newer Ruby or gem versions than those listed above, please submit bug reports to the appropriate trackers:</p>
+
+<ul>
+<li><a href="http://github.com/rspec/rspec-core">rspec-core (describe/it/etc)</a></li>
+<li><a href="http://github.com/rspec/rspec-expectations">rspec-expectations (should/should_not + matchers)</a></li>
+<li><a href="http://github.com/rspec/rspec-mocks">rspec-mocks</a></li>
+<li><a href="http://github.com/rspec/rspec-rails">rspec-rails</a></li>
+<li><a href="http://rspec.lighthouseapp.com/projects/16211">cucumber</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/12/rspec-rails-2-generators-and-rake-tasks-part-ii/">rspec-rails-2 generators and rake tasks - part II</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-12T00:41:10+02:00" pubdate data-updated="true">Jul 12<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Some questions have come up since I posted about <a href="http://blog.davidchelimsky.net/2010/07/11/rspec-rails-2-generators-and-rake-tasks">rspec-rails-2 generators and rake tasks</a> requiring that rspec-rails be declared in the <code>:development</code> group in a Gemfile. Here are a few of them, paraphrased, with answers:</p>
+
+<h3>Why the change?</h3>
+
+<p>rspec-rails now uses a Railtie to expose the rake tasks and generators. Railties allow Rails extensions to register themselves with Rails without having to copy files into your app. This makes installation and, especially, upgrades much easier to manage for both maintainers and users.</p>
+
+<h3>Do I need rspec-rails in both :development and :test groups?</h3>
+
+<h4>:development</h4>
+
+<p>We need rspec-rails in the <code>:development</code> group in order to expose the rake tasks and generators without having to type <code>RAILS_ENV=test</code> when we want to use them.</p>
+
+<h4>:test</h4>
+
+<p>Quite ironically, it turns out that we don&rsquo;t need it in the :test group at all. That may change in the future, and I don&rsquo;t see any harm in keeping it in the :test group as well, so I&rsquo;ll probably keep it there in my apps.</p>
+
+<h3>Doesn&rsquo;t that mean I&rsquo;m loading rspec-rails and all of its dependencies in the :development environment?</h3>
+
+<p>No, and herein lies the benefit of using a Railtie for this.</p>
+
+<p>When you declare a gem in a Gemfile, Bundler loads up a file with the same name as the gem, in our case <a href="http://github.com/rspec/rspec-rails/blob/master/lib/rspec-rails.rb"><code>rspec-rails.rb</code></a>.</p>
+
+<script src="http://gist.github.com/471892.js?file=rspec-rails.rb"></script>
+
+
+<p>The generator configs are only invoked when running <code>rails generate</code>, which is when you want them.  The <code>require</code> statement is only invoked when running <code>rake</code>, which is when you want it. If you&rsquo;re not running <code>rake</code> or <code>rails generate</code>, then no other files from rspec-rails or any of its dependencies are loaded, <em>unless you load them explicitly from elsewhere in your app</em>.</p>
+
+<h3>Does this actually work? When I add rspec-rails to the :development group and run <code>rails generate</code>, I don&rsquo;t see most of the rspec generators.</h3>
+
+<p>The only RSpec generator that is intended to be invoked directly is <code>rspec:install</code>, which you&rsquo;ll still see. The others are invoked implicitly by Rails when you run the various Rails generators. e.g., if you run <code>script/rails generate controller Widgets</code>, the controller generator implicitly calls out to the <code>rspec:controller</code> generator to generate a <code>WidgetsController</code> spec.</p>
+
+<p>Because these are intended to be implicit, Rails hides them from you in order to reduce the noise level.</p>
+
+<h3>OK, but now I see all of the <code>test_unit</code> generators. What&rsquo;s up with those?</h3>
+
+<p>Because RSpec is the test framework of record, Rails doesn&rsquo;t know to hide the test_unit generators. <strike>If you want to hide them, just add this to one of your config files:</p>
+
+<pre><code>Rails::Generators.hide_namespace("test_unit")
+</code></pre>
+
+<p></strike></p>
+
+<p>[Updated on 7//14]</p>
+
+<p>Turns out that <code>hide_namespaces</code> doesn&rsquo;t work for this use case. I&rsquo;ve got an <a href="https://rails.lighthouseapp.com/projects/8994/tickets/5111">open ticket in the Rails tracker</a> to address this, and I&rsquo;ll updated this post again once it&rsquo;s addressed.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/11/rspec-rails-2-generators-and-rake-tasks/">rspec-rails-2 generators and rake tasks</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-11T14:48:59+02:00" pubdate data-updated="true">Jul 11<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>As of <a href="http://github.com/rspec/rspec-rails">rspec-rails-2.0.0.beta.17</a>, generators and rake tasks are exposed through a <a href="http://github.com/rspec/rspec-rails/blob/master/lib/rspec-rails.rb">Railtie</a>. In order to see them when you run <code>rails generate</code> and <code>rake -T</code>, you need to include the <code>rspec-rails</code> gem in the <code>:development</code> group in your <code>Gemfile</code>.</p>
+
+<pre><code>group :development, :test do
+gem "rspec-rails", "&gt;= 2.0.0.beta.17"
+end
+</code></pre>
+
+<p>If you have a previous version of <code>rspec-rails-2.0.0.beta</code> installed, you should also remove these files:</p>
+
+<pre><code>lib/tasks/rspec.rake
+config/initializers/rspec_generator.rb
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/01/rspec-2-documentation/">RSpec-2 Documentation</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-01T14:54:19+02:00" pubdate data-updated="true">Jul 1<span>st</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>RSpec-2 is getting close to a release candidate, and as the beta gems have been flowing a lot of questions have been coming in, especially about documentation. Here is some information that should help.</p>
+
+<h2>Source code</h2>
+
+<p>RSpec development has moved to the <a href="http://github.com/rspec">rspec</a> account on github. There are five repositories at the moment:</p>
+
+<ul>
+<li><a href="http://github.com/rspec/rspec">http://github.com/rspec/rspec</a></li>
+<li><a href="http://github.com/rspec/rspec-core">http://github.com/rspec/rspec-core</a></li>
+<li><a href="http://github.com/rspec/rspec-expectations">http://github.com/rspec/rspec-expectations</a></li>
+<li><a href="http://github.com/rspec/rspec-mocks">http://github.com/rspec/rspec-mocks</a></li>
+<li><a href="http://github.com/rspec/rspec-rails">http://github.com/rspec/rspec-rails</a></li>
+</ul>
+
+
+<p><a href="http://github.com/rspec/rspec-rails">rspec-rails</a> depends on <a href="http://github.com/rspec/rspec">rspec</a>, which depends, in turn, on the other three.</p>
+
+<p>This structure has many benefits, but one cost is that the documentation, though plentiful, is a bit scattered.</p>
+
+<h2>READMEs</h2>
+
+<ul>
+<li><a href="http://github.com/rspec/rspec">http://github.com/rspec/rspec</a></li>
+<li><a href="http://github.com/rspec/rspec-core">http://github.com/rspec/rspec-core</a></li>
+<li><a href="http://github.com/rspec/rspec-expectations">http://github.com/rspec/rspec-expectations</a></li>
+<li><a href="http://github.com/rspec/rspec-mocks">http://github.com/rspec/rspec-mocks</a></li>
+<li><a href="http://github.com/rspec/rspec-rails">http://github.com/rspec/rspec-rails</a></li>
+</ul>
+
+
+<h2>Upgrade Notes</h2>
+
+<ul>
+<li><a href="http://github.com/rspec/rspec-core/blob/master/Upgrade.markdown">http://github.com/rspec/rspec-core/blob/master/Upgrade.markdown</a></li>
+<li><a href="http://github.com/rspec/rspec-expectations/blob/master/Upgrade.markdown">http://github.com/rspec/rspec-expectations/blob/master/Upgrade.markdown</a></li>
+<li><a href="http://github.com/rspec/rspec-rails/blob/master/Upgrade.markdown">http://github.com/rspec/rspec-rails/blob/master/Upgrade.markdown</a></li>
+</ul>
+
+
+<h2>Cucumber features</h2>
+
+<p>Each of the repos has a growing set of Cucumber features. Some of the features have been added in after the fact, but many of the new features have been driven out using Cucumber. These are a great source of &ldquo;How-To&rdquo; information, and you <em>know</em> they&rsquo;re up to date because they are <em>executable documentation</em>.</p>
+
+<p>If you peruse these and are unable to find the information you&rsquo;re looking for, or find any of the information incomplete or confusing, please, please, please submit a github issue (see Known Issues, below). Or, better yet, submit a patch!</p>
+
+<ul>
+<li><a href="http://github.com/rspec/rspec-core/tree/master/features/">http://github.com/rspec/rspec-core/tree/master/features/</a></li>
+<li><a href="http://github.com/rspec/rspec-expectations/tree/master/features/">http://github.com/rspec/rspec-expectations/tree/master/features/</a></li>
+<li><a href="http://github.com/rspec/rspec-mocks/tree/master/features/">http://github.com/rspec/rspec-mocks/tree/master/features/</a></li>
+<li><a href="http://github.com/rspec/rspec-rails/tree/master/features/">http://github.com/rspec/rspec-rails/tree/master/features/</a></li>
+</ul>
+
+
+<h2>RDoc</h2>
+
+<p>The RDoc is arguably the weakest link here. Patches welcome!</p>
+
+<ul>
+<li><a href="http://rdoc.info/projects/rspec/rspec-core">http://rdoc.info/projects/rspec/rspec-core</a></li>
+<li><a href="http://rdoc.info/projects/rspec/rspec-expectations">http://rdoc.info/projects/rspec/rspec-expectations</a></li>
+<li><a href="http://rdoc.info/projects/rspec/rspec-mocks">http://rdoc.info/projects/rspec/rspec-mocks</a></li>
+<li><a href="http://rdoc.info/projects/rspec/rspec-rails">http://rdoc.info/projects/rspec/rspec-rails</a></li>
+</ul>
+
+
+<h2>Known Issues</h2>
+
+<p>Issues for rspec-2 are being maintained on github.</p>
+
+<ul>
+<li><a href="http://github.com/rspec/rspec-core/issues">http://github.com/rspec/rspec-core/issues</a></li>
+<li><a href="http://github.com/rspec/rspec-expectations/issues">http://github.com/rspec/rspec-expectations/issues</a></li>
+<li><a href="http://github.com/rspec/rspec-mocks/issues">http://github.com/rspec/rspec-mocks/issues</a></li>
+<li><a href="http://github.com/rspec/rspec-rails/issues">http://github.com/rspec/rspec-rails/issues</a></li>
+</ul>
+
+
+<p>If you want to submit an issue and you&rsquo;re not sure which tracker it belongs in, just pick the one you think is most appropriate. I&rsquo;m more interested in getting the feedback then you knowing where to put the issue. I&rsquo;ll move it to the right place if necessary.</p>
+
+<h2>Wikis</h2>
+
+<p>PLEASE NOTE: github wikis can be updated by anybody with a github account, and I don&rsquo;t get any notification when wiki pages have changed. Most of the time, users add valuable information, but the structure is poor and always in flux, and there have been occasions in which the information was either misleading or simply inaccurate. The Cucumber features mentioned above, though currently incomplete, are a much better source for accurate documentation.</p>
+
+<ul>
+<li><a href="http://wiki.github.com/rspec/rspec/">http://wiki.github.com/rspec/rspec/</a></li>
+<li><a href="http://wiki.github.com/rspec/rspec-core/">http://wiki.github.com/rspec/rspec-core/</a></li>
+<li><a href="http://wiki.github.com/rspec/rspec-expectations/">http://wiki.github.com/rspec/rspec-expectations/</a></li>
+<li><a href="http://wiki.github.com/rspec/rspec-mocks/">http://wiki.github.com/rspec/rspec-mocks/</a></li>
+<li><a href="http://wiki.github.com/rspec/rspec-rails/">http://wiki.github.com/rspec/rspec-rails/</a></li>
+</ul>
+
+
+<h2>The RSpec Book</h2>
+
+<p>The RSpec Book is being updated for RSpec-2 and Rails-3. There will still be references back to RSpec-1 and Rails-2 where things have changed, but the focus will be on the way forward. Once the rails-3 and rspec-2 release candidates are out, we&rsquo;ll release one more updated PDF of the book for those in the beta program, and then off to the printer it goes. FINALLY!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/06/28/view-isolation-in-rspec-rails-2/">View isolation in rspec-rails-2</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-28T05:01:40+02:00" pubdate data-updated="true">Jun 28<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>View isolation is changing in <a href="http://github.com/rspec/rspec-rails">rspec-rails-2</a>. As of <a href="http://rubygems.org/gems/rspec-rails/versions/2.0.0.beta.14.1">beta.14</a>, <em>the view template needs to exist</em>, but the content of the template will not be evaluated. This still provides isolation from the content of the template and its dependencies, it just means the file has to be there, which means you have to create it.</p>
+
+<h2>Why this change?</h2>
+
+<p>rspec-rails-1 performed some <a href="http://github.com/dchelimsky/rspec-rails/blob/master/lib/spec/rails/example/controller_example_group.rb">serious gymnastics</a> to isolate controller specs from views. As many rspec/rails users well know, all the monkey patching of Rails&#8217; internals led to rspec-rails releases immediately following rails releases.</p>
+
+<p>Thankfully, Rails 3 exposes very clean extension points and APIs that make it far simpler to get the most important part of this isolation: isolation from the content of the template.</p>
+
+<h2>Rails 3 Resolvers</h2>
+
+<p>Rails makes a number of decisions based on the existence or lack thereof of a given template on the file system. Rails 3 also supports custom resolvers that let you store view templates in a database, for example. Given the wide array of possibilities, it is not possible for RSpec to predict every way in which templates will be stored or accessed.</p>
+
+<p>What RSpec <em>can</em> do, and does as of beta.14, is use the Rails machinery, or custom extensions that adhere to the Rails Resolver API, to find and load templates, and then stub out the content. Doing so requires <a href="http://github.com/rspec/rspec-rails/blob/master/lib/rspec/rails/view_rendering.rb">much less code</a> and, more importantly, much less invasive code. This increases the likelihood that new features in Rails will <em>just work</em> with rspec-rails as it is, and decreases the likelihood that changes to Rails&#8217; internals will require rspec-rails to release updates with every new release of Rails.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/06/24/why-you-want-a-topic-branch-when-contributing-to-git-hosted-projects/">Why you want a topic branch when contributing to git-hosted projects</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-24T13:23:57+02:00" pubdate data-updated="true">Jun 24<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When contributing to a git(hub)-hosted open source project, it is often recommended that you follow these steps:</p>
+
+<ul>
+<li>fork the repo</li>
+<li>make changes on a topic branch</li>
+<li>push the branch to your repo</li>
+<li>send a pull request or link to the commit from a ticket</li>
+</ul>
+
+
+<p>I was recently asked whether the topic branch in step 2 was necessary. The answer is that it&rsquo;s not really necessary, it just makes life easier for both the contributor and the maintainer. Here&rsquo;s why.</p>
+
+<p>When maintainers merge patches, they often modify commit messages: rewording for consistency in the commit logs, sign-off statements, etc. They&rsquo;ll also sometimes change the actual content of the commit to fix typos, reorganize methods in a file, etc, etc.</p>
+
+<p>In either case, the result is that the commit that gets merged to the mainline repo has a different sha1 than the commit you submitted. This means that when you go to merge the mainline master branch back into your master branch, you&rsquo;ll run into conflicts. Then, if you resolve them, the HEAD of your master branch is not the same as the HEAD of the mainline master branch, so the next patch you submit off your master branch will likely not apply easily.</p>
+
+<p>By keeping your patches on topic branches, you&rsquo;re able to keep your master branch aligned with the mainline master branch. This makes it easier for you to submit more patches later. It also makes it more likely that your contributions will apply cleanly, which increases the likelihood that they&rsquo;ll be accepted.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/06/14/filtering-examples-in-rspec-2/">Filtering examples in rspec-2</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-14T15:08:20+02:00" pubdate data-updated="true">Jun 14<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In <a href="">RSpec-2</a>, every example group and example has associated metadata, to which you can append arbitrary information. This allows you to slice and dice a spec suite in a variety of ways.</p>
+
+<h3>Adding arbitrary metadata</h3>
+
+<p>The <code>describe</code> and <code>it</code> methods, and their aliases, each accept a hash as the last argument before the block:</p>
+
+<pre><code>describe "something", :this =&gt; {:is =&gt; :arbitrary} do
+it "does something", :and =&gt; "so is this" do
+  # ...
+end
+end
+</code></pre>
+
+<h3><code>filter_run</code></h3>
+
+<p>The keys in these hashes can be accessed in a number of ways via <code>RSpec.configure</code>. If, for example, you&rsquo;re working on a specific example and don&rsquo;t want to run the full suite, you can use the <code>filter_run</code> method on the configuration like this:</p>
+
+<pre><code># in spec/spec_helper.rb
+RSpec.configure do |c|
+c.filter_run :focus =&gt; true
+end
+
+# in spec/any_spec.rb
+describe "something" do
+it "does something", :focus =&gt; true do
+  # ....
+end
+end
+</code></pre>
+
+<p>Now if you run <code>rspec spec</code>, it will only run that one example, no matter how many others there are in the suite.</p>
+
+<p>This works for examples and groups, so if you want to run all the examples in one group that you&rsquo;re focusing on, but nothing else, you can do this:</p>
+
+<pre><code>RSpec.configure do |c|
+c.filter_run :focus =&gt; true
+end
+
+describe "something", :focus =&gt; true do
+it "does something" do
+  # ....
+end
+it "does something else" do
+  # ....
+end
+end
+</code></pre>
+
+<p>The <code>rspec</code> command would now run both of the examples in that group.</p>
+
+<h3><code>filter_run_excluding</code></h3>
+
+<p>This is the inverse of <code>filter_run</code>. It excludes any examples or groups that match the filter:</p>
+
+<pre><code>RSpec.configure do |c|
+c.filter_run_excluding :slow =&gt; true
+end
+
+describe "something", :slow =&gt; true do
+it "does something" do
+  # ....
+end
+it "does something else" do
+  # ....
+end
+end
+</code></pre>
+
+<p>The <code>rspec</code> command would now run all the other examples in the suite, but not these two.</p>
+
+<p>NOTE: <code>filter_run_excluding</code> was added in beta.12, which was just released this morning.</p>
+
+<h3><code>lambda</code></h3>
+
+<p>You can filter on runtime conditions by assigning a lambda to a key. If your app is expected to behave differently in different versions of Ruby, you can use a <code>lambda</code> with <code>filter_run_excluding</code> like this:</p>
+
+<pre><code>RSpec.configure do |c|
+c.filter_run_excluding :ruby =&gt; lambda {|version|
+  !(RUBY_VERSION.to_s =~ /^#{version.to_s}/)
+}
+end
+
+describe "something" do
+it "does something", :ruby =&gt; 1.8 do
+  # ....
+end
+it "does something", :ruby =&gt; 1.9 do
+  # ....
+end
+end
+</code></pre>
+
+<p>This example comes directly from rspec-core&rsquo;s own <code>spec_helper.rb</code>.</p>
+
+<p>RSpec passes 1.8 and 1.9 to the lambda, which accepts it as the <code>version</code> block argument. If the lambda returns <code>true</code>, the example is <em>excluded</em> from the run (because we&rsquo;re using <code>filter_run_excluding</code>). Now the first example will only run if the ruby version is 1.8. Similarly, the latter example only runs under 1.9.</p>
+
+<h3>(no) command line support (yet)</h3>
+
+<p>We plan to add some sort of command line API to access these filters, but we&rsquo;re not sure yet what this is going to look like. There is an <a href="http://github.com/rspec/rspec-core/issues/37">open issue in github issues for rspec-core</a> . Please feel free to review and add any comments there.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/03/15/rspec-2-and-autotest/">rspec-2 and autotest</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-15T12:59:15+01:00" pubdate data-updated="true">Mar 15<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[Updated on 17 March, 2010]</p>
+
+<p>I just released rspec-2.0.0.beta.4 with support for <code>autotest</code>, among other enhancements. Autotest integration is going to be a bit different in rspec-2. We&rsquo;re removing the <code>autospec</code> command, which did nothing but set an environment variable and call <code>autotest</code>.</p>
+
+<p>In rspec-2, you&rsquo;ll use the <code>autotest</code> command directly, but doing so requires a small bit of configuration. As of beta.4, you&rsquo;ll have to do add this configuration manually. Just create an <code>autotest</code> directory in the root of your project, put the following statement in <code>./autotest/discover.rb</code>:</p>
+
+<pre><code>Autotest.add_discovery { "rspec2" }
+</code></pre>
+
+<p>The final 2.0.0 release will include a generator (even for non-rails projects) that will add this for you.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/01/25/rspec-20-in-the-works/">Rspec 2.0 in the works</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-01-25T04:31:02+01:00" pubdate data-updated="true">Jan 25<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We&rsquo;ve started to do some preliminary work on rspec-2.0, which we plan to release before Rails-3 goes final. At that point, the rspec-rails-2.0 plugin/gem will only work with rspec >= 2.0 and rails >= 3.0.</p>
+
+<p>We&rsquo;re committed to making the upgrade from rspec-1.x to rspec-2.0 as seamless as possible for most users, but extenders are going to see some differences. This is why we&rsquo;re going to take our time with alpha, beta, and candidate releases.</p>
+
+<p>Here are some of the improvements you can expect:</p>
+
+<h3>Modularity</h3>
+
+<p>Following the Rails and Merb models, Rspec-2 will be broken up into component gems and a meta-gem that depends on them. Most users will still <code>gem install rspec</code>, and doing so will install the component gems.</p>
+
+<p>We&rsquo;ve broken rspec up into 4 repos in the <a href="http://github.com/rspec">rspec account on github</a>:</p>
+
+<ul>
+<li>rspec => meta gem that depends on the others</li>
+<li>rspec-core => runner and output formatters</li>
+<li>rspec-expectations => <code>should</code> and matchers</li>
+<li>rspec-mocks => mocks and stubs</li>
+</ul>
+
+
+<p>With separate component repos, you&rsquo;ll be able to use rspec as you do today or mix and match components with other frameworks. This will also make it easier for contributors to contribute to the components they are interested in without worrying about other components.</p>
+
+<h3>New runner extracted from Micronaut</h3>
+
+<p>The <a href="http://github.com/rspec/rspec-core">rspec-core</a> repository is a complete rewrite of the runner, which has been a big sore spot over the years for contributors and extenders. We extracted the runner from <a href="http://github.com/spicycode/micronaut">Micronaut</a>, which is an Rspec-compatible framework written by <a href="http://github.com/spicycode">Chad Humphries</a>.</p>
+
+<p>Micronaut has a simple and powerful metadata model, which allows us to easily slice and dice a spec suite in much the same way we do now with Cucumber using tags. It also helps to simplify rspec&rsquo;s own specs (because you can access it from within an example).</p>
+
+<p>Because we&rsquo;re able to intercept examples before they are run, we&rsquo;ll also be able to offer a clean extension API, allowing you to add structures like <a href="http://merbivore.org/">Merb</a>&rsquo;s <code>given</code> blocks without monkey patching. Less monkey patching <code>==</code> more maintainable.</p>
+
+<h3>Where we are today</h3>
+
+<p>While Micronaut runs the same specs that Rspec does, there are some different names for things, and there are some differences in the CLI as well. We&rsquo;ve started to resolve some of the differences in <a href="http://github.com/rspec/rspec-core">rspec-core</a>, but we have a way to go.</p>
+
+<p>If you want to try it out and see what works and what doesn&rsquo;t, you can either install the prerelease gems (2.0.0.a2 as of this writing):</p>
+
+<pre><code>[sudo] gem install rspec --prerelease
+</code></pre>
+
+<p>You can also grab the dev environment and have a look at the code. See the <a href="http://github.com/rspec/rspec-dev">rspec-dev README</a> for info.</p>
+
+<p><strong><em>Please do not start reporting issues yet as this will only slow us down.</em></strong></p>
+
+<p>There is a lot that works, but there is also a lot that doesn&rsquo;t. Once we get to beta, we&rsquo;ll be looking for feedback and contributions, but for now we just want to let you know where things are.</p>
+
+<p>Rspec 2 uses <code>Rspec</code> as the root namespace and installs an <code>rspec</code> command instead of a <code>spec</code> command. Until we release 2.0.0 final, this will make it easy for you to keep things separate on your system and in your apps. Once we go final we&rsquo;ll either alias the old names or release a separate backwards-compatibility wrapper gem that does this for you.</p>
+
+<h3>What&rsquo;s next</h3>
+
+<p>We want to focus most of our efforts on rspec-2 at this point, so we don&rsquo;t plan any new development on the rspec-1.x series. We&rsquo;ll do bug-fix releases of rspec[-rails]-1.3, but no new features.</p>
+
+<p>I&rsquo;ll follow up with more information as it becomes clear. Look here for announcements about alpha and beta releases if you&rsquo;re interested in trying it out early or getting involved.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/01/12/rspec-2-and-rails-3/">Rspec 2 and Rails 3</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-01-12T05:12:27+01:00" pubdate data-updated="true">Jan 12<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>With the beta release of <a href="http://rubyonrails.org">Rails</a> 3 just around the corner, we&rsquo;re planning a 2.0 release of <a href="http://rspec.info">Rspec</a>, with an rspec-rails-2.0 gem for rails-3.0.</p>
+
+<p>Late last week and through the weekend, <a href="http://engineyard.com">Engine Yard</a>, <a href="http://thinkrelevance.com">Relevance</a> and <a href="http://obtiva.com">Obtiva</a> sponsored a meeting with <a href="http://yehudakatz.com/">Yehuda Katz</a>, <a href="http://carllerche.com/">Carl Lerche</a>, <a href="http://spicycode.com/">Chad Humphries</a>, and me. The four of us laid out some groundwork and made some good progress toward what promises to be be a very friendly world for Rspec and Rails users and extenders.</p>
+
+<p>Thanks to <a href="http://www.loudthinking.com">David Heinemeier Hansson</a> and the rest of the <a href="http://rubyonrails.org/core">Rails core team</a> for embracing agnosticism without compromising convention over configuration.</p>
+
+<p>I&rsquo;ll follow up with details as things shape up, but here is a quick synopsis:</p>
+
+<h3>Rails users</h3>
+
+<p>Whether or not you use Rspec, you&rsquo;ll see improvements in some of the built-in assertions, and other testing facilities that ship with Rails.</p>
+
+<h3>Rspec-rails users</h3>
+
+<p>If you do use Rspec, you&rsquo;ll see a new rspec-rails plugin/gem that hooks into new features of rails-3 like the new rails generators. You&rsquo;ll also see support for Merb-style request specs that wrap Rails&#8217; integration tests.</p>
+
+<h3>Test framework authors</h3>
+
+<p>Rails&#8217; testing APIs will be decoupled from the Test::Unit and Minitest runners. For authors of new testing frameworks, this means that you&rsquo;ll be able to include a module in your framework&rsquo;s objects instead of having to subclass <code>TestCase</code>. This will make it much easier to experiment with new ideas in the context of Rails, which clearly exposes those ideas to a wider audience than otherwise.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/7/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/5/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec&#8217;s new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

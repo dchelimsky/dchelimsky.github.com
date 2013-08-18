@@ -1,0 +1,329 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>RSpec-2.0.0.rc is released! - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="See http://blog.davidchelimsky.net/2010/07/01/rspec-2-documentation for links to all sorts of documentation on rspec-2. Plan is to release rspec-2.0. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/2010/10/05/rspec-200rc-is-released">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">RSpec-2.0.0.rc is released!</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-05T06:46:46+02:00" pubdate data-updated="true">Oct 5<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>See <a href="http://blog.davidchelimsky.net/2010/07/01/rspec-2-documentation">http://blog.davidchelimsky.net/2010/07/01/rspec-2-documentation</a> for links to all sorts of documentation on rspec-2.</p>
+
+<p>Plan is to release rspec-2.0.0 (final) within the next week, so please install, upgrade, etc, and report issues to:</p>
+
+<p><a href="http://github.com/rspec/rspec-core/issues">http://github.com/rspec/rspec-core/issues</a></p>
+
+<p><a href="http://github.com/rspec/rspec-expectations/issues">http://github.com/rspec/rspec-expectations/issues</a></p>
+
+<p><a href="http://github.com/rspec/rspec-mocks/issues">http://github.com/rspec/rspec-mocks/issues</a></p>
+
+<p><a href="http://github.com/rspec/rspec-rails/issues">http://github.com/rspec/rspec-rails/issues</a></p>
+
+<p>Many thinks to all of the contributors who got us here!</p>
+
+<h2>rspec-core-2.0.0.rc / 2010-10-05</h2>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.0.0.beta.22...v2.0.0.rc">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>implicitly require unknown formatters so you don&rsquo;t have to require the file explicitly on the commmand line (Michael Grosser)</li>
+<li>add &mdash;out/-o option to assign output target</li>
+<li>added fail_fast configuration option to abort on first failure</li>
+<li>support a Hash subject (its([:key]) { should == value }) (Josep M. Bach)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Explicitly require rspec version to fix broken rdoc task (Hans de Graaff)</li>
+<li>Ignore backtrace lines that come from other languages, like Java or Javascript (Charles Lowell)</li>
+<li>Rake task now does what is expected when setting (or not setting) fail_on_error and verbose</li>
+<li>Fix bug in which before/after(:all) hooks were running on excluded nested groups (Myron Marston)</li>
+<li>Fix before(:all) error handling so that it fails examples in nested groups, too (Myron Marston)</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>rspec-expectations-2.0.0.rc / 2010-10-05</h2>
+
+<p><a href="http://github.com/rspec/rspec-expectations/compare/v2.0.0.beta.22...v2.0.0.rc">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>require &lsquo;rspec/expectations&rsquo; in a T::U or MiniUnit suite (Josep M. Bach)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>change by 0 passes/fails correctly (Len Smith)</li>
+<li>Add description to satisfy matcher</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>rspec-mocks-2.0.0.rc / 2010-10-05</h2>
+
+<p><a href="http://github.com/rspec/rspec-mocks/compare/v2.0.0.beta.22...v2.0.0.rc">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>support passing a block to an expecttation block (Nicolas Braem)
+
+<ul>
+<li>obj.should_receive(:msg) {|&block;| &hellip; }</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Fix YAML serialization of stub (Myron Marston)</li>
+<li>Fix rdoc rake task (Hans de Graaff)</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>rspec-rails-2.0.0.rc / 2010-10-05</h2>
+
+<p><a href="http://github.com/rspec/rspec-rails/compare/v2.0.0.beta.22...v2.0.0.rc">full changelog</a></p>
+
+<ul>
+<li>Enhancements
+
+<ul>
+<li>add &mdash;webrat-matchers flag to scaffold generator (for view specs)</li>
+<li>separate ActiveModel and ActiveRecord APIs in mock_model and stub_model</li>
+<li>ControllerExampleGroup uses controller as the implicit subject by default (Paul Rosania)</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-05T06:46:46+02:00" pubdate data-updated="true">Oct 5<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/bdd/'>BDD</a>, <a class='category' href='/blog/categories/rspec/'>RSpec</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.davidchelimsky.net/blog/2010/10/05/rspec-200rc-is-released/" data-via="dchelimsky" data-counturl="http://blog.davidchelimsky.net/blog/2010/10/05/rspec-200rc-is-released/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2010/09/13/rspec-200beta22-is-released/" title="Previous Post: RSpec-2.0.0.beta.22 is released!">&laquo; RSpec-2.0.0.beta.22 is released!</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/10/10/rspec-131-rspec-rails-133-are-released/" title="Next Post: rspec-1.3.1 / rspec-rails-1.3.3 are released">rspec-1.3.1 / rspec-rails-1.3.3 are released &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

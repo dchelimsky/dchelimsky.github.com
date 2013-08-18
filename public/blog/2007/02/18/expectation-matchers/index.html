@@ -1,0 +1,309 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>expectation matchers - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="Expectation Matchers RSpec 0.8 introduces a new approach to setting and verifying expectations called Expectation Matchers. The idea of a Matcher is &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/2007/02/18/expectation-matchers">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">expectation matchers</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-02-18T16:14:41+01:00" pubdate data-updated="true">Feb 18<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>Expectation Matchers</h3>
+
+<p>RSpec 0.8 introduces a new approach to setting and verifying expectations called Expectation Matchers.</p>
+
+<!-- more -->
+
+
+<p>The idea of a Matcher is not new. It&rsquo;s just new to RSpec. Some other examples of matchers are argument matchers in dynamic mocking tools like <a href="http://jmock.org">jmock</a>. In fact, RSpec&rsquo;s own <a href="http://rspec.rubyforge.org/documentation/mocks/index.html">stubbing/mocking framework</a> employs them as well.</p>
+
+<p>Another example is <a href="http://code.google.com/p/hamcrest/">Hamcrest</a>, which is a java project that provides assertion matchers for use with junit. You can see a couple of examples in their <a href="http://code.google.com/p/hamcrest/wiki/Tutorial">tutorial</a>.</p>
+
+<h3>How They Work</h3>
+
+<p>RSpec&rsquo;s Expectation Matchers are designed to work in concert with #should and #should_not on Object. These methods do get added to every object, however this is a much lower level of pollution than that which uses method_missing on every object!</p>
+
+<h3>should and #should_not each accept either an Expectation Matcher or an expression using a specific subset of Ruby operators. See below for more on expressions using operators.</h3>
+
+<p>To be an Expectation Matcher, an object must respond_to #matches?(obj), #failure_message and #negative_failure_message.</p>
+
+<p>When you pass an Expectation Matcher to #should, #should sends #matches?(self) to the Matcher. If #matches? returns true, the expectation passes. If false, #should then raises an ExpectationNotMetError with the result of #failure_message on the matcher.</p>
+
+<h3>should_not works similarly, but raises the ExpectationNotMetError when #matches? returns true. It also uses the result of matcher.negative_failure_expectation.</h3>
+
+<p>Here&rsquo;s a concrete example:</p>
+
+<pre><code>&lt;code&gt;class Equal
+def initialize(expected)
+  @expected = expected
+end
+
+def matches?(actual)
+  @actual = actual
+  @actual.equal?(@expected)
+end
+
+def failure_message
+  return "expected #{@expected.inspect}, got #{@actual.inspect} (using .equal?)", @expected, @actual
+end
+
+def negative_failure_message
+  return "expected #{@actual.inspect} not to equal #{@expected.inspect} (using .equal?)", @expected, @actual
+end
+end
+
+#included in specify blocks
+module Matchers
+def equal(expected)
+  Equal.new(expected)
+end
+end
+
+#in a spec
+context "Ruby" do
+specify "should support simple addition" do
+  (2+2).should equal(4)
+end
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>As you can see, there&rsquo;s really not much to each Matcher, and the framework is so simple it hardly deserves to be called a framework.</p>
+
+<p>Once we got the initial framework (what else can I call it?) in place, adding each new matcher was quite simple. Of course we toyed w/ hierarchies with default behaviour and message-building objects, etc. In the end, we found that we lost the benefits of keeping the messages DRY because getting them worded correctly in every situation was starting to require some really convoluted centralized code that was tightly bound (conceptually) to the clients it served.</p>
+
+<p>We also wanted to make it easy for users to create custom expectation matchers. Frameworks tend to follow the 80/20 rule &ndash; the common 80% of the problem set is made easy, but you&rsquo;re on your own for the less common 20%. Since custom matchers will fall naturally into the less common 20%, it makes 0% sense to provide a framework for these.</p>
+
+<h3>Operator expressions</h3>
+
+<p>Here are some examples of expressions using operators:</p>
+
+<pre><code>&lt;code&gt;result.should == 3
+result.should be &gt; 7
+result.should =~ /some regexp/
+&lt;/code&gt;
+</code></pre>
+
+<p>My favorite of these is the &ldquo;should be&rdquo; collection. It turns out that Ruby converts that to this:</p>
+
+<pre><code>&lt;code&gt;result.should be.&gt;(7)
+&lt;/code&gt;
+</code></pre>
+
+<p>So it&rsquo;s the result of #be that gets #> called on it. Because this is part of the language, Ruby doesn&rsquo;t complain about the lack of parens. Sweet!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-02-18T16:14:41+01:00" pubdate data-updated="true">Feb 18<span>th</span>, 2007</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rspec/'>RSpec</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.davidchelimsky.net/blog/2007/02/18/expectation-matchers/" data-via="dchelimsky" data-counturl="http://blog.davidchelimsky.net/blog/2007/02/18/expectation-matchers/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2007/02/16/rspec-exts/" title="Previous Post: rspec-exts">&laquo; rspec-exts</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2007/02/18/custom-expectation-matchers/" title="Next Post: custom expectation matchers">custom expectation matchers &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,379 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Specifying mixins with shared example groups in RSpec-2 - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="One question that comes up on the rspec-users mailing list / google group is: &ldquo;How do I specify modules that get mixed into other modules and &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/2010/11/07/specifying-mixins-with-shared-example-groups-in-rspec-2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Specifying mixins with shared example groups in RSpec-2</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-11-07T18:41:24+01:00" pubdate data-updated="true">Nov 7<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>One question that comes up on the <a href="http://rubyforge.org/mailman/listinfo/rspec-users">rspec-users mailing list</a> / <a href="http://groups.google.com/group/rspec">google group</a> is: &ldquo;How do I specify modules that get mixed into other modules and classes?&rdquo;</p>
+
+<p>This is a great question and, naturally, leads to a wide variety of answers depending on context. I&rsquo;m going to approach this generally, and explain my viewpoint about it, but keep in mind that <em>context is everything</em>, and YMMV. That said:</p>
+
+<h2>In theory</h2>
+
+<p>With a tool like <a href="http://relishapp.com/rspec">RSpec</a>, the goal is to specify responsibilities of objects from the perspective of their consumers. Consider this structure:</p>
+
+<pre><code>module M
+end
+
+class C
+ include M
+end
+</code></pre>
+
+<p>If module M is included in class C, consumers of class C have no reason to know that module M is involved. They just care about the behaviour. Same is true of classes A, B, and D, if they each include module M. Keeping in mind that each host class/module/object (those that include or extend M) can override any of the behaviour of M, <em><strong>each host should be specified independently</strong></em>.</p>
+
+<p>Additionally, if module M enforces some rule, like host objects (i.e. classes and modules that include or extend M) must implement method F, then that responsibility belongs to M, and should be specified in the context of M, not any of its host classes/objects. These rules can be further broken down into rules enforced at mix-in time and rules enforced at runtime.</p>
+
+<p>So we&rsquo;re interested in specifying two fundamentally different things</p>
+
+<ul>
+<li>the behaviour of each class/object that mixes in M in response to events triggered by their consumers</li>
+<li>the behaviour of M in response to being mixed-in</li>
+</ul>
+
+
+<h2>In practice</h2>
+
+<h3>Specifying the behaviour of a module in response to being mixed in</h3>
+
+<p>Imagine we are developing a module that exposes a bunch of methods related to a person&rsquo;s age: <code>can_vote?</code>, <code>can_drink?</code>, etc. For this to work, the host object needs to supply the birthdate of the person in question. These sorts of requirements are often documented for us by library providers, but less often required programatically. It would be nice to provide a clear message to the developer when</p>
+
+<p>For this, I&rsquo;ll typically mix M into anonymous classes and objects and specify what happens:</p>
+
+<pre><code>describe AgeBasedApprovable do
+  it "requires host object to provide a 'birthdate' method" do
+    host = Object.new
+    expect do
+      host.extend(AgeBasedApprovable)
+    end.to raise_error(/Objects that extend AgeBasedApprovable must provide a 'birthdate' method/)
+  end
+end
+</code></pre>
+
+<h3>Specifying the behaviour of host classes/objects</h3>
+
+<p>For this, I&rsquo;ve used a combination of shared example groups and custom macros in the past, but the macros are not necessary any longer. Thanks to some lively discussion [1-5], and code from <a href="https://wincent.com/">Wincent Colaiuta</a>, <a href="http://twitter.com/ashleymoran">Ashley Moran</a> and <a href="http://twitter.com/myronmarston">Myron Marston</a>, shared example groups just got <em>awesome</em> in <a href="http://relishapp.com/rspec">rspec-2.0</a>! They can now be parameterized and/or customized in three different ways. The biggest change came from having <code>it_should_behave_like</code> (and its new alias, <code>it_behaves_like</code>), generate a nested example group instead of mixing a module directly into the host group. This means that this:</p>
+
+<pre><code>shared_examples_for M do
+  it "does something" do
+    # ....
+  end
+end
+
+describe C do
+  it_behaves_like M
+end
+</code></pre>
+
+<p>&hellip; is equivalent to this:</p>
+
+<pre><code>describe C do
+  context "behaves like M" do 
+    it "does something" do
+      # ....
+    end
+  end
+end
+</code></pre>
+
+<p>In rspec-1, shared groups are modules that get mixed into the host group, which means material defined in the shared group can impact the host group in surprising ways. With this new structure in rspec-2, the nested group is a completely separate group, and the combination of sharing behaviour (through inheritance) and isolating behaviour (through encapsulation) provides power we never had before in RSpec.</p>
+
+<h2>Customizing shared example groups</h2>
+
+<p>Here are three techniques for customizing shared groups:</p>
+
+<h3>Parameterization</h3>
+
+<pre><code>describe Host do
+  it_should_behave_like M, Host.new
+end
+</code></pre>
+
+<p>Here, the result of Host.new is passed to the shared group as a block parameter, making that value available at the group level (each example group is a class), and the instance level (each example runs in an <em>instance</em> of that class). So &hellip;</p>
+
+<pre><code>shared_examples_for M do |host|
+  it "can access #{host} in the docstring" do
+    host.do_something # it can access the host _in_ the example
+  end
+end
+</code></pre>
+
+<h3>Methods defined in host group</h3>
+
+<pre><code>describe Host do
+  let(:foo) { Host.new }
+  it_should_behave_like M
+end
+</code></pre>
+
+<p>In this case, the <code>foo()</code> method defined by <code>let()</code> is inherited by the generated nested group, and available within any of the examples defined in the shared group.</p>
+
+<pre><code>shared_examples_for M do
+  it "does something" do
+    foo
+  end
+end
+</code></pre>
+
+<p>NOTE that instance methods that are inherited like this are not available in the class scope of the generated example group, and are therefore not available for use in docstings:</p>
+
+<pre><code>shared_examples_for M do
+  it "does some #{foo}" do # this would raise an error
+    # ...
+  end
+end
+</code></pre>
+
+<h3>Methods defined in an extension block</h3>
+
+<pre><code>describe Host do
+  it_should_behave_like M do
+    let(:foo) { Host.new }
+  end
+end
+</code></pre>
+
+<p>The block passed to <code>it_should_behave_like()</code> is eval&rsquo;d after the shared group is eval&rsquo;d, allowing you to define default implementations of methods in the shared group. This means we can define groups that programmatically enforce rules for the host groups. For example:</p>
+
+<pre><code>shared_examples_for M do
+  def foo
+    raise "Groups that include shared examples for M must provide a foo method"
+  end
+
+  it "does something needing foo" do
+    foo
+  end
+end 
+</code></pre>
+
+<p>Now library authors can now ship shared groups that will programmatically instruct end users how to use them!</p>
+
+<p>[1] <a href="http://github.com/rspec/rspec-core/issues/issue/71">http://github.com/rspec/rspec-core/issues/issue/71</a></p>
+
+<p>[2] <a href="http://github.com/rspec/rspec-core/issues/issue/74">http://github.com/rspec/rspec-core/issues/issue/74</a></p>
+
+<p>[3] <a href="http://groups.google.com/group/rspec/browse_thread/thread/f5620df1c42874bf#">http://groups.google.com/group/rspec/browse_thread/thread/f5620df1c42874bf#</a></p>
+
+<p>[4] <a href="http://groups.google.com/group/rspec/browse_thread/thread/16d553ee2e51ccbd#">http://groups.google.com/group/rspec/browse_thread/thread/16d553ee2e51ccbd#</a></p>
+
+<p>[5] <a href="http://groups.google.com/group/rspec/browse_thread/thread/a23d5fb84a31f11e#">http://groups.google.com/group/rspec/browse_thread/thread/a23d5fb84a31f11e#</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-11-07T18:41:24+01:00" pubdate data-updated="true">Nov 7<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/bdd/'>BDD</a>, <a class='category' href='/blog/categories/rspec/'>RSpec</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.davidchelimsky.net/blog/2010/11/07/specifying-mixins-with-shared-example-groups-in-rspec-2/" data-via="dchelimsky" data-counturl="http://blog.davidchelimsky.net/blog/2010/11/07/specifying-mixins-with-shared-example-groups-in-rspec-2/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2010/11/07/rspec-21-is-released/" title="Previous Post: rspec-2.1 is released">&laquo; rspec-2.1 is released</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/11/13/rubyconf-slides-2/" title="Next Post: RubyConf 2010 Presentations">RubyConf 2010 Presentations &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

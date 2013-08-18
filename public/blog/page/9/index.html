@@ -1,0 +1,1206 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="In his blog entitled A case against Mocking and Stubbing, Brian Cardarella says since I&rsquo;ve been TATFT with TDD and some BDD I&rsquo;ve come to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/page/9">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/12/11/a-case-against-a-case-against-mocking-and-stubbing/">A case against a case against mocking and stubbing</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-12-11T12:08:00+01:00" pubdate data-updated="true">Dec 11<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In his blog entitled <a href="http://cardarella.blogspot.com/2008/12/case-against-mocking-and-stubbing.html">A case against Mocking and Stubbing</a>, Brian Cardarella says</p>
+
+<blockquote><p><em>since I&rsquo;ve been TATFT with TDD and some BDD I&rsquo;ve come to believe that mocking/stubbing is a horrible idea and it can hurt the development process</em></p></blockquote>
+
+<p>Please take a minute to let that soak in. &ldquo;a horrible idea&rdquo; and &ldquo;can hurt the development process&rdquo;. In fact, please go read the post before you read on. I&rsquo;d rather you read his words before you read my interpretation of them.</p>
+
+<p>Back? Cool. Scary stuff, huh?</p>
+
+<p>But never fear, because it&rsquo;s not about you (unless you are Brian). What he is really saying is this:</p>
+
+<blockquote><p><em>since I&rsquo;ve been TATFT with my own personal approach to testing Rails applications, which is a little bit different from what the TDD/BDD guys are doing and is largely based on Rails conventions which encourage you to couple layers together in your tests, I&rsquo;ve come to believe that mocking and stubbing, two concepts that assist and encourage testing in isolation, which is the opposite of the kind of testing I like to do, is a horrible idea for me and can hurt my own personal development process</em></p></blockquote>
+
+<p>Before I defend my re-phrasing of Brian&rsquo;s statement, let me say that he does have a couple of really good ideas in the post (specifically about the dilemma of databases), and I don&rsquo;t intend to convince you that mocking and stubbing are inherently good ideas that will save the world, or that Brian&rsquo;s process would be improved by adding mocks and stubs to it.</p>
+
+<p>But Brian makes a broad generalization, attacking ideas that many view as inherently useful <em>in the appropriate context</em>, and I feel that the scope of his statement requires a bit of narrowing.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2008/12/11/a-case-against-a-case-against-mocking-and-stubbing/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/10/13/cucumbers-creating-cucumbers/">cucumbers creating cucumbers</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-10-13T11:30:00+02:00" pubdate data-updated="true">Oct 13<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;m preparing to present a practical demonstration of rspec, cucumber and friends at <a href="http://www.locaweb.com.br/railssummit/default.asp?prog=dia16&amp;language=6">Rails Summit Latin America</a> this Thursday.</p>
+
+<p>I was playing with the idea of using cucumber/rspec to drive the development of a cucumber browser/editor, but I&rsquo;ve decided that it ends up being a bit too meta for a conference presentation.</p>
+
+<p>Of course, nothing is too meta for a blog post, and clearly I&rsquo;ve already procrastinated a great deal if it&rsquo;s just a few days before and I&rsquo;m still prototyping the app, so why not take some more time away from what I should be doing and post this sillyness?</p>
+
+<p>And with <strong>that</strong> &hellip; enjoy!</p>
+
+<pre><code>Feature: create feature
+
+So that I can easily create new feature
+As a stakeholder
+I want to create a feature in a browser
+
+Scenario: create feature
+  When I create a new feature named "Eat Cheese"
+  And I give "Eat Cheese" the narrative:
+    So that I can be happy
+    As a cheese-loving person
+    I want to eat cheese
+  And I add a scenario to "Eat Cheese" named "roquefort"
+  And I add a step to "roquefort" with "Given I am holding my nose"
+  And I add a step to "roquefort" with "When I eat a hunk o' roquefort"
+  And I add a step to "roquefort" with "Then I should smile at its deliciousness"
+
+  And I save and run the "roquefort" scenario
+
+  Then I should see "3 steps pending"
+  And I should see:
+    You can use these snippets to implement pending steps:
+
+    Given /^I am holding my nose$/ do
+    end
+
+    When /^I eat a hunk o' roquefort$/ do
+    end
+
+    Then /^I should smile at its deliciousness$/ do
+    end
+</code></pre>
+
+<p>DISCLAIMER: This also assumes some support for multi-line steps that has not yet been implemented and may not be supported as depicted here. So please don&rsquo;t try this at home.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/09/23/windy-city-rails-conf/">Windy City Rails Conf</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-09-23T09:05:00+02:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This past weekend, I presented on BDD and RSpec at the first annual <a href="http://windycityrails.org/">Windy City Rails Conf</a>. As is typical, I ran out of time and didn&rsquo;t get to get down to details. My next talks are starting w/ code examples!</p>
+
+<p>Until then, here are the <a href="/assets/2008/9/23/BehaviourDrivenRails.WindyCityRails.2008.pdf">slides from the presentation</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/09/22/cucumber/">Cucumber</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-09-22T20:39:00+02:00" pubdate data-updated="true">Sep 22<span>nd</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Aslak Hellesøy&rsquo;s <a href="http://github.com/aslakhellesoy/cucumber">Cucumber</a> library will be replacing RSpec&rsquo;s Story Runner <strong>after</strong> the RSpec 1.1.5 release (coming soon).</p>
+
+<p>Cucumber is a bottom up re-write of the Story Runner, and features a grammar parser using <a href="http://treetop.rubyforge.org/">Treetop</a>. When I first started working on support for plain text stories, I chose to roll my own parsing rather than writing a grammar for a number of reasons, but it turns out that we get some great benefits from it.</p>
+
+<h3>Cucumber supports multiple spoken languages:</h3>
+
+<p>So now you can say:</p>
+
+<pre><code>Funcionalidade: Adição
+Para evitar erros bobos
+Como um péssimo matemático
+Eu quero saber como somar dois números
+
+Cenário: Adicionar dois números
+  Dado que eu digitei 50 na calculadora
+  E que eu digitei 70 na calculadora
+  Quando eu aperto o botão de soma
+  Então o resultado na calculadora deve ser 120
+</code></pre>
+
+<p>Que legal! (How cool is <strong>that</strong>?)</p>
+
+<p>There are already several languages supported, and adding new ones is fairly trivial, so we&rsquo;ll likely support adding your own languages after some time.</p>
+
+<h3>Improved backtraces</h3>
+
+<p>Cucumber includes line numbers from the plain text Feature files, making it much, much easier to understand failures. (NOTE: we&rsquo;re calling them Features now instead of Stories &ndash; look for another post on that subject soon)</p>
+
+<h3>Simpler configuration</h3>
+
+<p>Cucumber eliminates steps_for and using_steps_for. Simply define steps using the Given, When and Then methods:</p>
+
+<pre><code>#features/steps/accounts.rb
+Given /I have \$(\d+) in my (.*) account/ do |dollars, account_type|
+...
+end
+</code></pre>
+
+<p>Now require the files with the step definitions you need:</p>
+
+<pre><code>cucumber -r features/steps/accounts.rb features/transfer_money
+</code></pre>
+
+<p>&hellip; and you&rsquo;re off. For most cases you don&rsquo;t even need that granularity, you can just say …</p>
+
+<pre><code>&lt;code&gt;cucumber features&lt;/code&gt;
+</code></pre>
+
+<p>&hellip; and cucumber will require any .rb files it finds in the features directory before running the feature files.</p>
+
+<h3>Fewer surprises</h3>
+
+<p>When RSpec&rsquo;s Story Runner finds more than one step definition that can handle a step, the first one it finds wins. This can lead to some painful debugging sessions.</p>
+
+<p>When Cucumber finds more than one step definition that can handle a step, you get an error telling you which step definitions are competing, including their location (file and line number), so you can easily see and resolve the conflict.</p>
+
+<h3>What this means for you if you&rsquo;re already using Story Runner</h3>
+
+<p>Cucumber is only a few months old and is nearly feature compatible with RSpec&rsquo;s Story Runner and already adds a lot of powerful new features. Aslak has converted many, many stories to cucumber features, and is <a href="http://github.com/aslakhellesoy/cucumber/wikis/migration-from-rspec-stories">posting about his experiences</a> and refining the process as he goes. By the time we release cucumber as the official scenario runner, the migration path will be well documented and inexpensive.</p>
+
+<p>As for a time frame, that&rsquo;s difficult to say. We&rsquo;ve been promising the 1.1.5 release for some time and for one reason or another it keeps getting pushed back. We&rsquo;ll likely wait for the rails 2.2 release and make sure that it is compatible. Rumor has it that is coming soon, but it was coming soon several weeks ago as well, so we&rsquo;ll have to wait and see.</p>
+
+<p>In the mean time, we are freezing development on Story Runner so that we can focus on Cucumber development. Before we officially release cucumber as part of rspec, we&rsquo;ll create a separate project up on github for just the story runner (likely named rspec-stories) so the code will be available for teams that want to continue to use and/or maintain it.</p>
+
+<p>I&rsquo;ll follow up here and on the <a href="http://rubyforge.org/mailman/listinfo/rspec-users">rspec-users mailing list</a> (which is mirrored by the <a href="http://groups.google.com/group/rspec">rspec google group</a>) as things progress.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/07/01/how-i-got-started-programming/">How I got started programming</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-01T15:15:00+02:00" pubdate data-updated="true">Jul 1<span>st</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Tagged by <a href="http://www.brynary.com/2008/6/30/how-i-got-started-programming">Bryan Helmkamp</a>.</p>
+
+<h3>How old were you when you started programming?</h3>
+
+<p>Mid 20&rsquo;s for a minute. Then mid 30&rsquo;s for real.</p>
+
+<h3>How did you get started programming?</h3>
+
+<p>There were two starts. First, a tiny bit of background.</p>
+
+<p>My father was a programmer for a minute (great stories about tripping on the way to deliver his final project in school, punch cards flying through the air in every-which direction), and my step father worked for Chemical Bank&rsquo;s Data Processing department during my childhood. So I had some exposure to the results of programming as a kid, but had never really looked at any code. I was too busy shuffling cards and making <a href="http://magicref.tripod.com/booksjr/kaufmancoin.htm">coins disappear</a> (my middle name, dare I admit it, is Arthur).</p>
+
+<p>At 23, I was getting started as a musician (my 2nd career) and sought a non-music gig to get me through. A friend hooked me up as the copy-room attendent at an engineering firm. Apparently, this job had been occupied by people even less responsible that I was (a tough thing to be next to me at that age) because everyone was shocked when a couple of weeks in I was done each day by early afternoon and offering to help in other areas the rest of the day.</p>
+
+<p>That&rsquo;s when the guy who ran IT gave me the keys to the castle: a user account on their DIGITAL network and access to the giant BASIC manuals. I read through them in my spare time and wrote my first program: a musical scale generator. It went something like this:</p>
+
+<pre><code>$ What root?
+D
+$ What quality?
+minor
+$ D E F G A Bb C D
+$ What root?
+</code></pre>
+
+<p>Dig the simple UI! I got it to handle major, natural, harmonic and melodic minor scales and all the modes of each. I was quite proud.</p>
+
+<p>Eventually I made the ill-fated, romantic decision to earn all of my pennies from musical endeavors, so I quit at the engineering firm, turning in my keys to the castle, and started teaching guitar to fill that hole in my pocket.</p>
+
+<p>Skip ahead 10 or 15 years. By then (1998) had a degree in music and was earning a living playing, teaching and arranging music. You&rsquo;ve heard this story before. All the money came from gigs that involved tuxedos or commercials, and I got through those gigs to sponsor my habit of playing jazz and rock in clubs for beer money.</p>
+
+<p>During this time, I had acquired an Apple Performa (remember?), had figured out how to make simple html websites and was helping some musician friends with theirs. I really, really enjoyed this, and my girlfriend noticed that I smiled when I made a website or played <a href="http://www.last.fm/music/Chick+Corea/_/Windows">Windows</a> (unfortunately titled, but beautiful tune by Chick Corea) but I frowned when I played Celebration. She suggested that I should consider taking a programming course and trying to get a part time job somewhere, thus sponsoring the smiley parts of my music habit with something that also made me smile.</p>
+
+<p>This was the late 90&rsquo;s, smack in the middle of the bubble, and it seemed like a perfectly reasonable idea. Little did I know that 10 years later I&rsquo;d have hung my guitars in the closet to work on OSS. They&rsquo;re still hanging there. This makes me sad. But I haven&rsquo;t sold them yet, so there is still hope.</p>
+
+<p>Anyhow, I took a couple of classes at a local community college, got a job working in the school&rsquo;s IT department, and here we are 10 years later.</p>
+
+<h3>What was your first language?</h3>
+
+<p>BASIC</p>
+
+<h3>What was the first real program you wrote?</h3>
+
+<p>Depends on your definition of real. I wrote an applet when I was in school that let you try to solve a <a href="http://www.brainbashers.com/showpuzzles.asp?puzzle=ZLKY">brain teaser</a>. The first thing I got paid money to write that actually got used by people to make other money was an online training course for hospital administrators to learn how to fill out government forms properly.</p>
+
+<h3>What languages have you used since you started programming?</h3>
+
+<p>In no particular order: Ruby, Javascript, Python, Java, C#, PHP, Cold Fusion (OK, that is in a particular order).</p>
+
+<h3>What was your first professional programming gig?</h3>
+
+<p>The aforementioned hospital admin training course.</p>
+
+<h3>If there is one thing you learned along the way that you would tell new developers, what would it be?</h3>
+
+<p>Best practices are the serpent. They have the potential to be useful, but they are only useful in a very limited set of contexts, and they are applied just as often (if not more often) in the wrong ones as the right ones. Take the blinders off.</p>
+
+<h3>What&rsquo;s the most fun you&rsquo;ve ever had programming?</h3>
+
+<p>Working on an accounting-support system for a non-profit. This was about a year long project. We were doing (mostly) XP, pairing, and working closely with the people who actually used the software. The team included <a href="http://www.8thlight.com/main/bios/micah">Micah Martin</a>, <a href="http://www.8thlight.com/main/bios/paul">Paul Pagel</a> and <a href="http://mutuallyhuman.com/">Craig Demyanovich</a>, all three of whom contributed to pairing sessions filled with a great balance of joy and head-butting. I learned a ton and had a great time doing it.</p>
+
+<p>Aside from the fun we had programming, there were a lot of fun non-programming moments as well. I think my favorite on that gig was one morning when we were all arriving at the office. We had started greeting each other in different languages, Micah in French, me in Portuguese, and Christine (a woman who was not on the team, but worked close by) in Italian. Craig had joined us for the first time since we had been doing this, and he caught on rather quickly:</p>
+
+<p>Me: bom dia, gente!</p>
+
+<p>Micah: bon jour!</p>
+
+<p>Christine: buongiorno!</p>
+
+<p>Craig: puts &ldquo;hello&rdquo;</p>
+
+<p>Another great moment on that project was sitting down with a user and watching her do her data entry job. She was really, really, really fast. But there was this one part in the process where she would pause for each entry. She wasn&rsquo;t even aware of it, but recognized the problem when I brought it to her attention. So we made a small change to the UI and got rid of this small, but meaningful impediment and her life got just a little better. Very satisfying.</p>
+
+<h3>Up Next</h3>
+
+<p>Here are some folks who don&rsquo;t seem to have been tagged yet. Let&rsquo;s see if they&rsquo;ll play …</p>
+
+<ul>
+<li><p><a href="http://blog.daveastels.com/">Dave Astels</a></p></li>
+<li><p><a href="http://workingwithrails.com/person/4767-steven-baker">Steven Baker</a></p></li>
+<li><p><a href="http://mutuallyhuman.com/">Craig Demyanovich</a></p></li>
+<li><p><a href="http://objectmentor.com/omTeam/feathers_m.html">Michael Feathers</a></p></li>
+<li><p><a href="http://www.chadfowler.com/">Chad Fowler</a></p></li>
+<li><p><a href="http://blog.aslakhellesoy.com/">Aslak Hellesoy</a></p></li>
+<li><p><a href="http://www.8thlight.com/main/bios/micah">Micah Martin</a></p></li>
+<li><p><a href="http://objectmentor.com/omTeam/martin_r.html">Robert Martin</a></p></li>
+<li><p><a href="http://www.vernix.org/marcel/">Marcel Molina</a></p></li>
+<li><p><a href="http://www.8thlight.com/main/bios/paul">Paul Pagel</a></p></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/07/01/new-controller-examples/">new controller examples</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-01T07:02:07+02:00" pubdate data-updated="true">Jul 1<span>st</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There&rsquo;s been a lot of discussion about <em>clarity over DRY</em> lately. This is something that I&rsquo;ve been espousing for some time, but recent posts by <a href="http://blog.jayfields.com/2008/05/testing-duplicate-code-in-your-tests.html">Jay Fields</a>, <a href="http://lindsaar.net/2008/6/24/tip-24-being-clever-in-specs-is-for-dummies">Mikel Lindsaar</a> and <a href="http://dannorth.net/2008/06/let-your-examples-flow">Dan North</a> have gotten me thinking about it again with more focus.</p>
+
+<p>With this in mind, I&rsquo;ve been refining the examples generated for restful controllers when you run <code>script/generate rspec_scaffold</code> with the <a href="http://github.com/dchelimsky/rspec-rails">rspec-rails</a> plugin. I&rsquo;ve got them now where I&rsquo;m pretty happy with them, but I&rsquo;m curious to hear what you think. I&rsquo;m not going to tell you what I changed or what to look for, I&rsquo;m just going to ask you to look it over and post your comments.</p>
+
+<p>There are two listings: the generated code and the output you get from running the examples. Thanks in advance for any feedback.</p>
+
+<h3>script/generate rspec_scaffold account</h3>
+
+<pre><code>require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+
+describe AccountsController do
+
+def mock_account(stubs={})
+  stubs = {
+    :save =&gt; true,
+    :update_attributes =&gt; true,
+    :destroy =&gt; true,
+    :to_xml =&gt; ''
+  }.merge(stubs)
+  @mock_account ||= mock_model(Account, stubs)
+end
+
+describe "responding to GET /accounts" do
+
+  it "should succeed" do
+    Account.stub!(:find)
+    get :index
+    response.should be_success
+  end
+
+  it "should render the 'index' template" do
+    Account.stub!(:find)
+    get :index
+    response.should render_template('index')
+  end
+
+  it "should find all accounts" do
+    Account.should_receive(:find).with(:all)
+    get :index
+  end
+
+  it "should assign the found accounts for the view" do
+    Account.should_receive(:find).and_return([mock_account])
+    get :index
+    assigns[:accounts].should == [mock_account]
+  end
+
+end
+
+describe "responding to GET /accounts.xml" do
+
+  before(:each) do
+    request.env["HTTP_ACCEPT"] = "application/xml"
+  end
+
+  it "should succeed" do
+    Account.stub!(:find).and_return([])
+    get :index
+    response.should be_success
+  end
+
+  it "should find all accounts" do
+    Account.should_receive(:find).with(:all).and_return([])
+    get :index
+  end
+
+  it "should render the found accounts as xml" do
+    Account.should_receive(:find).and_return(accounts = mock("Array of Accounts"))
+    accounts.should_receive(:to_xml).and_return("generated XML")
+    get :index
+    response.body.should == "generated XML"
+  end
+
+end
+
+describe "responding to GET /accounts/1" do
+
+  it "should succeed" do
+    Account.stub!(:find)
+    get :show, :id =&gt; "1"
+    response.should be_success
+  end
+
+  it "should render the 'show' template" do
+    Account.stub!(:find)
+    get :show, :id =&gt; "1"
+    response.should render_template('show')
+  end
+
+  it "should find the requested account" do
+    Account.should_receive(:find).with("37")
+    get :show, :id =&gt; "37"
+  end
+
+  it "should assign the found account for the view" do
+    Account.should_receive(:find).and_return(mock_account)
+    get :show, :id =&gt; "1"
+    assigns[:account].should equal(mock_account)
+  end
+
+end
+
+describe "responding to GET /accounts/1.xml" do
+
+  before(:each) do
+    request.env["HTTP_ACCEPT"] = "application/xml"
+  end
+
+  it "should succeed" do
+    Account.stub!(:find).and_return(mock_account)
+    get :show, :id =&gt; "1"
+    response.should be_success
+  end
+
+  it "should find the account requested" do
+    Account.should_receive(:find).with("37").and_return(mock_account)
+    get :show, :id =&gt; "37"
+  end
+
+  it "should render the found account as xml" do
+    Account.should_receive(:find).and_return(mock_account)
+    mock_account.should_receive(:to_xml).and_return("generated XML")
+    get :show, :id =&gt; "1"
+    response.body.should == "generated XML"
+  end
+
+end
+
+describe "responding to GET /accounts/new" do
+
+  it "should succeed" do
+    get :new
+    response.should be_success
+  end
+
+  it "should render the 'new' template" do
+    get :new
+    response.should render_template('new')
+  end
+
+  it "should create a new account" do
+    Account.should_receive(:new)
+    get :new
+  end
+
+  it "should assign the new account for the view" do
+    Account.should_receive(:new).and_return(mock_account)
+    get :new
+    assigns[:account].should equal(mock_account)
+  end
+
+end
+
+describe "responding to GET /accounts/1/edit" do
+
+  it "should succeed" do
+    Account.stub!(:find)
+    get :edit, :id =&gt; "1"
+    response.should be_success
+  end
+
+  it "should render the 'edit' template" do
+    Account.stub!(:find)
+    get :edit, :id =&gt; "1"
+    response.should render_template('edit')
+  end
+
+  it "should find the requested account" do
+    Account.should_receive(:find).with("37")
+    get :edit, :id =&gt; "37"
+  end
+
+  it "should assign the found Account for the view" do
+    Account.should_receive(:find).and_return(mock_account)
+    get :edit, :id =&gt; "1"
+    assigns[:account].should equal(mock_account)
+  end
+
+end
+
+describe "responding to POST /accounts" do
+
+  describe "with successful save" do
+
+    it "should create a new account" do
+      Account.should_receive(:new).with({'these' =&gt; 'params'}).and_return(mock_account)
+      post :create, :account =&gt; {:these =&gt; 'params'}
+    end
+
+    it "should assign the created account for the view" do
+      Account.stub!(:new).and_return(mock_account)
+      post :create, :account =&gt; {}
+      assigns(:account).should equal(mock_account)
+    end
+
+    it "should redirect to the created account" do
+      Account.stub!(:new).and_return(mock_account)
+      post :create, :account =&gt; {}
+      response.should redirect_to(account_url(mock_account))
+    end
+
+  end
+
+  describe "with failed save" do
+
+    it "should create a new account" do
+      Account.should_receive(:new).with({'these' =&gt; 'params'}).and_return(mock_account(:save =&gt; false))
+      post :create, :account =&gt; {:these =&gt; 'params'}
+    end
+
+    it "should assign the invalid account for the view" do
+      Account.stub!(:new).and_return(mock_account(:save =&gt; false))
+      post :create, :account =&gt; {}
+      assigns(:account).should equal(mock_account)
+    end
+
+    it "should re-render the 'new' template" do
+      Account.stub!(:new).and_return(mock_account(:save =&gt; false))
+      post :create, :account =&gt; {}
+      response.should render_template('new')
+    end
+
+  end
+
+end
+
+describe "responding to PUT /accounts/1" do
+
+  describe "with successful update" do
+
+    it "should find the requested account" do
+      Account.should_receive(:find).with("37").and_return(mock_account)
+      put :update, :id =&gt; "37"
+    end
+
+    it "should update the found account" do
+      Account.stub!(:find).and_return(mock_account)
+      mock_account.should_receive(:update_attributes).with({'these' =&gt; 'params'})
+      put :update, :id =&gt; "1", :account =&gt; {:these =&gt; 'params'}
+    end
+
+    it "should assign the found account for the view" do
+      Account.stub!(:find).and_return(mock_account)
+      put :update, :id =&gt; "1"
+      assigns(:account).should equal(mock_account)
+    end
+
+    it "should redirect to the account" do
+      Account.stub!(:find).and_return(mock_account)
+      put :update, :id =&gt; "1"
+      response.should redirect_to(account_url(mock_account))
+    end
+
+  end
+
+  describe "with failed update" do
+
+    it "should find the requested account" do
+      Account.should_receive(:find).with("37").and_return(mock_account(:update_attributes =&gt; false))
+      put :update, :id =&gt; "37"
+    end
+
+    it "should update the found account" do
+      Account.stub!(:find).and_return(mock_account)
+      mock_account.should_receive(:update_attributes).with({'these' =&gt; 'params'})
+      put :update, :id =&gt; "1", :account =&gt; {:these =&gt; 'params'}
+    end
+
+    it "should assign the found account for the view" do
+      Account.stub!(:find).and_return(mock_account(:update_attributes =&gt; false))
+      put :update, :id =&gt; "1"
+      assigns(:account).should equal(mock_account)
+    end
+
+    it "should re-render the 'edit' template" do
+      Account.stub!(:find).and_return(mock_account(:update_attributes =&gt; false))
+      put :update, :id =&gt; "1"
+      response.should render_template('edit')
+    end
+
+  end
+
+end
+
+describe "responding to DELETE /accounts/1" do
+
+  it "should find the account requested" do
+    Account.should_receive(:find).with("37").and_return(mock_account)
+    delete :destroy, :id =&gt; "37"
+  end
+
+  it "should call destroy on the found account" do
+    Account.stub!(:find).and_return(mock_account)
+    mock_account.should_receive(:destroy)
+    delete :destroy, :id =&gt; "1"
+  end
+
+  it "should redirect to the accounts list" do
+    Account.stub!(:find).and_return(mock_account)
+    delete :destroy, :id =&gt; "1"
+    response.should redirect_to(accounts_url)
+  end
+
+end
+
+end
+</code></pre>
+
+<h3>script/spec spec/controllers/accounts_controller_spec.rb -fn</h3>
+
+<pre><code>AccountsController
+responding to GET /accounts
+  should succeed
+  should render the 'index' template
+  should find all accounts
+  should assign the found accounts for the view
+responding to GET /accounts.xml
+  should succeed
+  should find all accounts
+  should render the found accounts as xml
+responding to GET /accounts/1
+  should succeed
+  should render the 'show' template
+  should find the requested account
+  should assign the found account for the view
+responding to GET /accounts/1.xml
+  should succeed
+  should find the account requested
+  should render the found account as xml
+responding to GET /accounts/new
+  should succeed
+  should render the 'new' template
+  should create a new account
+  should assign the new account for the view
+responding to GET /accounts/1/edit
+  should succeed
+  should render the 'edit' template
+  should find the requested account
+  should assign the found Account for the view
+responding to POST /accounts
+  with successful save
+    should create a new account
+    should assign the created account for the view
+    should redirect to the created account
+  with failed save
+    should create a new account
+    should assign the invalid account for the view
+    should re-render the 'new' template
+responding to PUT /accounts/1
+  with successful update
+    should find the requested account
+    should update the found account
+    should assign the found account for the view
+    should redirect to the account
+  with failed update
+    should find the requested account
+    should update the found account
+    should assign the found account for the view
+    should re-render the 'edit' template
+responding to DELETE /accounts/1
+  should find the account requested
+  should call destroy on the found account
+  should redirect to the accounts list
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/06/16/slides-from-railsconf/">Slides from RailsConf</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-06-16T17:10:00+02:00" pubdate data-updated="true">Jun 16<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Here are the <a href="http://blog.davidchelimsky.net/assets/2008/7/14/IntegrationTestingWithRSpec.pdf.zip">slides</a> from my session at RailsConf on <a href="http://en.oreilly.com/rails2008/public/schedule/detail/2055">Integration Testing With RSpec&rsquo;s Story Runner</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/06/07/thoughts-on-the-dance-off/">Thoughts on the Dance-Off</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-06-07T22:43:28+02:00" pubdate data-updated="true">Jun 7<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In his <a href="http://en.oreilly.com/rails2008/public/schedule/detail/1833">Great Test Framework Dance-Off</a> at <a href="http://en.oreilly.com/rails2008/public/content/home">RailsConf 2008</a>, <a href="http://blog.hasmanythrough.com/">Josh Susser</a> compared <a href="http://rspec.info">rspec</a> with <a href="http://rubyforge.org/projects/test-spec/">test/spec</a> and <a href="http://www.thoughtbot.com/projects/shoulda">shoulda</a>. All in all I&rsquo;d say he was very fair in his comparisons and I&rsquo;d recommend checking out his <a href="http://hasmanythrough.com/gtfdo/gtfdo.pdf">slides</a>.</p>
+
+<p>There were a couple of dings Josh handed rspec and I&rsquo;d like to respond to them. This is not intended to sell you on using rspec if you&rsquo;re not already using it. In fact, you&rsquo;ll see that I agree with a some of Josh&rsquo;s criticisms.</p>
+
+<p>I&rsquo;d much rather see developers using frameworks like test/spec and shoulda than not using anything more expressive than test/unit out of the box, but I also cringe when I hear that someone chose a different framework for reasons that are based on inaccurate or incomplete information. I take full responsibility for that. If you&rsquo;re basing decisions on inaccurate or incomplete information it&rsquo;s because I haven&rsquo;t made the accurate and complete information available to you. This post is one step towards addressing that problem.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2008/06/07/thoughts-on-the-dance-off/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/05/29/rspec-waving-bye-bye-to-implicit-module-inclusion/">RSpec waving &#8216;bye bye&#8217; to implicit module inclusion</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-05-29T17:31:26+02:00" pubdate data-updated="true">May 29<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Until sometime very soon, when you describe a module in RSpec using this syntax:</p>
+
+<pre><code>describe SomeModule do
+...
+end
+</code></pre>
+
+<p>RSpec implicitly includes that module in the example group. This allows you to do this:</p>
+
+<pre><code>describe CatLikeBehaviour do
+it "should say 'meow' when it greets you" do
+  say_hello.should == 'meow'
+end
+end
+
+module CatLikeBehaviour do
+def say_hello
+  'meow'
+end
+end
+</code></pre>
+
+<p>As is often the case with things implicit, this actually turns out to be a problem. The problem revealed itself most notably when an RSpec user reported that a <code>describe()</code> method in a module he was using was conflicting with RSpec&rsquo;s <code>describe()</code> method.</p>
+
+<p>One response to that thread suggested that using <code>describe()</code> in a module might be too generic, but I think that really hides the point. Imagine how frustrated you would get if you had examples of a module with a <code>current?</code> method and we decided to add a <code>current?</code> method to <code>Spec::Example::ExampleGroupMethods</code>. You&rsquo;d suddenly start seeing those examples fail with stack traces eminating from RSpec instead of your code. Not good.</p>
+
+<p>And so, we are going to be removing this feature.</p>
+
+<p>With the 1.1.4 release, you get a warning any time that the example calls a method on <code>self</code> that is part of the included module. Soon it will be removed entirely.</p>
+
+<h3>rails helper examples</h3>
+
+<p>The biggest impact of this is going to be felt in rspec-rails helper examples. There are two remedies that you have if you&rsquo;ve got examples that send messages to <code>self</code> that should be going to another object:</p>
+
+<ol>
+<li><p>use the new <code>helper</code> object provided by <code>HelperExampleGroup</code></p>
+
+<p> describe DateHelper do
+ it &ldquo;should format the date as mm/dd/yyyy&rdquo; do
+   helper.format_date(Date.new(2008, 5, 31)).should == &lsquo;05/31/2008&rsquo;
+ end
+ end</p></li>
+</ol>
+
+
+<p>The <code>helper</code> object is an instance of <code>ActionView::Base</code> with the named module included in it, so it has access to everything else that it should have.</p>
+
+<ol>
+<li><p>include the module explicitly</p>
+
+<p> describe DateHelper do
+ include DateHelper
+ it &ldquo;should format the date as mm/dd/yyyy&rdquo; do
+   format_date(Date.new(2008, 5, 31)).should == &lsquo;05/31/2008&rsquo;
+ end
+ end</p></li>
+</ol>
+
+
+<p>My recommendation is definitely the first option as I find it more expressive.</p>
+
+<p>I realize this is API changing and backward-compatibility breaking, but this is one of those cases where, at least in my view, the pain is justified by the result.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/05/27/rspec-1-1-4/">RSpec-1.1.4</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-05-27T08:07:25+02:00" pubdate data-updated="true">May 27<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We released RSpec-1.1.4 today. It&rsquo;s mostly a maintenance release but there are a few of cool new features that you may want to know about and take advantage of.</p>
+
+<h3>hash_including</h3>
+
+<p>One thing that has always been a drag is having to specify every key/value pair in a hash that is received as an argument. This is especially painful in Rails controller examples because Rails adds some data to the hash and the examples really don&rsquo;t care about that extra data.</p>
+
+<p>Enter <code>hash_including()</code>.</p>
+
+<p>This is a mock argument matcher that let&rsquo;s you expect a hash including certain key/value pairs regardless of anything else that shows up in the hash. So instead of:</p>
+
+<pre><code>account.should_receive(:deposit).with({:amount =&gt; 37.42, :date =&gt; anything()})
+</code></pre>
+
+<p>you can just say:</p>
+
+<pre><code>account.should_receive(:deposit).with(hash_including(:amount =&gt; 37.42))
+</code></pre>
+
+<p>and keep the example focused on what you&rsquo;re really interested in</p>
+
+<p>Thanks to <a href="http://talklikeaduck.denhaven2.com/">Rick DeNatale</a> who submitted this feature request and the patch to implement it.</p>
+
+<h3>The heckler returns</h3>
+
+<p>RSpec wasn&rsquo;t correctly supporting heckle for a while but the spec-heckler is back in action. For those unfamiliar, you can read about heckle at <a href="http://blog.zenspider.com/2007/06/heckle-version-141-has-been-re.html">zenspider&rsquo;s blog</a>.</p>
+
+<p>Here&rsquo;s how you heckle your Animal model in your PetStore app:</p>
+
+<pre><code>spec spec/models/animal_spec.rb --heckle Animal
+</code></pre>
+
+<p>Thanks to <a href="http://tarvainen.wordpress.com/">Antti Tarvainen</a> for resurrecting this one.</p>
+
+<h3>stub_model</h3>
+
+<p>This is for rails developers who like writing view examples with <code>mock_model()</code> but are sick and tired of having to stub every single attribute that gets referenced in a view.</p>
+
+<p>Instead of creating a mock object like <code>mock_model()</code> does, <code>stub_model()</code> creates an instance of a real model class, but cuts off it&rsquo;s connection to the database, raising an error any time it tries to connect to the database.</p>
+
+<p>This is inspired by projects like <a href="http://www.dcmanges.com/blog/rails-unit-record-test-without-the-database">unit_record</a> and <a href="http://agilewebdevelopment.com/plugins/nulldb">NullDB</a>, but let&rsquo;s you do things at a more granular level &ndash; allowing you to hit the db in some cases (where you think you really need it) and not in others.</p>
+
+<p>Of course, you may prefer to the sort of &ldquo;protection&rdquo; you get from those projects, which ensure that no code touches the DB at all. If you do, have at it. This is just another option for you.</p>
+
+<h3>All this and more</h3>
+
+<p>These are just a few of the issues addressed in 1.1.4. For more information, check out the <a href="http://rspec.info/changes.html">changelog</a> and <a href="http://rspec.lighthouseapp.com/projects/5645">lighthouse</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/10/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/8/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec&#8217;s new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

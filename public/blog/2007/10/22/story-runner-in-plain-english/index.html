@@ -1,0 +1,436 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Story Runner in Plain English - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="Houston, we have Plain Text! I just committed a first stab at a Plain Text Story Runner. It&rsquo;s in RSpec&rsquo;s trunk and will be (in some form &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/2007/10/22/story-runner-in-plain-english">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Story Runner in Plain English</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-10-22T03:24:53+02:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h4>Houston, we have Plain Text!</h4>
+
+<p>I just committed a first stab at a Plain Text Story Runner. It&rsquo;s in RSpec&rsquo;s trunk and will be (in some form) part of the next release.</p>
+
+<p>Big thanks to <a href="http://evang.eli.st/blog/">Pat Maddox</a> for the StoryPartFactory (which is now called StoryMediator) and to all on the rspec-users list who contributed their ideas and thoughts to the discussion about plain text stories.</p>
+
+<p>Keep in mind that this is brand new and very experimental. I do not recommend that you start converting all your projects to using this.</p>
+
+<p>That said …</p>
+
+<h4>A bit of background</h4>
+
+<p>[Update: modified to use And for multiple Givens, Whens or Thens]</p>
+
+<p>The initial implementation of Story Runner supported syntax like this (slightly modified from Dan North&rsquo;s article <a href="http://dannorth.net/2007/06/introducing-rbehave">introducing rbehave</a>):</p>
+
+<pre><code>Story "transfer to cash account",
+%(As a savings account holder
+I want to transfer money from my savings account
+So that I can get cash easily from an ATM) do
+
+Scenario "savings account is in credit" do
+  Given "my savings account balance is", 100 do |balance|
+    @savings_account = Account.new(balance)
+  end
+  And "my cash account balance is", 10 do |balance|
+    @cash_account = Account.new(balance)
+  end
+  When "I transfer", 20 do |amount|
+    @savings_account.transfer_to(@cash_account, amount)
+  end
+  Then "my savings account balance should be", 80 do |expected_amount|
+    @savings_account.balance.should == expected_amount
+  end
+  And "my cash account balance should be", 30 do |expected_amount|
+    @cash_account.balance.should == expected_amount
+  end
+end
+
+Scenario "savings account is overdrawn" do
+  Given "my savings account balance is", -20
+  And "my cash account balance is", 10
+  When "I transfer", 20
+  Then "my savings account balance should be", -20
+  And "my cash account balance should be", 10
+end
+end
+</code></pre>
+
+<p>While this is a really cool start, there are a couple of problems. One is that we&rsquo;re constrained in the way we phrase things. Because the arguments become part of the phrase, we have to structure each phrase so that the argument comes at the end.</p>
+
+<p>The other problem, for me, is that the differing levels of abstraction in the two scenarios make it difficult to read.</p>
+
+<h4>Enter Blockless Steps and Parameterized Steps</h4>
+
+<p>The first step in resolving this problem was to decouple the expression of the story from the steps, which is accomplished with the use of Parameterized Steps. Here&rsquo;s how the story above might look:</p>
+
+<p>[Update: using StepGroup/define instead of StepMatchers/add]</p>
+
+<pre><code>steps = StepGroup.new do |define|
+define.given("my savings account balance is $balance") do |balance|
+  @savings_account = Account.new(balance.to_f)
+end
+
+define.given("my cash account balance is $balance" do |balance|
+  @cash_account = Account.new(balance.to_f)
+end
+
+define.when("I transfer $amount") do |amount|
+  @savings_account.transfer_to(@cash_account, amount.to_f)
+end
+
+define.then("my savings account balance should be $expected_amount" do |expected_amount|
+  @savings_account.balance.should == expected_amount.to_f
+end
+
+define.then("my cash account balance should be $expected_amount" do |expected_amount|
+  @cash_account.balance.should == expected_amount.to_f
+end
+end
+
+Story "transfer to cash account",
+%(As a savings account holder
+  I want to transfer money from my savings account
+  So that I can get cash easily from an ATM),
+  :steps =&gt; steps do
+
+Scenario "savings account is in credit" do
+  Given "my savings account balance is 100"
+  And "my cash account balance is 10"
+  When "I transfer 20"
+  Then "my savings account balance should be 80"
+  And "my cash account balance should be 30"
+end
+
+Scenario "savings account is overdrawn" do
+  Given "my savings account balance is -20"
+  And "my cash account balance is 10"
+  When "I transfer 20"
+  Then "my savings account balance should be -20"
+  And "my cash account balance should be 10"
+end
+end
+</code></pre>
+
+<p>A bit nicer, yes? The steps coming first is a bit noisy, but that could be extracted to another file, or perhaps we can add a means of associating them with the Story after the Story has already been parsed so they can move below the Story.</p>
+
+<p>That bit aside, look how much cleaner the Story reads now. And we can do a couple of additional things to make it even nicer. One thing you might notice is that the line about transfering (When &ldquo;I transfer 20&rdquo;) doesn&rsquo;t specify which way the transfer goes. We can improve on that by enhancing that step:</p>
+
+<pre><code>steps = StepGroup.new do |define|
+...
+
+define.when("I transfer $amount from $source to $target") do |amount, source, target|
+  if source == 'cash' and target == 'savings'
+    @savings_account.transfer_to(@cash_account, amount.to_f)
+  elsif source == 'savings' and target == 'cash'
+    @cash_account.transfer_to(@savings_account, amount.to_f)
+  else
+    raise "I don't know how to transfer from #{source} to #{target}"
+  end
+end
+
+...
+</code></pre>
+
+<p>That lets us write the step as</p>
+
+<p>  When &ldquo;I transfer 20 from savings to cash&rdquo;</p>
+
+<p>As you can see, this is a big step towards making stories more clear and flexible.</p>
+
+<h4>More on Steps</h4>
+
+<p>Another thing you may have noticed is that the Steps are grouped together somewhat arbitrarily. Thanks to a couple of handy convenience methods, you can easily build up libraries of these steps and make them as broad or as granular as you like. Perhaps we want the account steps available to many stories, but the transfer step only to this one. Here&rsquo;s how you can handle that:</p>
+
+<pre><code>class AccountSteps &lt; Spec::Story::StepGroup
+steps do |define|
+  define.given("my savings account balance is $balance") do |balance|
+    @savings_account = Account.new(balance.to_f)
+  end
+
+  define.given("my cash account balance is $balance" do |balance|
+    @cash_account = Account.new(balance.to_f)
+  end
+
+  define.then("my savings account balance should be $expected_amount" do |expected_amount|
+    @savings_account.balance.should == expected_amount.to_f
+  end
+
+  define.then("my cash account balance should be $expected_amount" do |expected_amount|
+    @cash_account.balance.should == expected_amount.to_f
+  end
+end
+end
+
+steps = AccountSteps.new do |define|
+define.when("I transfer $amount") do |amount|
+  @savings_account.transfer_to(@cash_account, amount.to_f)
+end
+end
+</code></pre>
+
+<p>Here we&rsquo;ve created a subclass of StepGroup, instantiated one and defined an additional &lsquo;when&rsquo; that will only be available to this instance.</p>
+
+<h4>Goodbye quotes!</h4>
+
+<p>Once we were able to get rid of the blocks, the quotes made no sense. So we&rsquo;ve added support for true plain text stories. So now our example can read like this:</p>
+
+<pre><code>Story: transfer to cash account
+As a savings account holder
+I want to transfer money from my savings account
+So that I can get cash easily from an ATM
+
+Scenario: savings account is in credit
+  Given my savings account balance is 100
+  And my cash account balance is 10
+  When I transfer 20
+  Then my savings account balance should be 80
+  And my cash account balance should be 30
+
+Scenario: savings account is overdrawn
+  Given my savings account balance is -20
+  And my cash account balance is 10
+  When I transfer 20
+  Then my savings account balance should be -20
+  And my cash account balance should be 10
+</code></pre>
+
+<p>That gets stored in a plain text file and you can run it by running a ruby file that looks like this:</p>
+
+<pre><code>require 'spec'
+require 'path/to/your/library/files'
+require 'path/to/file/that/defines/account_steps.rb'
+
+# assumes the other story file is named the same as this file minus ".rb"
+runner = Spec::Story::Runner::PlainTextStoryRunner.new(File.expand_path(__FILE__).gsub(".rb",""))
+runner.steps &lt;&lt; AccountSteps.new
+runner.run
+</code></pre>
+
+<p>And that&rsquo;s it! It&rsquo;s that simple. This is still in its very early phases and I&rsquo;m certain there will be enhancements as people gain experience with it.</p>
+
+<p>If you want to check it out yourself, grab the trunk and do the following:</p>
+
+<pre><code>cd trunk/rspec
+ruby examples/stories/calculator.rb
+ruby examples/stories/addition.rb
+</code></pre>
+
+<p>The first example uses Ruby with blockless steps. The second example uses a plain text story stored in examples/stories/addition.</p>
+
+<p>Also, with a couple of small tweaks we&rsquo;ll be able to consume plain text from any source (not just a local file) and feed it into the PlainTextStoryRunner. This means that we&rsquo;ll be able to do things like email scenarios to an app that consumes email and runs the scenario against the system and emails you back a report! Crazy, huh?</p>
+
+<p>Lastly, just a reminder, this is only in trunk right now (as of rev 2764), so if you want to explore it you&rsquo;ll have to get the trunk.</p>
+
+<p>Enjoy!!!!!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-10-22T03:24:53+02:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2007</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.davidchelimsky.net/blog/2007/10/22/story-runner-in-plain-english/" data-via="dchelimsky" data-counturl="http://blog.davidchelimsky.net/blog/2007/10/22/story-runner-in-plain-english/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2007/09/08/simple-matchers-made-simple/" title="Previous Post: Simple Matchers made Simple">&laquo; Simple Matchers made Simple</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2007/10/23/plain-text-stories-on-rails/" title="Next Post: Plain Text Stories on Rails">Plain Text Stories on Rails &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

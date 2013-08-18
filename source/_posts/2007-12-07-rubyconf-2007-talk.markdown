@@ -1,0 +1,32 @@
+---
+author: David
+comments: false
+date: 2007-12-07 23:23:51+00:00
+layout: post
+slug: rubyconf-2007-talk
+title: RubyConf 2007 Talk
+wordpress_id: 50
+---
+
+The RSpec/BDD talk that Dave Astels and I presented at RubyConf 2007 has been [posted for your viewing pleasure](http://rubyconf2007.confreaks.com/d3t1p2_rspec.html).
+
+
+
+
+
+
+There are also a bunch of other RubyConf talks [posted on the same site](http://rubyconf2007.confreaks.com/).
+
+
+
+
+
+
+One correction: In our talk, I said that the role/feature/reason story format came from Mike Cohn's book User Stories Applied. The real source was a project team at Connextra that Tim MacKinnon was a part of. Tim later joined Thoughtworks, where Dan North learned about it from Tim.
+
+
+
+
+
+
+I did, in fact, learn about it from Mike Cohn, but it was at a talk he did at an Agile Conference a couple of summers back. I had also read his book, and somewhere in my head merged the talk and the book.

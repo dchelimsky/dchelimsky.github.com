@@ -1,0 +1,595 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="Unlike rspec core, &lsquo;spec/rails&rsquo;, a.k.a. rspec_on_rails, wraps &lsquo;test/unit&rsquo; in order to take advantage of facilities that are &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/page/15">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/02/01/specs-and-assertions-together-again-at-last/">expectations and assertions, together again at last</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-02-01T01:50:34+01:00" pubdate data-updated="true">Feb 1<span>st</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Unlike rspec core, &lsquo;spec/rails&rsquo;, a.k.a. rspec_on_rails, wraps &lsquo;test/unit&rsquo; in order to take advantage of facilities that are tightly coupled to &lsquo;test/unit&rsquo; (e.g. fixtures).</p>
+
+<p>One thing that&rsquo;s been missing, however, has been the ability to just use &lsquo;test/unit&rsquo; assertions right in your specs. With the upcoming 0.8 release (anything after rev 1451 if you&rsquo;re a trunkster), you&rsquo;ll now be able to do so.</p>
+
+<p>This means that, in theory, you&rsquo;ll have access to all of the plugins that are available that are bound to &lsquo;test/unit&rsquo;, like <a href="http://www.jasongarber.com/articles/2006/10/24/easier-testing-of-forms-form_test_helper">form_test_helper</a> and the <a href="http://lukeredpath.co.uk/2006/7/7/testing-your-rails-views-with-hpricot">hpricot_test_extension</a>.</p>
+
+<p>I say &ldquo;in theory&rdquo; because it is impossible for us to commit to support all of the existing plugins any more than any plugin developer can commit to supporting compatibility with all other plugins. That said, I&rsquo;ve tried both of the plugins mentioned above and they &ldquo;just worked&rdquo;.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/01/21/view-specs-are-about-to-get-a-whole-lot-easier/">view specs are about to get a whole lot easier</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-01-21T01:26:15+01:00" pubdate data-updated="true">Jan 21<span>st</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The next release of rspec_on_rails will include a complete port of assert_select. So now you&rsquo;ll be able to spec your login form like this:</p>
+
+<pre><code>&lt;code&gt;
+context "login/login" do
+setup do
+  render 'login/login.rhtml'
+end
+
+specify "should display login form" do
+  response.should have_tag("form[action=/login]") {
+    with_tag("input[type=text][name=email]")
+    with_tag("input[type=password][name=password]")
+    with_tag("input[type=submit][value=Login]")
+  }
+end
+end
+</code></pre>
+
+<p>`</p>
+
+<p>How sweet is that!!!</p>
+
+<p>Trunk-sters out there can do this right now. The rest can expect a release within the next couple of weeks.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2006/12/22/clean-out-init-rb-in-rspec_on_rails-plugin/">clean out init.rb in rspec_on_rails plugin</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-12-22T23:24:46+01:00" pubdate data-updated="true">Dec 22<span>nd</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There is a conflict between spec/rails and test/unit that prevents you from running tests if specs are loaded up. Previous versions of spec/rails had require statements in init.rb in the plugin&rsquo;s root directory. This meant that you were ALWAYS loading rspec, even in your dev and production environments.</p>
+
+<p>The current version (0.7.5) relies on ~/spec/spec_helper.rb to require &lsquo;spec/rails&rsquo;, and init.rb is empty.</p>
+
+<p>If you are working with any previous versions, be sure to clean out your ~/vendor/plugins/rspec_on_rails/init.rb (some versions had that directory as rspec).</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2006/11/27/fighting-the-urge-to-ask/">Fighting the Urge to Ask</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-11-27T09:19:19+01:00" pubdate data-updated="true">Nov 27<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ActiveRecord provides a lot of magic methods that let us get at the properties of a given AR subclass. This is absolutely fantastic news!</p>
+
+<p>Except for one thing.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2006/11/27/fighting-the-urge-to-ask/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2006/11/15/cohesive-models/">Cohesive Models</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-11-15T13:53:38+01:00" pubdate data-updated="true">Nov 15<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Now that Rails uses Ruby to express database structure (migrations), it seems silly to me that we can&rsquo;t just express that right in the model classes. Something like this:</p>
+
+<pre><code>&lt;code&gt;
+class Person &lt; ActiveRecord::Base
+fields do |f|
+  f.add :first_name, :string
+  f.add :last_name, :string
+end
+end
+</code></pre>
+
+<p>`</p>
+
+<p>Doing this would not only make models more cohesive, but it would make it easier to specify a lot about models without ever touching the database.</p>
+
+<p>We&rsquo;d need a means of discovering necessary migrations on the fly, and that could get very tricky very quickly, but I think it&rsquo;s worth exploring.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2006/11/10/tutorial-rspec-stubs-and-mocks/">tutorial - rspec: stubs and mocks</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-11-10T00:56:41+01:00" pubdate data-updated="true">Nov 10<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>RSpec’s mocking/stubbing facilities are enhanced significantly in RSpec-0.7.</p>
+
+<p>You can now intermingle stub methods and mock expectations on the same objects. This applies to instances of Spec::Mocks::Mock or ANY other object or class.</p>
+
+<p>Having integrated stubs and mocks available not only supports isolated and fast controller specs, it also provides a nice way to separate setup noise from the “interesting bits” in your specs. I try to exploit this by preferring stub methods (stub!) in my setup and mock expectations (should_receive) in specify blocks.</p>
+
+<pre><code>1&lt;tt&gt;
+&lt;/tt&gt;2&lt;tt&gt;
+&lt;/tt&gt;3&lt;tt&gt;
+&lt;/tt&gt;4&lt;tt&gt;
+&lt;/tt&gt;&lt;strong&gt;5&lt;/strong&gt;&lt;tt&gt;
+&lt;/tt&gt;6&lt;tt&gt;
+&lt;/tt&gt;7&lt;tt&gt;
+&lt;/tt&gt;8&lt;tt&gt;
+&lt;/tt&gt;9&lt;tt&gt;
+&lt;/tt&gt;&lt;strong&gt;10&lt;/strong&gt;&lt;tt&gt;
+&lt;/tt&gt;11&lt;tt&gt;
+&lt;/tt&gt;12&lt;tt&gt;
+&lt;/tt&gt;13&lt;tt&gt;
+&lt;/tt&gt;14&lt;tt&gt;
+&lt;/tt&gt;&lt;strong&gt;15&lt;/strong&gt;&lt;tt&gt;
+&lt;/tt&gt;16&lt;tt&gt;
+&lt;/tt&gt;17&lt;tt&gt;
+&lt;/tt&gt;18&lt;tt&gt;
+&lt;/tt&gt;19&lt;tt&gt;
+&lt;/tt&gt;&lt;strong&gt;20&lt;/strong&gt;&lt;tt&gt;
+&lt;/tt&gt;21&lt;tt&gt;
+&lt;/tt&gt;22&lt;tt&gt;
+&lt;/tt&gt;23&lt;tt&gt;
+&lt;/tt&gt;24&lt;tt&gt;
+&lt;/tt&gt;&lt;strong&gt;25&lt;/strong&gt;&lt;tt&gt;
+&lt;/tt&gt;
+
+
+
+
+
+
+
+
+&lt;tt&gt;
+&lt;/tt&gt;context &lt;span class="s"&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="k"&gt;the PersonController&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;/span&gt; &lt;span class="r"&gt;do&lt;/span&gt;&lt;tt&gt;
+&lt;/tt&gt;  controller_name &lt;span class="sy"&gt;:person&lt;/span&gt;&lt;tt&gt;
+&lt;/tt&gt;  &lt;tt&gt;
+&lt;/tt&gt;  setup &lt;span class="r"&gt;do&lt;/span&gt;&lt;tt&gt;
+&lt;/tt&gt;    &lt;span class="iv"&gt;@person&lt;/span&gt; = mock(&lt;span class="s"&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="k"&gt;person&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;/span&gt;)&lt;tt&gt;
+&lt;/tt&gt;    &lt;span class="co"&gt;Person&lt;/span&gt;.stub!(&lt;span class="sy"&gt;:new&lt;/span&gt;).and_return(&lt;span class="iv"&gt;@person&lt;/span&gt;)&lt;tt&gt;
+&lt;/tt&gt;  &lt;span class="r"&gt;end&lt;/span&gt;&lt;tt&gt;
+&lt;/tt&gt;  &lt;tt&gt;
+&lt;/tt&gt;  specify &lt;span class="s"&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="k"&gt;should create a new person on GET to create&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;/span&gt; &lt;span class="r"&gt;do&lt;/span&gt;&lt;tt&gt;
+&lt;/tt&gt;    &lt;span class="co"&gt;Person&lt;/span&gt;.should_receive(&lt;span class="sy"&gt;:new&lt;/span&gt;).and_return(&lt;span class="iv"&gt;@person&lt;/span&gt;)&lt;tt&gt;
+&lt;/tt&gt;    get &lt;span class="s"&gt;&lt;span class="dl"&gt;'&lt;/span&gt;&lt;span class="k"&gt;create&lt;/span&gt;&lt;span class="dl"&gt;'&lt;/span&gt;&lt;/span&gt;&lt;tt&gt;
+&lt;/tt&gt;  &lt;span class="r"&gt;end&lt;/span&gt;&lt;tt&gt;
+&lt;/tt&gt;  &lt;tt&gt;
+&lt;/tt&gt;  specify &lt;span class="s"&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="k"&gt;should assign new person to template on GET to create&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;/span&gt; &lt;span class="r"&gt;do&lt;/span&gt;&lt;tt&gt;
+&lt;/tt&gt;    get &lt;span class="s"&gt;&lt;span class="dl"&gt;'&lt;/span&gt;&lt;span class="k"&gt;create&lt;/span&gt;&lt;span class="dl"&gt;'&lt;/span&gt;&lt;/span&gt;&lt;tt&gt;
+&lt;/tt&gt;    assigns[&lt;span class="sy"&gt;:person&lt;/span&gt;].should_be &lt;span class="iv"&gt;@person&lt;/span&gt;&lt;tt&gt;
+&lt;/tt&gt;  &lt;span class="r"&gt;end&lt;/span&gt;&lt;tt&gt;
+&lt;/tt&gt;  &lt;tt&gt;
+&lt;/tt&gt;  specify &lt;span class="s"&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="k"&gt;should render 'person/create' on GET to create&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;/span&gt; &lt;span class="r"&gt;do&lt;/span&gt;&lt;tt&gt;
+&lt;/tt&gt;    controller.should_render &lt;span class="sy"&gt;:template&lt;/span&gt; =&gt; &lt;span class="s"&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="k"&gt;person/create&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;/span&gt;&lt;tt&gt;
+&lt;/tt&gt;    get &lt;span class="s"&gt;&lt;span class="dl"&gt;'&lt;/span&gt;&lt;span class="k"&gt;create&lt;/span&gt;&lt;span class="dl"&gt;'&lt;/span&gt;&lt;/span&gt;&lt;tt&gt;
+&lt;/tt&gt;  &lt;span class="r"&gt;end&lt;/span&gt;&lt;tt&gt;
+&lt;/tt&gt;  &lt;tt&gt;
+&lt;/tt&gt;&lt;span class="r"&gt;end&lt;/span&gt;&lt;tt&gt;
+&lt;/tt&gt;
+</code></pre>
+
+<p>In this example, the line …</p>
+
+<pre><code>&lt;code&gt;
+Person.stub!(:new).and_return(@person)
+&lt;/code&gt;
+</code></pre>
+
+<p>&hellip; in setup stubs the method so GET ‘create’ will work every time. The line …</p>
+
+<pre><code>&lt;code&gt;
+Person.should_receive(:new).and_return(@person)
+&lt;/code&gt;
+</code></pre>
+
+<p>&hellip; in the specify block “should create a new person on GET to create” sets an expectation that must be met. Even though it seems like duplication of the stub method, it is serving a different function: it tells the story for that spec.</p>
+
+<p>Note how in the other specs there is no focus on Person.new. It’s out of the way, but the stub in the setup makes sure its taken care of.</p>
+
+<p>So use stubs to take care of the “noise” (in this case stuff that has to be there to get the specs to run), and use mock expectations to put focus on the fact that something is expected.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2006/11/07/bdd-specs-and-tests-together-again-at-last/">BDD - specs and tests, together again at last</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-11-07T00:03:57+01:00" pubdate data-updated="true">Nov 7<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In discussing the 0.7 release of &lsquo;spec/rails&rsquo;, I find myself talking about how the model, view, controller and helper <strong>specs</strong> should be accompanied by integration <strong>tests</strong>. Those are the words that are emerging naturally. Admittedly, integration &lsquo;specs&rsquo; just sounds silly to me!</p>
+
+<p>This strikes me as interesting because we&rsquo;ve been talking about wanting to eliminate the &lsquo;test&rsquo; word from our BDD vocabulary, but as Dan North has pointed out, it keeps coming back.</p>
+
+<p>What&rsquo;s emerging for me, however, is that it comes back in a different form. Perhaps the little bits we write in the TDD/BDD eeny-weeny red-green-refactor cycle are fundamentally different animals</p>
+
+<p>But an evermore clear distinction emerges between the design activity of BDD in the small vs the customer collaboration activity of BDD in the large. (OK, medium to some of you)</p>
+
+<p>In other words I think it&rsquo;s OK to use the word test when we talk about integration, system, whatever-higher-level tests. And it&rsquo;s OK to talk about specs when we talk about the details.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2006/11/06/view-spec-tutorial/">tutorial - driving view behaviour with &#8216;spec/rails&#8217;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-11-06T17:11:15+01:00" pubdate data-updated="true">Nov 6<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[Updated for 0.9 on 2007/04/12]</p>
+
+<p>rspec-0.9&rsquo;s &lsquo;spec/rails&rsquo; (RSpec on Rails) plugin lets you spec your views in complete isolation of any controllers. This means that you can spec your views even before there are any models or controllers! Once models and controllers do exist, changes to them will not cause your view specs to fail.</p>
+
+<p>Here&rsquo;s a brief tutorial to get you started.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2006/11/06/view-spec-tutorial/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/14/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec&#8217;s new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

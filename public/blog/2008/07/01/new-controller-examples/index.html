@@ -1,0 +1,584 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>new controller examples - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="There&rsquo;s been a lot of discussion about clarity over DRY lately. This is something that I&rsquo;ve been espousing for some time, but recent &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/2008/07/01/new-controller-examples">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">new controller examples</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-01T07:02:07+02:00" pubdate data-updated="true">Jul 1<span>st</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>There&rsquo;s been a lot of discussion about <em>clarity over DRY</em> lately. This is something that I&rsquo;ve been espousing for some time, but recent posts by <a href="http://blog.jayfields.com/2008/05/testing-duplicate-code-in-your-tests.html">Jay Fields</a>, <a href="http://lindsaar.net/2008/6/24/tip-24-being-clever-in-specs-is-for-dummies">Mikel Lindsaar</a> and <a href="http://dannorth.net/2008/06/let-your-examples-flow">Dan North</a> have gotten me thinking about it again with more focus.</p>
+
+<p>With this in mind, I&rsquo;ve been refining the examples generated for restful controllers when you run <code>script/generate rspec_scaffold</code> with the <a href="http://github.com/dchelimsky/rspec-rails">rspec-rails</a> plugin. I&rsquo;ve got them now where I&rsquo;m pretty happy with them, but I&rsquo;m curious to hear what you think. I&rsquo;m not going to tell you what I changed or what to look for, I&rsquo;m just going to ask you to look it over and post your comments.</p>
+
+<p>There are two listings: the generated code and the output you get from running the examples. Thanks in advance for any feedback.</p>
+
+<h3>script/generate rspec_scaffold account</h3>
+
+<pre><code>require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+
+describe AccountsController do
+
+def mock_account(stubs={})
+  stubs = {
+    :save =&gt; true,
+    :update_attributes =&gt; true,
+    :destroy =&gt; true,
+    :to_xml =&gt; ''
+  }.merge(stubs)
+  @mock_account ||= mock_model(Account, stubs)
+end
+
+describe "responding to GET /accounts" do
+
+  it "should succeed" do
+    Account.stub!(:find)
+    get :index
+    response.should be_success
+  end
+
+  it "should render the 'index' template" do
+    Account.stub!(:find)
+    get :index
+    response.should render_template('index')
+  end
+
+  it "should find all accounts" do
+    Account.should_receive(:find).with(:all)
+    get :index
+  end
+
+  it "should assign the found accounts for the view" do
+    Account.should_receive(:find).and_return([mock_account])
+    get :index
+    assigns[:accounts].should == [mock_account]
+  end
+
+end
+
+describe "responding to GET /accounts.xml" do
+
+  before(:each) do
+    request.env["HTTP_ACCEPT"] = "application/xml"
+  end
+
+  it "should succeed" do
+    Account.stub!(:find).and_return([])
+    get :index
+    response.should be_success
+  end
+
+  it "should find all accounts" do
+    Account.should_receive(:find).with(:all).and_return([])
+    get :index
+  end
+
+  it "should render the found accounts as xml" do
+    Account.should_receive(:find).and_return(accounts = mock("Array of Accounts"))
+    accounts.should_receive(:to_xml).and_return("generated XML")
+    get :index
+    response.body.should == "generated XML"
+  end
+
+end
+
+describe "responding to GET /accounts/1" do
+
+  it "should succeed" do
+    Account.stub!(:find)
+    get :show, :id =&gt; "1"
+    response.should be_success
+  end
+
+  it "should render the 'show' template" do
+    Account.stub!(:find)
+    get :show, :id =&gt; "1"
+    response.should render_template('show')
+  end
+
+  it "should find the requested account" do
+    Account.should_receive(:find).with("37")
+    get :show, :id =&gt; "37"
+  end
+
+  it "should assign the found account for the view" do
+    Account.should_receive(:find).and_return(mock_account)
+    get :show, :id =&gt; "1"
+    assigns[:account].should equal(mock_account)
+  end
+
+end
+
+describe "responding to GET /accounts/1.xml" do
+
+  before(:each) do
+    request.env["HTTP_ACCEPT"] = "application/xml"
+  end
+
+  it "should succeed" do
+    Account.stub!(:find).and_return(mock_account)
+    get :show, :id =&gt; "1"
+    response.should be_success
+  end
+
+  it "should find the account requested" do
+    Account.should_receive(:find).with("37").and_return(mock_account)
+    get :show, :id =&gt; "37"
+  end
+
+  it "should render the found account as xml" do
+    Account.should_receive(:find).and_return(mock_account)
+    mock_account.should_receive(:to_xml).and_return("generated XML")
+    get :show, :id =&gt; "1"
+    response.body.should == "generated XML"
+  end
+
+end
+
+describe "responding to GET /accounts/new" do
+
+  it "should succeed" do
+    get :new
+    response.should be_success
+  end
+
+  it "should render the 'new' template" do
+    get :new
+    response.should render_template('new')
+  end
+
+  it "should create a new account" do
+    Account.should_receive(:new)
+    get :new
+  end
+
+  it "should assign the new account for the view" do
+    Account.should_receive(:new).and_return(mock_account)
+    get :new
+    assigns[:account].should equal(mock_account)
+  end
+
+end
+
+describe "responding to GET /accounts/1/edit" do
+
+  it "should succeed" do
+    Account.stub!(:find)
+    get :edit, :id =&gt; "1"
+    response.should be_success
+  end
+
+  it "should render the 'edit' template" do
+    Account.stub!(:find)
+    get :edit, :id =&gt; "1"
+    response.should render_template('edit')
+  end
+
+  it "should find the requested account" do
+    Account.should_receive(:find).with("37")
+    get :edit, :id =&gt; "37"
+  end
+
+  it "should assign the found Account for the view" do
+    Account.should_receive(:find).and_return(mock_account)
+    get :edit, :id =&gt; "1"
+    assigns[:account].should equal(mock_account)
+  end
+
+end
+
+describe "responding to POST /accounts" do
+
+  describe "with successful save" do
+
+    it "should create a new account" do
+      Account.should_receive(:new).with({'these' =&gt; 'params'}).and_return(mock_account)
+      post :create, :account =&gt; {:these =&gt; 'params'}
+    end
+
+    it "should assign the created account for the view" do
+      Account.stub!(:new).and_return(mock_account)
+      post :create, :account =&gt; {}
+      assigns(:account).should equal(mock_account)
+    end
+
+    it "should redirect to the created account" do
+      Account.stub!(:new).and_return(mock_account)
+      post :create, :account =&gt; {}
+      response.should redirect_to(account_url(mock_account))
+    end
+
+  end
+
+  describe "with failed save" do
+
+    it "should create a new account" do
+      Account.should_receive(:new).with({'these' =&gt; 'params'}).and_return(mock_account(:save =&gt; false))
+      post :create, :account =&gt; {:these =&gt; 'params'}
+    end
+
+    it "should assign the invalid account for the view" do
+      Account.stub!(:new).and_return(mock_account(:save =&gt; false))
+      post :create, :account =&gt; {}
+      assigns(:account).should equal(mock_account)
+    end
+
+    it "should re-render the 'new' template" do
+      Account.stub!(:new).and_return(mock_account(:save =&gt; false))
+      post :create, :account =&gt; {}
+      response.should render_template('new')
+    end
+
+  end
+
+end
+
+describe "responding to PUT /accounts/1" do
+
+  describe "with successful update" do
+
+    it "should find the requested account" do
+      Account.should_receive(:find).with("37").and_return(mock_account)
+      put :update, :id =&gt; "37"
+    end
+
+    it "should update the found account" do
+      Account.stub!(:find).and_return(mock_account)
+      mock_account.should_receive(:update_attributes).with({'these' =&gt; 'params'})
+      put :update, :id =&gt; "1", :account =&gt; {:these =&gt; 'params'}
+    end
+
+    it "should assign the found account for the view" do
+      Account.stub!(:find).and_return(mock_account)
+      put :update, :id =&gt; "1"
+      assigns(:account).should equal(mock_account)
+    end
+
+    it "should redirect to the account" do
+      Account.stub!(:find).and_return(mock_account)
+      put :update, :id =&gt; "1"
+      response.should redirect_to(account_url(mock_account))
+    end
+
+  end
+
+  describe "with failed update" do
+
+    it "should find the requested account" do
+      Account.should_receive(:find).with("37").and_return(mock_account(:update_attributes =&gt; false))
+      put :update, :id =&gt; "37"
+    end
+
+    it "should update the found account" do
+      Account.stub!(:find).and_return(mock_account)
+      mock_account.should_receive(:update_attributes).with({'these' =&gt; 'params'})
+      put :update, :id =&gt; "1", :account =&gt; {:these =&gt; 'params'}
+    end
+
+    it "should assign the found account for the view" do
+      Account.stub!(:find).and_return(mock_account(:update_attributes =&gt; false))
+      put :update, :id =&gt; "1"
+      assigns(:account).should equal(mock_account)
+    end
+
+    it "should re-render the 'edit' template" do
+      Account.stub!(:find).and_return(mock_account(:update_attributes =&gt; false))
+      put :update, :id =&gt; "1"
+      response.should render_template('edit')
+    end
+
+  end
+
+end
+
+describe "responding to DELETE /accounts/1" do
+
+  it "should find the account requested" do
+    Account.should_receive(:find).with("37").and_return(mock_account)
+    delete :destroy, :id =&gt; "37"
+  end
+
+  it "should call destroy on the found account" do
+    Account.stub!(:find).and_return(mock_account)
+    mock_account.should_receive(:destroy)
+    delete :destroy, :id =&gt; "1"
+  end
+
+  it "should redirect to the accounts list" do
+    Account.stub!(:find).and_return(mock_account)
+    delete :destroy, :id =&gt; "1"
+    response.should redirect_to(accounts_url)
+  end
+
+end
+
+end
+</code></pre>
+
+<h3>script/spec spec/controllers/accounts_controller_spec.rb -fn</h3>
+
+<pre><code>AccountsController
+responding to GET /accounts
+  should succeed
+  should render the 'index' template
+  should find all accounts
+  should assign the found accounts for the view
+responding to GET /accounts.xml
+  should succeed
+  should find all accounts
+  should render the found accounts as xml
+responding to GET /accounts/1
+  should succeed
+  should render the 'show' template
+  should find the requested account
+  should assign the found account for the view
+responding to GET /accounts/1.xml
+  should succeed
+  should find the account requested
+  should render the found account as xml
+responding to GET /accounts/new
+  should succeed
+  should render the 'new' template
+  should create a new account
+  should assign the new account for the view
+responding to GET /accounts/1/edit
+  should succeed
+  should render the 'edit' template
+  should find the requested account
+  should assign the found Account for the view
+responding to POST /accounts
+  with successful save
+    should create a new account
+    should assign the created account for the view
+    should redirect to the created account
+  with failed save
+    should create a new account
+    should assign the invalid account for the view
+    should re-render the 'new' template
+responding to PUT /accounts/1
+  with successful update
+    should find the requested account
+    should update the found account
+    should assign the found account for the view
+    should redirect to the account
+  with failed update
+    should find the requested account
+    should update the found account
+    should assign the found account for the view
+    should re-render the 'edit' template
+responding to DELETE /accounts/1
+  should find the account requested
+  should call destroy on the found account
+  should redirect to the accounts list
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-01T07:02:07+02:00" pubdate data-updated="true">Jul 1<span>st</span>, 2008</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.davidchelimsky.net/blog/2008/07/01/new-controller-examples/" data-via="dchelimsky" data-counturl="http://blog.davidchelimsky.net/blog/2008/07/01/new-controller-examples/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2008/06/16/slides-from-railsconf/" title="Previous Post: Slides from RailsConf">&laquo; Slides from RailsConf</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2008/07/01/how-i-got-started-programming/" title="Next Post: How I got started programming">How I got started programming &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

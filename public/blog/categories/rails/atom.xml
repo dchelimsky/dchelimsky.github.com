@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Rails | David Chelimsky]]></title>
+  <link href="http://blog.davidchelimsky.net/blog/categories/rails/atom.xml" rel="self"/>
+  <link href="http://blog.davidchelimsky.net/"/>
+  <updated>2013-08-18T10:57:37+02:00</updated>
+  <id>http://blog.davidchelimsky.net/</id>
+  <author>
+    <name><![CDATA[David]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[rspec-2.9.0 is released!]]></title>
+    <link href="http://blog.davidchelimsky.net/blog/2012/03/18/rspec-290-is-released/"/>
+    <updated>2012-03-18T00:10:59+01:00</updated>
+    <id>http://blog.davidchelimsky.net/blog/2012/03/18/rspec-290-is-released</id>
+    <content type="html"><![CDATA[<p>rspec-2.9.0 is released wtih lots of bug fixes and a few minor feature improvements as well. Enjoy!</p>
+
+<h3>rspec-core-2.9.0 / 2012-03-17</h3>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.8.0...v2.9.0">full changelog</a></p>
+
+<p>Enhancements</p>
+
+<ul>
+<li>Support for &ldquo;X minutes X seconds&rdquo; spec run duration in formatter. (uzzz)</li>
+<li>Strip whitespace from group and example names in doc formatter.</li>
+<li>Removed spork-0.9 shim. If you&rsquo;re using spork-0.8.x, you&rsquo;ll need to upgrade
+to 0.9.0.</li>
+</ul>
+
+
+<p>Bug fixes</p>
+
+<ul>
+<li>Restore <code>--full_backtrace</code> option</li>
+<li>Ensure that values passed to <code>config.filter_run</code> are respected when running
+over DRb (using spork).</li>
+<li>Ensure shared example groups are reset after a run (as example groups are).</li>
+<li>Remove <code>rescue false</code> from calls to filters represented as Procs</li>
+<li>Ensure described_class gets the closest constant (pyromaniac)</li>
+<li>In &ldquo;autorun&rdquo;, don&rsquo;t run the specs in the at_exit hook if there was an
+exception (most likely due to a SyntaxError). (sunaku)</li>
+<li>Don&rsquo;t extend groups with modules already used to extend ancestor groups.</li>
+<li><code>its</code> correctly memoizes nil or false values (Yamada Masaki)</li>
+</ul>
+
+
+<h3>rspec-expectations-2.9.0 / 2012-03-17</h3>
+
+<p><a href="http://github.com/rspec/rspec-expectations/compare/v2.8.0...v2.9.0">full changelog</a></p>
+
+<p>Enhancements</p>
+
+<ul>
+<li>Move built-in matcher classes to RSpec::Matchers::BuiltIn to reduce pollution
+of RSpec::Matchers (which is included in every example).</li>
+<li>Autoload files with matcher classes to improve load time.</li>
+</ul>
+
+
+<p>Bug fixes</p>
+
+<ul>
+<li>Align <code>respond_to?</code> and <code>method_missing</code> in DSL-defined matchers.</li>
+<li>Clear out user-defined instance variables between invocations of DSL-defined
+matchers.</li>
+<li>Dup the instance of a DSL generated matcher so its state is not changed by
+subsequent invocations.</li>
+<li>Treat expected args consistently across positive and negative expectations
+(thanks to Ralf Kistner for the heads up)</li>
+</ul>
+
+
+<h3>rspec-mocks-2.9.0 / 2012-03-17</h3>
+
+<p><a href="http://github.com/rspec/rspec-mocks/compare/v2.8.0...v2.9.0">full changelog</a></p>
+
+<p>Enhancements</p>
+
+<ul>
+<li>Support order constraints across objects (preethiramdev)</li>
+</ul>
+
+
+<p>Bug fixes</p>
+
+<ul>
+<li>Allow a <code>as_null_object</code> to be passed to <code>with</code></li>
+<li>Pass proc to block passed to stub (Aubrey Rhodes)</li>
+<li>Initialize child message expectation args to match any args (#109 &ndash;
+preethiramdev)</li>
+</ul>
+
+
+<h3>rspec-rails-2.9.0 / 2012-03-17</h3>
+
+<p><a href="http://github.com/rspec/rspec-rails/compare/v2.8.1...v2.9.0">full changelog</a></p>
+
+<p>Enhancments</p>
+
+<ul>
+<li>add description method to RouteToMatcher (John Wulff)</li>
+<li>Run &ldquo;db:test:clone_structure&rdquo; instead of &ldquo;db:test:prepare&rdquo; if Active Record&rsquo;s
+schema format is &ldquo;:sql&rdquo;. (Andrey Voronkov)</li>
+</ul>
+
+
+<p>Bug fixes</p>
+
+<ul>
+<li><code>mock_model(XXX).as_null_object.unknown_method</code> returns self again</li>
+<li>Generated view specs use different IDs for each attribute.</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[rspec-rails-2.8.1 is released]]></title>
+    <link href="http://blog.davidchelimsky.net/blog/2012/01/05/rspec-rails-281-is-released/"/>
+    <updated>2012-01-05T06:43:28+01:00</updated>
+    <id>http://blog.davidchelimsky.net/blog/2012/01/05/rspec-rails-281-is-released</id>
+    <content type="html"><![CDATA[<h2>Bug fix release</h2>
+
+<p>The rails-3.2.0.rc2 release broke <code>stub_model</code> in rspec-rails-2.0.0 > 2.8.0.
+The rspec-rails-2.8.1 release fixes this issue, but it means that when you
+upgrade to rails-3.2.0.rc2 or greater, you&rsquo;ll have to upgrade to
+rspec-rails-2.8.1 or greater.</p>
+
+<p>Because rspec-rails-2.8.1 supports all versions of rails since 3.0, I recommend
+that you upgrade to rspec-rails-2.8.1 first, and then upgrade to
+rails-3.2.0.rc2 (or 3.2.0 once it&rsquo;s out).</p>
+
+<h3>Changelog</h3>
+
+<p><a href="http://rubydoc.info/gems/rspec-rails/file/Changelog.md">http://rubydoc.info/gems/rspec-rails/file/Changelog.md</a></p>
+
+<h3>Docs</h3>
+
+<p><a href="http://rubydoc.info/gems/rspec-rails">http://rubydoc.info/gems/rspec-rails</a></p>
+
+<p><a href="http://relishapp.com/rspec/rspec-rails">http://relishapp.com/rspec/rspec-rails</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[rspec-2.7.0 is released!]]></title>
+    <link href="http://blog.davidchelimsky.net/blog/2011/10/16/rspec-270-is-released/"/>
+    <updated>2011-10-16T22:28:00+02:00</updated>
+    <id>http://blog.davidchelimsky.net/blog/2011/10/16/rspec-270-is-released</id>
+    <content type="html"><![CDATA[<p>We&rsquo;re pleased to announce the release of rspec-2.7.0. Release notes for each
+gem are listed below, but here are a couple of highlights:</p>
+
+<h2>Just type <code>rspec</code></h2>
+
+<p>With the the 2.7.0 release, if you keep all of your specs in the conventional
+<code>spec</code> directory, you don&rsquo;t need to follow the <code>rspec</code> command with a path.
+Just type <code>rspec</code>.</p>
+
+<p>If you keep your specs in a different directory, just set the <code>--default_path</code>
+option to that directory on the command line, or in a <code>.rspec</code> config file.</p>
+
+<h2>The rake task now lets Bundler manage Bundler</h2>
+
+<p>The <code>RSpec::Core::RakeTask</code> invokes the <code>rspec</code> command in a subshell. In
+recent releases, it assumed that you wanted it prefixed with <code>bundle exec</code> if
+it saw a <code>Gemfile</code>. We then added <code>gemfile</code> and <code>skip_bundler</code> options to the
+task, so you could manage this in different ways.</p>
+
+<p>It turns out that Bundler manages this quite well without any help from RSpec.
+If you activate Bundler in the parent shell, via the command line or
+<code>Bundler.setup</code>, it sets environment variables that activate Bundler in the
+subshell with the correct gemfile.</p>
+
+<p>The <code>gemfile</code> and <code>skip_bundler</code> options are therefore deprecated and have no
+effect.</p>
+
+<h2>Release Notes</h2>
+
+<h3>rspec-core-2.7.0</h3>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.6.4...v2.7.0">full changelog</a></p>
+
+<p>NOTE: RSpec&rsquo;s release policy dictates that there should not be any backward
+incompatible changes in minor releases, but we&rsquo;re making an exception to
+release a change to how RSpec interacts with other command line tools.</p>
+
+<p>As of 2.7.0, you must explicity <code>require "rspec/autorun"</code> unless you use the
+<code>rspec</code> command (which already does this for you).</p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>Add example.exception (David Chelimsky)</li>
+<li><code>--default_path</code> command line option (Justin Ko)</li>
+<li>support multiple <code>--line_number</code> options (David J. Hamilton)
+
+<ul>
+<li>also supports <code>path/to/file.rb:5:9</code> (runs examples on lines 5 and 9)</li>
+</ul>
+</li>
+<li>Allow classes/modules to be used as shared example group identifiers
+(Arthur Gunn)</li>
+<li>Friendly error message when shared context cannot be found (Sławosz
+Sławiński)</li>
+<li>Clear formatters when resetting config (John Bintz)</li>
+<li>Add <code>xspecify</code> and xexample as temp-pending methods (David Chelimsky)</li>
+<li>Add <code>--no-drb</code> option (Iain Hecker)</li>
+<li>Provide more accurate run time by registering start time before code
+is loaded (David Chelimsky)</li>
+<li>Rake task default pattern finds specs in symlinked dirs (Kelly Felkins)</li>
+<li>Rake task no longer does anything to invoke bundler since Bundler already
+handles it for us. Thanks to Andre Arko for the tip.</li>
+<li>Add <code>--failure-exit-code</code> option (Chris Griego)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Include <code>Rake::DSL</code> to remove deprecation warnings in Rake > 0.8.7 (Pivotal
+Casebook)</li>
+<li>Only eval <code>let</code> block once even if it returns <code>nil</code> (Adam Meehan)</li>
+<li>Fix <code>--pattern</code> option (wasn&rsquo;t being recognized) (David Chelimsky)</li>
+<li>Only implicitly <code>require "rspec/autorun"</code> with the <code>rspec</code> command (David
+Chelimsky)</li>
+<li>Ensure that rspec&rsquo;s <code>at_exit</code> defines the exit code (Daniel Doubrovkine)</li>
+<li>Show the correct snippet in the HTML and TextMate formatters (Brian
+Faherty)</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-expectations-2.7.0</h3>
+
+<p><a href="http://github.com/rspec/rspec-expectations/compare/v2.6.0...v2.7.0">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>HaveMatcher converts argument using <code>to_i</code> (Alex Bepple &amp; Pat Maddox)</li>
+<li>Improved failure message for the <code>have_xxx</code> matcher (Myron Marston)</li>
+<li>HaveMatcher supports <code>count</code> (Matthew Bellantoni)</li>
+<li>Change matcher dups <code>Enumerable</code> before the action, supporting custom
+<code>Enumerable</code> types like <code>CollectionProxy</code> in Rails (David Chelimsky)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Fix typo in <code>have(n).xyz</code> documentation (Jean Boussier)</li>
+<li>fix <code>safe_sort</code> for ruby 1.9.2 (<code>Kernel</code> now defines <code>&lt;=&gt;</code> for Object)
+(Peter van Hardenberg)</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-mocks-2.7.0</h3>
+
+<p><a href="http://github.com/rspec/rspec-mocks/compare/v2.6.0...v2.7.0">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>Use <code>__send__</code> rather than <code>send</code> (alextk)</li>
+<li>Add support for <code>any_instance.stub_chain</code> (Sidu Ponnappa)</li>
+<li>Add support for <code>any_instance</code> argument matching based on <code>with</code> (Sidu
+Ponnappa and Andy Lindeman)</li>
+</ul>
+</li>
+<li><p>Changes</p>
+
+<ul>
+<li>Check for <code>failure_message_for_should</code> or <code>failure_message</code> instead of
+<code>description</code> to detect a matcher (Tibor Claassen)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>pass a hash to <code>any_instance.stub</code>. (Justin Ko)</li>
+<li>allow <code>to_ary</code> to be called without raising <code>NoMethodError</code> (Mikhail
+Dieterle)</li>
+<li><code>any_instance</code> properly restores private methods (Sidu Ponnappa)</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-rails-2.7.0</h3>
+
+<p><a href="http://github.com/rspec/rspec-rails/compare/v2.6.1...v2.7.0">full changelog</a></p>
+
+<ul>
+<li><p>Enhancments</p>
+
+<ul>
+<li><code>ActiveRecord::Relation</code> can use the <code>=~</code> matcher (Andy Lindeman)</li>
+<li>Make generated controller spec more consistent with regard to ids
+(Brent J. Nordquist)</li>
+<li>Less restrictive autotest mapping between spec and implementation files
+(José Valim)</li>
+<li><code>require 'rspec/autorun'</code> from generated <code>spec_helper.rb</code> (David Chelimsky)</li>
+<li>add <code>bypass_rescue</code> (Lenny Marks)</li>
+<li><code>route_to</code> accepts query string (Marc Weil)</li>
+</ul>
+</li>
+<li><p>Internal</p>
+
+<ul>
+<li>Added specs for generators using ammeter (Alex Rothenberg)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Fix configuration/integration bug with rails 3.0 (fixed in 3.1) in which
+<code>fixure_file_upload</code> reads from <code>ActiveSupport::TestCase.fixture_path</code> and
+misses RSpec&rsquo;s configuration (David Chelimsky)</li>
+<li>Support nested resource in view spec generator (David Chelimsky)</li>
+<li>Define <code>primary_key</code> on class generated by <code>mock_model("WithAString")</code>
+(David Chelimsky)</li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Avoid stubbing methods invoked by a framework]]></title>
+    <link href="http://blog.davidchelimsky.net/blog/2011/09/23/avoid-stubbing-methods-invoked-by-a-framework/"/>
+    <updated>2011-09-23T01:23:55+02:00</updated>
+    <id>http://blog.davidchelimsky.net/blog/2011/09/23/avoid-stubbing-methods-invoked-by-a-framework</id>
+    <content type="html"><![CDATA[<p>In a <a href="https://github.com/rspec/rspec-mocks/issues/78">github issue</a> reported to
+the <a href="https://github.com/rspec/rspec-mocks">rspec-mocks</a> project, the user had
+run into a problem in a Rails' controller spec in which an RSpec-generated test
+double didn&rsquo;t behave as expected. What follows is an edited version of the
+issue and my response, with the hope that it reaches a wider audience and/or
+sparks some conversation.</p>
+
+<h2>The reported problem: ActiveSupport::JSON::Encoding::CircularReferenceError using doubles</h2>
+
+<p>This spec &hellip;</p>
+
+<pre><code>require 'spec_helper'
+
+describe ListsController do
+  let(:list) { double("List") }
+
+  describe "GET 'index'" do
+    let(:expected) { [{id: "1", name: "test"}] }
+
+    before do
+      list.stub(:id){ "1" }
+      list.stub(:name){ "test" }
+      List.stub(:select){ [ list ] }
+    end
+
+    it "should return the list of lists" do
+      get :index, format: :json
+      response.body.should == expected.to_json
+    end
+  end
+end
+</code></pre>
+
+<p>&hellip; plus this implementation &hellip;</p>
+
+<pre><code>class ListsController &lt; ApplicationController
+  respond_to :json
+
+  expose(:lists) { List.select("id, name") }
+
+  def index
+    respond_with(lists)
+  end
+end
+</code></pre>
+
+<p>&hellip; produces this failure:</p>
+
+<pre><code>  Failure/Error: get :index, format: :json
+     ActiveSupport::JSON::Encoding::CircularReferenceError:
+       object references itself
+</code></pre>
+
+<h2>The deeper problem: this is a great example of when <em>not</em> to use stubs.</h2>
+
+<p>Here&rsquo;s why: there are three incorrect assumptions hiding behind the stubs!</p>
+
+<ol>
+<li><code>select</code> takes an Array: <code>List.select(["id","name"])</code>, but the example stubs it incorrectly.</li>
+<li>the id is numeric, but the example uses String.</li>
+<li>the json is wrapped: <code>{"list":{"id":1,"name":"test"}}</code>, but the example doesn&rsquo;t wrap it.</li>
+</ol>
+
+
+<p>Even if the stubs were properly aligned with reality, the reason for the error
+is that <code>respond_with(lists)</code> eventually calls <code>as_json</code> on the <code>list</code> object,
+which, in this example, is an RSpec double that doesn&rsquo;t implement <code>as_json</code>.
+We need to either use a <code>stub_model</code> (which does implement <code>as_json</code>), or
+explicitly stub it in the example:</p>
+
+<pre><code>list.stub(:as_json) { { list: {id: 1, name: "test"} } }
+</code></pre>
+
+<p>But I&rsquo;d avoid stubs altogether in this case. Stubs are great for well defined
+(and understood) public APIs <em>which are invoked by the code being specified</em>.
+In this case, we&rsquo;re stubbing an API (<code>as_json</code>) that is invoked by the Rails
+framework, not the code being specified. If the Rails framework ever changes
+how it renders json, this example would continue to pass, but it would be a
+false positive.</p>
+
+<h2>One possible remedy</h2>
+
+<h4>Here&rsquo;s how I&rsquo;d approach this outside-in (based on my own flow, design preferences, and target outcomes. YMMV.)</h4>
+
+<p>Start with a request spec:</p>
+
+<pre><code>require 'spec_helper'
+
+describe "Lists" do
+  describe "GET 'index.json'" do
+    it "returns the list of lists" do
+      list = List.create!(name: "test")
+      get "/lists.json"
+      response.body.should == [{list: {id: list.id, name: "test"}}].to_json
+    end
+  end
+end
+</code></pre>
+
+<p>This shows exactly what to expect, so when working on clients we can refer
+directly to this without having to dig into internals.</p>
+
+<p>Run this and it fails with <code>uninitialized constant List</code>, so generate the list
+resource:</p>
+
+<pre><code>rails generate resource list name:string
+rake db:migrate
+rake db:test:prepare
+</code></pre>
+
+<p>Run it again and it fails with <code>ActionView::MissingTemplate</code>. Now we have a
+couple of choices. The purist view says &ldquo;write a controller spec&rdquo;, but some
+people say controller specs are unnecessary if there are already request specs
+(or cukes) as they just add duplication.</p>
+
+<p>For me, the answer depends upon the complexity of the requirement as it
+compares to what we get for free from Rails. In this case, the only difference
+between the requirement and what Rails gives us for free is that we constrain
+the fields to <code>id</code> and <code>name</code> This is something we can implement in the model,
+so I&rsquo;d just implement this very simple controller code and move on:</p>
+
+<pre><code>class ListsController &lt; ApplicationController
+  respond_to :json
+
+  def index
+    respond_with List.all
+  end
+end
+</code></pre>
+
+<p>Now the request spec fails with:</p>
+
+<pre><code>expected: "[{\"list\":{\"id\":1,\"name\":\"test\"}}]"
+     got: "[{\"list\":{\"created_at\":\"2011-08-27T14:56:19Z\",\"id\":1,\"name\":\"test\",\"updated_at\":\"2011-08-27T14:56:19Z\"}}]"
+</code></pre>
+
+<p>We&rsquo;re getting more key/value pairs than we want. I want the model responsible
+for constraining the keys in the json (Rails implements json transformations in
+the context of the model, so why shouldn&rsquo;t we?), so I&rsquo;d add a model spec:</p>
+
+<pre><code>require 'spec_helper'
+
+describe List do
+  describe "#as_json" do
+    it "constrains keys to id and name" do
+      list = List.new(:name =&gt; "things")
+      list.as_json['list'].keys.should eq(%w[id name])
+    end
+  end
+end
+</code></pre>
+
+<p>This fails with:</p>
+
+<pre><code>expected ["id", "name"]
+     got ["created_at", "name", "updated_at"]
+</code></pre>
+
+<p>I expect to see <code>created_at</code> and <code>updated_at</code>, but I&rsquo;m surprised (initially) to
+see that <code>id</code> is missing. Thinking this through, it makes sense because the
+example generates the <code>list</code> using <code>new</code>, so no <code>id</code> is generated.  To get <code>id</code>
+to show up in the list of keys, we can use <code>create</code> instead of <code>new</code>, or we can
+explicitly set it. I&rsquo;m going to go with setting the id explicitly to avoid the
+db hit, accepting the self-imposed leaky abstraction. It&rsquo;s all trade-offs.</p>
+
+<pre><code>it "constrains fields to id and name" do
+  list = List.new(:name =&gt; "things")
+  list.id = 37
+  list.as_json['list'].keys.should eq(%w[id name])
+end
+</code></pre>
+
+<p>Now it fails with:</p>
+
+<pre><code>expected ["id", "name"]
+     got ["created_at", "id", "name", "updated_at"]
+</code></pre>
+
+<p>Now we can implement the constraint:</p>
+
+<pre><code>class List &lt; ActiveRecord::Base
+  def as_json
+    super({ only: %w[id name]})
+  end
+end
+</code></pre>
+
+<p>Now the model spec passes, but the request spec fails with:</p>
+
+<pre><code>ArgumentError:
+  wrong number of arguments (1 for 0)
+</code></pre>
+
+<p>This is because the <code>as_json</code> implementation fails to honor the <a href="http://api.rubyonrails.org/classes/ActiveModel/Serializers/JSON.html#method-i-as_json">Rails
+API</a>:</p>
+
+<pre><code>as_json(options = nil)
+</code></pre>
+
+<p><code>as_json</code> is called by the Rails framework with an options hash. Had we done
+this without the request spec and weren&rsquo;t aware of this information, we&rsquo;d have
+a bunch of passing specs but the app would blow up. Hooray for testing at
+multiple levels!</p>
+
+<p>So we add a new example to the model spec:</p>
+
+<pre><code>it "honors the submitted options hash" do
+  list = List.new(:name =&gt; "things")
+  list.id = 37
+  list.as_json(:only =&gt; :name)['list'].keys.should eq(%w[name])
+end
+</code></pre>
+
+<p>This fails with <code>wrong number of arguments (1 for 0)</code> as well, so now we adjust
+the model implementation:</p>
+
+<pre><code>def as_json(opts={})
+  super({ only: %w[id name]}.merge(opts))
+end
+</code></pre>
+
+<p>Now the model spec passes again, and so does the request spec! DONE!</p>
+
+<p>The result is a very nice balance of clarity, speed (in spite of the one db hit
+in the request spec) and flexibility. Any new endpoints we add will get the
+same json representation because it is expressed in the model (heeding the
+principle of least surprise). The model spec not only specifies how the model
+should represent itself as json, but it helps to explain how the rails
+framework uses the model. All of this with no stubbing at all, and especially
+no stubbing of APIs our code isn&rsquo;t invoking.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[rspec-rails-2.6.1 is released!]]></title>
+    <link href="http://blog.davidchelimsky.net/blog/2011/05/26/rspec-rails-261-is-released/"/>
+    <updated>2011-05-26T04:24:04+02:00</updated>
+    <id>http://blog.davidchelimsky.net/blog/2011/05/26/rspec-rails-261-is-released</id>
+    <content type="html"><![CDATA[<p>This is a bug fix release that is compatible with the rails-3.0.0 to 3.0.7, 3.0.8.rc1, and 3.1.0.rc1 (it is mostly, but not fully compatible with but not rails-3.1.0.beta1).</p>
+
+<h3>rspec-rails-2.6.1 / 2011-05-25</h3>
+
+<p><a href="http://github.com/rspec/rspec-rails/compare/v2.6.0...v2.6.1">full changelog</a></p>
+
+<ul>
+<li>Bug fixes
+
+<ul>
+<li>fix controller specs with anonymous controllers with around filters</li>
+<li>exclude spec directory from rcov metrics (Rodrigo Navarro)</li>
+<li>guard against calling prerequisites on nil default rake task (Jack Dempsey)</li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

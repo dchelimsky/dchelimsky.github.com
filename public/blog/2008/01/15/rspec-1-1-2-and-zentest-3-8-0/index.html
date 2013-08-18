@@ -1,0 +1,285 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>RSpec-1.1.2 and ZenTest-3.8.0 - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="The RSpec-1.1.2 release includes changes to keep RSpec compatible with autotest in ZenTest-3.8.0. This new ZenTest release boasts an improved &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/2008/01/15/rspec-1-1-2-and-zentest-3-8-0">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">RSpec-1.1.2 and ZenTest-3.8.0</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-01-15T07:15:55+01:00" pubdate data-updated="true">Jan 15<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>The <a href="http://rspec.info">RSpec-1.1.2</a> release includes changes to keep RSpec compatible with autotest in <a href="http://zentest.rubyforge.org/ZenTest/">ZenTest-3.8.0</a>. This new ZenTest release boasts an improved cascading configuration model that works well for subclasses (like those that ship with RSpec) <strong>and</strong> allows users to override the mappings of specs (or tests) to code as well as the list of files that get ignored by autotest.</p>
+
+<p>To support this, Autotest now loads the following files in the following order:</p>
+
+<pre><code>Autotest
+AutotestSubClass
+~/.autotest
+./.autotest
+</code></pre>
+
+<p>This allows RSpec (or any other library) to override defaults set in <code>Autotest</code>, and then provides users both generic (~/.autotest) and project specific (./.autotest) control over the mappings and exceptions.</p>
+
+<p>How can you take advantage of this?</p>
+
+<p>When autotest begins to run, it calls its <code>:initialize</code> hook. This hook is exposed by the <code>add_hook</code> method. You can use this to access the mappings and exceptions using the following methods on Autotest:</p>
+
+<pre><code>clear_mappings()
+add_mapping(regexp, proc)
+remove_mapping(regexp)
+
+clear_exceptions()
+add_exception(string)
+remove_exception(string)
+</code></pre>
+
+<h4>add_mapping</h4>
+
+<p>The <code>add_mapping</code> method adds a key/value pair to a hash that maps regexps to procs. Whenever autotest senses that a file is touched, it looks for the regexp that matches the file name and the runs all the files returned by the associated proc.</p>
+
+<p>Imagine you&rsquo;re working on a shopping cart app. You have some currency conversion behaviour in a <code>Product</code> model that you&rsquo;d like to extract to an <code>acts_as_currency</code> plugin, and you want autotest to observe the process. You might add a mapping like this to .autotest:</p>
+
+<pre><code>Autotest.add_hook :initialize do |at|
+at.add_mapping(%r%^plugins/acts_as_currency/lib/.*\.rb$%) {
+  at.files_matching %r%^spec/models/product_spec\.rb$% +
+  at.files_matching %r%^plugins/acts_as_currency/spec/.*_spec\.rb$%
+}
+end
+</code></pre>
+
+<p>In this case, a change to any of the files in the plugin&rsquo;s lib directory would cause all the plugins specs to run, as well as the spec for the <code>Product</code> model.</p>
+
+<h4>add_exception</h4>
+
+<p>The <code>add_exception</code> method adds paths to a list of paths that Autotest ignores.</p>
+
+<p>I like to run autotest in verbose mode (<code>autotest -v</code>) because it tells me when I change a file that it doesn&rsquo;t know what to do with. The drawback is that it wants to tell me every time I commit because files in the .svn/.hg/.git directories change. So I&rsquo;ve got these all listed as exceptions in my ~/.autotest file, along with assorted others:</p>
+
+<pre><code>Autotest.add_hook :initialize do |at|
+%w{.svn .hg .git}.each {|exception|at.add_exception(exception)}
+end
+</code></pre>
+
+<p>Note that autotest compiles this list to a Regexp with no anchors, so .hgignore and .gitignore would also get ignored in this case.</p>
+
+<h4>Cascading config and granular control</h4>
+
+<p>One of the coolest changes in ZenTest-3.8.0 is that autotest loads both ~/.autotest and ./.autotest. So now you can have the hooks you like on every project (like growl notifation) all in one place and still have project specific settings.</p>
+
+<p>This also allows you to set up global mappings/exceptions and modify them at the project level. See <a href="http://zentest.rubyforge.org/ZenTest/classes/Autotest.html">Autotest&rsquo;s RDoc</a> for more info.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-01-15T07:15:55+01:00" pubdate data-updated="true">Jan 15<span>th</span>, 2008</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/autotest/'>Autotest</a>, <a class='category' href='/blog/categories/rspec/'>RSpec</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.davidchelimsky.net/blog/2008/01/15/rspec-1-1-2-and-zentest-3-8-0/" data-via="dchelimsky" data-counturl="http://blog.davidchelimsky.net/blog/2008/01/15/rspec-1-1-2-and-zentest-3-8-0/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2008/01/10/presenting-at-qcon-london/" title="Previous Post: Presenting at QCon London">&laquo; Presenting at QCon London</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2008/01/20/rspec-new-pattern-option/" title="Next Post: RSpec: new --pattern option">RSpec: new --pattern option &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

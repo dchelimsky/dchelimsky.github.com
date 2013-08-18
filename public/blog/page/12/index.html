@@ -1,0 +1,953 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="Houston, we have Plain Text! I just committed a first stab at a Plain Text Story Runner. It&rsquo;s in RSpec&rsquo;s trunk and will be (in some form &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/page/12">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/10/22/story-runner-in-plain-english/">Story Runner in Plain English</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-10-22T03:24:53+02:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h4>Houston, we have Plain Text!</h4>
+
+<p>I just committed a first stab at a Plain Text Story Runner. It&rsquo;s in RSpec&rsquo;s trunk and will be (in some form) part of the next release.</p>
+
+<p>Big thanks to <a href="http://evang.eli.st/blog/">Pat Maddox</a> for the StoryPartFactory (which is now called StoryMediator) and to all on the rspec-users list who contributed their ideas and thoughts to the discussion about plain text stories.</p>
+
+<p>Keep in mind that this is brand new and very experimental. I do not recommend that you start converting all your projects to using this.</p>
+
+<p>That said …</p>
+
+<h4>A bit of background</h4>
+
+<p>[Update: modified to use And for multiple Givens, Whens or Thens]</p>
+
+<p>The initial implementation of Story Runner supported syntax like this (slightly modified from Dan North&rsquo;s article <a href="http://dannorth.net/2007/06/introducing-rbehave">introducing rbehave</a>):</p>
+
+<pre><code>Story "transfer to cash account",
+%(As a savings account holder
+I want to transfer money from my savings account
+So that I can get cash easily from an ATM) do
+
+Scenario "savings account is in credit" do
+  Given "my savings account balance is", 100 do |balance|
+    @savings_account = Account.new(balance)
+  end
+  And "my cash account balance is", 10 do |balance|
+    @cash_account = Account.new(balance)
+  end
+  When "I transfer", 20 do |amount|
+    @savings_account.transfer_to(@cash_account, amount)
+  end
+  Then "my savings account balance should be", 80 do |expected_amount|
+    @savings_account.balance.should == expected_amount
+  end
+  And "my cash account balance should be", 30 do |expected_amount|
+    @cash_account.balance.should == expected_amount
+  end
+end
+
+Scenario "savings account is overdrawn" do
+  Given "my savings account balance is", -20
+  And "my cash account balance is", 10
+  When "I transfer", 20
+  Then "my savings account balance should be", -20
+  And "my cash account balance should be", 10
+end
+end
+</code></pre>
+
+<p>While this is a really cool start, there are a couple of problems. One is that we&rsquo;re constrained in the way we phrase things. Because the arguments become part of the phrase, we have to structure each phrase so that the argument comes at the end.</p>
+
+<p>The other problem, for me, is that the differing levels of abstraction in the two scenarios make it difficult to read.</p>
+
+<h4>Enter Blockless Steps and Parameterized Steps</h4>
+
+<p>The first step in resolving this problem was to decouple the expression of the story from the steps, which is accomplished with the use of Parameterized Steps. Here&rsquo;s how the story above might look:</p>
+
+<p>[Update: using StepGroup/define instead of StepMatchers/add]</p>
+
+<pre><code>steps = StepGroup.new do |define|
+define.given("my savings account balance is $balance") do |balance|
+  @savings_account = Account.new(balance.to_f)
+end
+
+define.given("my cash account balance is $balance" do |balance|
+  @cash_account = Account.new(balance.to_f)
+end
+
+define.when("I transfer $amount") do |amount|
+  @savings_account.transfer_to(@cash_account, amount.to_f)
+end
+
+define.then("my savings account balance should be $expected_amount" do |expected_amount|
+  @savings_account.balance.should == expected_amount.to_f
+end
+
+define.then("my cash account balance should be $expected_amount" do |expected_amount|
+  @cash_account.balance.should == expected_amount.to_f
+end
+end
+
+Story "transfer to cash account",
+%(As a savings account holder
+  I want to transfer money from my savings account
+  So that I can get cash easily from an ATM),
+  :steps =&gt; steps do
+
+Scenario "savings account is in credit" do
+  Given "my savings account balance is 100"
+  And "my cash account balance is 10"
+  When "I transfer 20"
+  Then "my savings account balance should be 80"
+  And "my cash account balance should be 30"
+end
+
+Scenario "savings account is overdrawn" do
+  Given "my savings account balance is -20"
+  And "my cash account balance is 10"
+  When "I transfer 20"
+  Then "my savings account balance should be -20"
+  And "my cash account balance should be 10"
+end
+end
+</code></pre>
+
+<p>A bit nicer, yes? The steps coming first is a bit noisy, but that could be extracted to another file, or perhaps we can add a means of associating them with the Story after the Story has already been parsed so they can move below the Story.</p>
+
+<p>That bit aside, look how much cleaner the Story reads now. And we can do a couple of additional things to make it even nicer. One thing you might notice is that the line about transfering (When &ldquo;I transfer 20&rdquo;) doesn&rsquo;t specify which way the transfer goes. We can improve on that by enhancing that step:</p>
+
+<pre><code>steps = StepGroup.new do |define|
+...
+
+define.when("I transfer $amount from $source to $target") do |amount, source, target|
+  if source == 'cash' and target == 'savings'
+    @savings_account.transfer_to(@cash_account, amount.to_f)
+  elsif source == 'savings' and target == 'cash'
+    @cash_account.transfer_to(@savings_account, amount.to_f)
+  else
+    raise "I don't know how to transfer from #{source} to #{target}"
+  end
+end
+
+...
+</code></pre>
+
+<p>That lets us write the step as</p>
+
+<p>  When &ldquo;I transfer 20 from savings to cash&rdquo;</p>
+
+<p>As you can see, this is a big step towards making stories more clear and flexible.</p>
+
+<h4>More on Steps</h4>
+
+<p>Another thing you may have noticed is that the Steps are grouped together somewhat arbitrarily. Thanks to a couple of handy convenience methods, you can easily build up libraries of these steps and make them as broad or as granular as you like. Perhaps we want the account steps available to many stories, but the transfer step only to this one. Here&rsquo;s how you can handle that:</p>
+
+<pre><code>class AccountSteps &lt; Spec::Story::StepGroup
+steps do |define|
+  define.given("my savings account balance is $balance") do |balance|
+    @savings_account = Account.new(balance.to_f)
+  end
+
+  define.given("my cash account balance is $balance" do |balance|
+    @cash_account = Account.new(balance.to_f)
+  end
+
+  define.then("my savings account balance should be $expected_amount" do |expected_amount|
+    @savings_account.balance.should == expected_amount.to_f
+  end
+
+  define.then("my cash account balance should be $expected_amount" do |expected_amount|
+    @cash_account.balance.should == expected_amount.to_f
+  end
+end
+end
+
+steps = AccountSteps.new do |define|
+define.when("I transfer $amount") do |amount|
+  @savings_account.transfer_to(@cash_account, amount.to_f)
+end
+end
+</code></pre>
+
+<p>Here we&rsquo;ve created a subclass of StepGroup, instantiated one and defined an additional &lsquo;when&rsquo; that will only be available to this instance.</p>
+
+<h4>Goodbye quotes!</h4>
+
+<p>Once we were able to get rid of the blocks, the quotes made no sense. So we&rsquo;ve added support for true plain text stories. So now our example can read like this:</p>
+
+<pre><code>Story: transfer to cash account
+As a savings account holder
+I want to transfer money from my savings account
+So that I can get cash easily from an ATM
+
+Scenario: savings account is in credit
+  Given my savings account balance is 100
+  And my cash account balance is 10
+  When I transfer 20
+  Then my savings account balance should be 80
+  And my cash account balance should be 30
+
+Scenario: savings account is overdrawn
+  Given my savings account balance is -20
+  And my cash account balance is 10
+  When I transfer 20
+  Then my savings account balance should be -20
+  And my cash account balance should be 10
+</code></pre>
+
+<p>That gets stored in a plain text file and you can run it by running a ruby file that looks like this:</p>
+
+<pre><code>require 'spec'
+require 'path/to/your/library/files'
+require 'path/to/file/that/defines/account_steps.rb'
+
+# assumes the other story file is named the same as this file minus ".rb"
+runner = Spec::Story::Runner::PlainTextStoryRunner.new(File.expand_path(__FILE__).gsub(".rb",""))
+runner.steps &lt;&lt; AccountSteps.new
+runner.run
+</code></pre>
+
+<p>And that&rsquo;s it! It&rsquo;s that simple. This is still in its very early phases and I&rsquo;m certain there will be enhancements as people gain experience with it.</p>
+
+<p>If you want to check it out yourself, grab the trunk and do the following:</p>
+
+<pre><code>cd trunk/rspec
+ruby examples/stories/calculator.rb
+ruby examples/stories/addition.rb
+</code></pre>
+
+<p>The first example uses Ruby with blockless steps. The second example uses a plain text story stored in examples/stories/addition.</p>
+
+<p>Also, with a couple of small tweaks we&rsquo;ll be able to consume plain text from any source (not just a local file) and feed it into the PlainTextStoryRunner. This means that we&rsquo;ll be able to do things like email scenarios to an app that consumes email and runs the scenario against the system and emails you back a report! Crazy, huh?</p>
+
+<p>Lastly, just a reminder, this is only in trunk right now (as of rev 2764), so if you want to explore it you&rsquo;ll have to get the trunk.</p>
+
+<p>Enjoy!!!!!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/09/08/simple-matchers-made-simple/">Simple Matchers made Simple</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-09-08T16:36:02+02:00" pubdate data-updated="true">Sep 8<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Although RSpec supports custom matchers, it has always been a bit more work than is ideal for simpler situations. This could be attributed to the desire for a system which would be flexible.</p>
+
+<p>But now, with a bit of convention-over-configuration kool-aide, we offer you the SimpleMatcher.</p>
+
+<p>The SimpleMatcher snuck its way into RSpec&rsquo;s source when we merged in the Story Runner (formerly RBehave). Dan North had wanted a simpler way to create custom matchers, and so he created one and used it throughout the specs for the Story Runner.</p>
+
+<p>And now we bring it to you (today if you use trunk, otherwise next release).</p>
+
+<p>Here&rsquo;s how you use it:</p>
+
+<pre><code>&lt;code&gt;def beat(hand)
+return simple_matcher("hand that beats #{hand.to_s}") do |actual|
+  actual.beats?(hand)
+end
+end
+
+full_house.should beat(flush)
+=&gt; nil #passes
+
+straight.should beat(flush)
+=&gt; Expected hand that beats Flush, got Straight
+&lt;/code&gt;
+</code></pre>
+
+<p>Admittedly, these are only useful for very simple cases. But what&rsquo;s in a name?</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/08/17/159/">159</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-08-17T22:11:00+02:00" pubdate data-updated="true">Aug 17<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Apparently I&rsquo;ve reached some sense of balance. I&rsquo;m &frac12; way there (somewhere). 1:59 since it all began, 1:59 left to go …</p>
+
+<p><img src="http://blog.davidchelimsky.net/assets/2008/7/13/159.jpg" alt="" /></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/07/08/rspec-basics-peep-code-is-out/">rSpec Basics Peep Code is Out</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-07-08T19:56:35+02:00" pubdate data-updated="true">Jul 8<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://topfunky.com">Topfunky</a> has just released the first of a 3 part <a href="http://peepcode.com/">PeepCode</a> series on <a href="http://rspec.rubyforge.org">rspec</a> entitled <a href="http://peepcode.com/products/rspec-basics">rSpec Basics</a>. I&rsquo;ve gone through it myself and I am impressed.</p>
+
+<p>I would recommend this for anybody who is just getting started with rspec and <a href="http://rubyonrails.com">rails</a>. As its title suggests, it covers the basics: a bit of BDD philosophy, getting things set up, writing simple examples, all the way through describing models.</p>
+
+<p>As for advanced users, I&rsquo;d recommend this to those of you who are interested in a few helpful tips and tricks. There is some material on the textmate bundles and integrating with growl. In fact, the approach to validating models is simple and pragmatic, and one that I suspect will become the standard in time.</p>
+
+<p>The only constructive criticism I&rsquo;d offer is that the discussion of the philosophy of the <a href="http://rspec.rubyforge.org/community">rspec team</a> doesn&rsquo;t recognize the roots of our philosophy in Test Driven Development. It seems to present writing focused examples, getting them to fail first, etc, as our idea. It is not. Just ask <a href="http://www.google.com/search?q=test+driven+development">google</a>.</p>
+
+<p>Regardless, it is very exciting to see the beginnings of quality educational material on rspec and BDD emerging. Keep your eyes open in this space. I suspect there is quite a bit more on the horizon.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/06/28/template-expects_render/">template.expects_render</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-06-28T08:57:15+02:00" pubdate data-updated="true">Jun 28<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One thing that&rsquo;s been missing from rspec_on_rails for a while is a clean and consistent way to mock or stub calls to partials from inside partials. In fact, even mocking partials inside non-partial templates has been buggy. For example, let&rsquo;s say you&rsquo;re describing a template that should include a partial named &lsquo;_thing&rsquo;. You might want to do something like this:</p>
+
+<pre><code>&lt;code&gt;assigns[:thing] = thing = Object.new
+template.should_receive(:render).with(
+:partial =&gt; 'thing',
+:object =&gt; thing
+)
+render 'things/index.html.erb'
+&lt;/code&gt;
+</code></pre>
+
+<p>Now if that is the only example in your entire suite that renders &lsquo;things/index.html.erb&rsquo;, no problem. In other words, in most cases, this is a problem.</p>
+
+<h4>The Problem</h4>
+
+<p>It turns out that Rails compiles ERB templates in memory the first time they are encountered and continues to use the compiled version throughout a given process. This is a GOOD thing for performance. It is, however, a challenge for testability. Why? Because when we stub methods using rspec, mocha or flexmock, we replace the real methods with implementations from the mocking framework. Those methods are part of what gets compiled. And that means WEIRD STUFF.</p>
+
+<p>If you mock a method in the template and the template gets compiled, then every other access to that template accesses the mocked method (even accesses in other examples). Conversely, if you mock a method in a template that&rsquo;s already been compiled, well, it just doesn&rsquo;t get hooked up at all and the mock expectation fails.</p>
+
+<p>The problem with mocking partials inside partials is that a response only has one instance of ActionView::Base, so if you mock one call to render on that instance, you mock them all. This means that you simply can not use a standard mocking framework to mock the call as they are simply not designed to pass some calls on to the real object and intercept others.</p>
+
+<h4>RSpec&rsquo;s Solution</h4>
+
+<p>To solve this, I created a proxy that delegates to a mock object, but that mock behaviour is not added to ActionView::Base directly. When ActionView::Base receives #render, it asks the proxy if it is interested in the call based on the arguments that were passed in. If so, it passes it on to the mock proxy for later verification, and otherwise swallows the call, the way a mock normally would. If it is not, however, interested in the call, execution of the render method continues as normal.</p>
+
+<p>I have to confess that this feels a bit dirty. I come from a land of fairly strict rules about what mocks should and should not do, but now live in a land in which a lot of rules I learned before are being challenged. This is the land of Ruby and Rails. And so I grit my teeth, and do what seems pragmatic.</p>
+
+<h4>View Examples</h4>
+
+<p>The result is that you&rsquo;ll now be able to do this in View Examples:</p>
+
+<pre><code>&lt;code&gt;assigns[:thing] = thing = Object.new
+template.expects_render(:partial =&gt; 'thing', :object =&gt; thing)
+render 'things/index.html.erb'
+&lt;/code&gt;
+</code></pre>
+
+<p>You can even do this if the thing you&rsquo;re rendering in the example IS a partial which contains a sub-partial:</p>
+
+<pre><code>&lt;code&gt;thing = Object.new
+template.expects_render(:partial =&gt; 'thing', :object =&gt; thing)
+render :partial =&gt; 'outer_partial', :locals =&gt; {:thing =&gt; thing}
+&lt;/code&gt;
+</code></pre>
+
+<h4>Controller Examples too</h4>
+
+<p>I also added the same behaviour to controllers in Controller Examples. This essentially restores the old <code>controller.should_render</code> behaviour that we gave up in RSpec 0.9, but with the syntax similar to that in the view examples above:</p>
+
+<pre><code>&lt;code&gt;controller.expects_render(:action =&gt; 'login')
+get 'index'
+&lt;/code&gt;
+</code></pre>
+
+<p>Thanks to <a href="http://jakescruggs.blogspot.com/">Jake Scruggs</a> for pairing on this with me. It might not have happened had he not offered to help.</p>
+
+<h4>When can I use it?</h4>
+
+<p>This is committed to RSpec&rsquo;s trunk and will be released with RSpec-1.0.6, sometime very soon.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/06/23/pending-insert-reason-here/">pending(&#8220;insert reason here&#8221;)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-06-23T20:03:34+02:00" pubdate data-updated="true">Jun 23<span>rd</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In RSpec-1.0, we introduced a Not Yet Implemented feature. When you say …</p>
+
+<pre><code>&lt;code&gt;it "should do something"&lt;/code&gt;
+</code></pre>
+
+<p>&hellip; with no block, the summary report lists that example as not implemented.</p>
+
+<pre><code>&lt;code&gt;37 examples, 0 failures, 1 not implemented&lt;/code&gt;
+</code></pre>
+
+<p>As I started to use this I found myself doing stuff like this:</p>
+
+<pre><code>&lt;code&gt;it "should do something"
+# do
+#   here.is(the).actual(implementation).but(commented).out
+# end
+&lt;/code&gt;
+</code></pre>
+
+<p>This made me sad. I hate having things that are commented out like that, even if the summary report draws my attention to it.</p>
+
+<p>Then came a conversation with <a href="http://dannorth.net">Dan</a> about <a href="http://rbehave.rubyforge.org">rbehave</a>. In his article <a href="http://dannorth.net/2007/06/introducing-rbehave">introducing rbehave</a>, Dan talks about identifying pending scenarios so instead of getting failures while he&rsquo;s working on the objects that must implement the behaviour, he gets a nice list of scenarios that should pass pending the completion of those objects. We discussed the similarities and differences between the Not Yet Implemented feature in RSpec and the Pending feature in rbehave and agreed that RSpec should have the pending method.</p>
+
+<p>And so it has come to pass.</p>
+
+<p>RSpec (trunk, as of rev 2118 &ndash; will be included in 1.0.6) still supports calling #it with no block, but now also supports the #pending method, allowing you to say:</p>
+
+<pre><code>&lt;code&gt;describe "pending example (using pending method)" do
+it %Q|should be reported as "PENDING: for some reason"| do
+  pending("for some reason")
+end
+end
+
+describe "pending example (with no block)" do
+it %Q|should be reported as "PENDING: Not Yet Implemented"|
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>And hear:</p>
+
+<pre><code>&lt;code&gt;$ ruby bin/spec examples/pending_example.rb -fs
+
+pending example (using pending method)
+- should be reported as "PENDING: for some reason" (PENDING: for some reason)
+
+pending example (with no block)
+- should be reported as "PENDING: Not Yet Implemented" (PENDING: Not Yet Implemented)
+
+Finished in 0.006639 seconds
+
+2 examples, 0 failures, 2 pending
+&lt;/code&gt;
+</code></pre>
+
+<p>The #pending method raises a Spec::DSL::ExamplePendingError, which gets reported, in this case, as &ldquo;PENDING: for some reason&rdquo;. If you leave off the block the example will be reported as &ldquo;PENDING: Not Yet Implemented&rdquo;. Either way, the summary will combine these two types of pending examples as just &ldquo;pending&rdquo;.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/06/15/real-confusion-over-mock-concepts/">Real Confusion over Mock Concepts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-06-15T17:20:44+02:00" pubdate data-updated="true">Jun 15<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Various dictionaries define Mock (the noun) as an imitation, a counterfeit, a fake. The term &ldquo;Mock Object&rdquo; initially meant exactly that &ndash; an imitation object, which serves as a control (i.e. invariant) in a test, allowing you to limit the variables in your test to the object being tested.</p>
+
+<p>Over time, new, more specific definitions have emerged and confusion has ensued. Now we are calling these things &ldquo;Test Doubles&rdquo;, of which there can be several types including what we now call Mocks and Stubs. And to make matters worse, if I use what we now call Mocks, I&rsquo;m a <strong>Mockist</strong> and if I use what we now call Stubs I&rsquo;m a <strong>Classicist</strong>. Why can&rsquo;t we just use both of these tools when each is appropriate and dispense with the name calling?</p>
+
+<p>But I digress.</p>
+
+<p>The main problem that I see with all of this is that the thing that separates the different kinds of Test Doubles is really how they behave at the individual message/method level. We have frameworks called Mocking Frameworks that create objects you can train to supply pre-defined responses (in which case its acting like a Stub), record messages (in which case it&rsquo;s a Recording Stub), and even verify that specific messages are received (in which case its a Mock). The same object can have all of these behaviours, so the struggle over what to call the object seems to miss the point.</p>
+
+<p>And to make matters more confusing, mocking frameworks in dynamic languages like Ruby give you the ability to treat any real object in your system in the same way as you treat a generated Mock, Fake, Test Double, Test Spy, etc, etc, etc. In RSpec, for example, you can do this:</p>
+
+<pre><code>&lt;code&gt;real_collaborator = RealCollaborator.new
+real_collaborator.should_receive(:some_message)
+object_i_am_describing = InterestingClass.new(real_collaborator)
+object_i_am_describing.do_something_that_should_send_some_message_to_collaborator
+&lt;/code&gt;
+</code></pre>
+
+<p>So what can we call this object? It&rsquo;s real, but it behaves like a Mock because I tell it to. This has always been considered a mocking no-no for many reasons. For example, you risk replacing methods that other methods in the same class rely on, which can lead to some unexpected test failures or, worse, passing tests that should be failing. In practice, I find that I only do this when dealing with other frameworks that rely on class methods (like Ruby on Rails&#8217; ActiveRecord).</p>
+
+<p>But, again, I digress.</p>
+
+<h4>Fighting confusion with more confusion</h4>
+
+<p>Of late, I&rsquo;ve gotten into the habit of talking about these things at the method level. You have an object (Test Double or Real Object) that can have Method Stubs and Message Expectations, either of which can return Stub Values. I&rsquo;m hopeful that these are self-explanatory, but in the interest of minimizing confusion:</p>
+
+<p>By &ldquo;Test Double&rdquo; I mean the <a href="http://xunitpatterns.com/Test%20Double.html">Meszaros definition</a>. Essentially, a test-specific substitute for a real object.</p>
+
+<p>By &ldquo;Method Stub&rdquo; I mean a no-op implementation of a method that may or may not be called at any time during the test. A Method Stub returns a Stub Value unless it returns nil, None, void, nirvana, etc.</p>
+
+<p>By &ldquo;Message Expectation&rdquo; I mean an expectation that a specific message will be received by the Test Double.</p>
+
+<p>By &ldquo;Stub Value&rdquo; I mean a single, pre-defined value that will be returned by a Method Stub regardless of whether or not it is associated with a Message Expectation.</p>
+
+<p>I recognize that I risk adding to the confusion instead of minimizing it, however I think this makes the whole thing easier to understand. What do you think?</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/06/06/speaking-at-the-rails-edge/">Speaking at The Rails Edge</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-06-06T21:02:14+02:00" pubdate data-updated="true">Jun 6<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://pragmaticstudio.com/therailsedge/"><img src="http://pragmaticstudio.com/therailsedge/images/rails-edge.png" alt="" /></a></p>
+
+<p>Mike Mangino of <a href="http://elevatedrails.com">Elevated Rails</a> and I are joining forces to do a talk at <a href="http://pragmaticstudio.com/therailsedge/">The Rails Edge</a> in Chicago in August. We&rsquo;ll be talking about how to use <a href="http://rspec.rubyforge.org">RSpec</a> and <a href="http://www.openqa.org/selenium/">Selenium</a> together to drive the development of Rails applications.</p>
+
+<p>Hope to see you there!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/06/04/rspec-1-0-belated-thanks/">RSpec 1.0 - belated thanks</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-06-04T09:18:52+02:00" pubdate data-updated="true">Jun 4<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The decision to release <a href="http://rspec.rubyforge.org">RSpec</a> 1.0 happened quite spontaneously at <a href="http://conferences.oreillynet.com/rails/">RailsConf 2007</a> in Portland. I heard more than one person there say they like RSpec&rsquo;s sensibilities and might use it if not for the changing API and upgrade problems, adding that they&rsquo;d consider using it when it goes 1.0.</p>
+
+<p><a href="http://blog.aslakhellesoy.com/">Aslak</a> was in Portland as well, so he and I talked it over and decided that the time was right to put a stake in the ground and release RSpec-1.0. Brian Takita was there as well, and was happy to join in the effort. So the three of us sat down to close up some holes and ship it.</p>
+
+<p>But the REALLY cool thing was that a few other people got wind of our plan and sat down with us to help make it all happen. Big thanks go out to <a href="http://kurt.karmalab.org">Kurt Schrader</a>, <a href="http://spicycode.com/">Chad Humphries</a>, <a href="http://theedgecase.com/team">Ken Barker</a> and <a href="http://www.codebehind.org/">Dustin Tinney</a> for joining the three of us. It was a blast hanging out with all you guys and the effort is seriously appreciated.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/06/03/oxymoron-testing-behaviour-of-abstractions/">oxymoron: testing behaviour of abstractions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-06-03T23:59:17+02:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The question of how test behaviour implemented in abstract classes came up on the RSpec list yesterday. This is something that comes up periodically, so I thought it worth posting about. Over the years I&rsquo;ve seen and tried a few different approaches to dealing with this problem and I&rsquo;ve come to an approach that feels right to me. It stems from two basic principles:</p>
+
+<ul>
+<li><p>Abstract classes don&rsquo;t have any behaviour</p></li>
+<li><p>Only remove duplication that actually exists</p></li>
+</ul>
+
+
+<h3>Abstract classes don&rsquo;t have any behaviour</h3>
+
+<p>Abstract classes are a structural tool that we can use to share implementation between concrete classes. Sometimes they actually represent abstract types, but all too often they&rsquo;re misused as convenient placeholders for shared implementation. When that happens, their presence clouds meaning.</p>
+
+<p>In statically typed languages like Java and C#, you can spot this misuse by looking at the types being referenced in method signatures. If no methods accept the abstract class, then it isn&rsquo;t really functioning as an abstract type in your system.</p>
+
+<p>This is a bit more subtle in Ruby because we don&rsquo;t have an abstract class construct and we think in duck types instead of static or runtime types. Abstract classes are really more of a convention than a language feature.</p>
+
+<p>Regardless, this rule of thumb steers me away from testing abstract classes directly.</p>
+
+<h3>Only remove duplication that actually exists</h3>
+
+<p>This is a general rule of thumb that I like to apply whether I&rsquo;m dealing with examples or subject code. Only remove <strong>actual</strong> duplication. If you start with something general before you have anything specific, there is a tendency to make assumptions about what the duplication will be, and those assumptions are often misguided.</p>
+
+<p>In terms of abstractions, this rule of thumb guides me to extract abstraction when I see duplication rather than imposing it up front.</p>
+
+<h3>Putting the two together</h3>
+
+<p>The question on the list was specifically about how to test methods that live in in Application in a Ruby on Rails app. For the uninitiated, Application is the base class for all controllers in an MVC framework. Ruby doesn&rsquo;t support abstract classes, so you <strong>can</strong> actually initialize Application, but AFAIK the Rails framework never does.</p>
+
+<p>Based on the two principles, and given that I write executable examples first, I start by describing the behaviour of a concrete controller, developing methods directly on that controller against those examples. When a new controller comes along that should have the same behaviour, I&rsquo;ll often duplicate the examples and the behaviour first and then extract the duplication into shared examples and the Application controller. This way, if there are any differences at all in the expected behaviour (which there often are) it easier to figure out the exact bits that I want to extract.</p>
+
+<p>Once I&rsquo;ve got the abstraction in both the examples and code I can just plug them in to the third, fourth, etc examples.</p>
+
+<h3>Other schools of thought</h3>
+
+<p>There is a runtime cost to pay when you&rsquo;re running the same examples for multiple subclasses of an abstract class. You could argue that this is wasteful because the same implementation is being tested multiple times, which flies in the face of the goal of fast running test suites. This argument might lead you to write tests directly for the abstract class.</p>
+
+<p>I can&rsquo;t really disagree with the performance cost, yet I still prefer to approach it as I do because I find it more clear and less brittle to be describing the behaviour of concrete types rather than the behaviour of abstract types (which doesn&rsquo;t really exist).</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/13/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/11/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec&#8217;s new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

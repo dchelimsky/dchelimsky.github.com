@@ -9,7 +9,8 @@
   <meta name="author" content="David">
 
   
-  <meta name="description" content="$(document).ready(function() { var redirect_url = "http://blog.davidchelimsky.net" + window.location.pathname; $('#url').text(redirect_url); &hellip;">
+  <meta name="description" content="if (window.location.pathname.match(/^\/blog/)) { $(document).ready(function() { $('#message').text("Oops!"); });
+} else { window.location = "/blog &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -64,21 +65,18 @@
   <div id="main">
     <div id="content">
       <script type="text/javascript">
-$(document).ready(function() {
-  var redirect_url = "http://blog.davidchelimsky.net" + window.location.pathname;
-  $('#url').text(redirect_url);
-  setTimeout(function() { window.location = redirect_url;}, 1500);
-});
+if (window.location.pathname.match(/^\/blog/)) {
+  $(document).ready(function() {
+    $('#message').text("Oops!");
+  });
+} else {
+  window.location = "/blog" + window.location.pathname;
+};
 </script>
 
 <div class="blog-index">
   <article>
-    The page you&#8217;re looking for is probably on my old blog site: <a href="http://oldblog.davidchelimsky.net">http://oldblog.davidchelimsky.net</a>
-    <br/>
-    <br/>
-    Redirecting you just a second &#8230;
-    <br/>
-    <br/>
+    <div id="message"></div>
   </article>
 </div>
 

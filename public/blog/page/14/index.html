@@ -1,0 +1,725 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="RSpec 0.9 is coming soon, and promises to do a better job of playing nice with others. RSpec plays nice with you. There&rsquo;s a new configuration &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/page/14">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/04/01/rspec-plays-nice-with-others/">RSpec plays nice with others</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-04-01T15:58:50+02:00" pubdate data-updated="true">Apr 1<span>st</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>RSpec 0.9 is coming soon, and promises to do a better job of playing nice with others.</p>
+
+<h4>RSpec plays nice with you.</h4>
+
+<p>There&rsquo;s a new configuration mechanism inspired by the one in Rails:</p>
+
+<pre><code>&lt;code&gt;Spec::Runner.configure do |config|
+config.use_transactional_fixtures = true
+#etc
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>This mostly affects Spec::Rails users, but as new features become configurable, this will be the &ldquo;how&rdquo;.</p>
+
+<h4>RSpec plays nice with mocha.</h4>
+
+<p>Update 4/25 &ndash; 0.9 will be released with support for flexmock as well as mocha.</p>
+
+<p>Speaking of new configurable features, RSpec 0.9 will play nice with other mock frameworks. The first release is going to support using mocha, but we&rsquo;re hoping to follow this with support for flexmock as well. So now, in a spec_helper.rb, you can do this:</p>
+
+<pre><code>&lt;code&gt;Spec::Runner.configure do |config|
+config.mock_with :mocha
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>This tells RSpec to load up mocha instead of RSpec&rsquo;s mock framework, Spec::Mocks. One nice thing about using mocha with RSpec is that, in my opinion, the different syntax illuminates the different semantics:</p>
+
+<ul>
+<li><h1>expects for pre-action, interaction expectations</h1></li>
+<li><h1>should for post-action, (typically) state expectations</h1></li>
+</ul>
+
+
+<p>Sure, we could get similar syntax by aliasing #should_receive, but there are a lot of people who simply prefer mocha or flexmock and we want to invite them all to use RSpec without giving up their preferred mocking framework.</p>
+
+<h4>RSpec even plays nice with &lsquo;test/unit&rsquo;</h4>
+
+<p>For some time now, RSpec has allowed you to bring the myriad plugins and add-ons associated with &lsquo;test/unit&rsquo; by deriving the binding in which examples are run from Test::Unit::TestCase (like so…)</p>
+
+<pre><code>&lt;code&gt;describe Thing do
+inherit Test::Unit::TestCase
+#...
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>With RSpec 0.9, we&rsquo;ve added the reverse: Spec::Expectations and Spec::Matchers made available to your &lsquo;test/unit&rsquo; tests with a simple require statement:</p>
+
+<pre><code>&lt;code&gt;require 'test/unit'
+require 'spec/test_case_adapter'
+
+class ThingTest &lt; Test::Unit::TestCase
+def setup
+  @thing = Thing.new
+end
+
+def test_thing_should_be_friendly
+  @thing.should be_friendly
+end
+end
+&lt;/code&gt;
+</code></pre>
+
+<h4>RSpec plays nice with your diet</h4>
+
+<p>With RSpec 0.9, RSpec is finally sugar-free!</p>
+
+<p>We&rsquo;ll miss the underscores that followed #should, and I&rsquo;m personally grateful to Rich Kilmer for the very, very cool patch that not only allowed us to eliminate all of those nasty dots, but taught me one of my first serious lessons in meta-programming. However, as time went on we discovered that continuing to support that sugar was going to be an ongoing struggle between RSpec and any system it was being used to describe that happened to like #method_missing as much as RSpec did. And so we bid it a bittersweet &ldquo;adieu&rdquo;.</p>
+
+<p>Of course, if you&rsquo;re missing some sweetener, there&rsquo;s always the natural sweeteners in mocha ….</p>
+
+<p>Describe it with RSpec-0.9. Coming soon to a gems directory near you.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/03/11/describe-it-with-rspec/">Describe it with RSpec</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-03-11T06:07:25+01:00" pubdate data-updated="true">Mar 11<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>module BddTools</p>
+
+<pre><code>describe RSpec do
+  it "should help you get the words right" do
+    Kernel.should respond_to(:describe)
+    Behaviour.should respond_to(:it)
+  end
+end
+end&lt;/code&gt;
+</code></pre>
+
+<p>That code produces this output:</p>
+
+<pre><code>&lt;code&gt;BddTools::RSpec
+- should help you get the words right
+&lt;/code&gt;
+</code></pre>
+
+<p>Behaviour Driven Development is all about <a href="http://behaviour-driven.org/GettingTheWordsRight">getting the words right</a>.</p>
+
+<p><a href="http://dannorth.net">Dan North</a> has just registered <a href="http://rbehave.rubyforge.org">rbehave</a> at <a href="http://rubyforge.org">rubyforge</a> and is using <a href="http://rspec.rubyforge.org">rspec</a> to drive ITS behaviour. Getting started, he felt that &ldquo;context&rdquo; and &ldquo;specify&rdquo; weren&rsquo;t speaking to him, so he wrapped them in &ldquo;describe&rdquo; and &ldquo;it&rdquo; to create the syntax in the example above.</p>
+
+<p>These new words have been added to rspec&rsquo;s trunk and will be released with rspec-0.8.3. Combined with their elder siblings &ldquo;context&rdquo; and &ldquo;specify&rdquo;, you&rsquo;ll now be able to choose from a wider set of words to get your specs to &ldquo;speak&rdquo;.</p>
+
+<p>Keep your eyes peeled for <a href="http://rbehave.rubyforge.org">rbehave</a>, an Acceptance Testing Framework that provides a Story Runner designed to promote communication between Customers, Developers and Testers. Combine rbehave&rsquo;s Story Runner with rspec describing lower level behaviours and you&rsquo;ll have the beginnings of the perfect toolset for a BDD project in Ruby.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/03/02/lesson-learned-dont-fork-a-moving-target/">lesson learned - don&#8217;t fork a moving target</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-03-02T17:30:43+01:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In rspec-0.8.0, I forked assert_select in order to get the desired rspec syntax and error messages. Yesterday, only a day after the 0.8.1 release, the specs for &ldquo;response.should have_rjs&rdquo; (rspec&rsquo;s assert_select_rjs port) started failing against edge rails.</p>
+
+<p>It didn&rsquo;t take me very long to realize that forking assert_select (and its siblings &ndash; assert_select_rjs, assert_select_email, etc) was a big mistake. The only thing that is really maintainable is a very thin wrapper. As long as the API doesn&rsquo;t change, the wrapper should continue to work correctly.</p>
+
+<p>So I re-wrote have_tag, with_tag (for nested tags), have_rjs, be_feed and send_email to simply delegate off to assert_select &ndash; exactly as i.should have_done in the first place. This rewrite will be released with 0.8.2, probably later today.</p>
+
+<p>Unfortunately, this does introduce a regression. Currently, assert_select_rjs does not support :hide or :effect, so these won&rsquo;t be supported by should have_rjs.</p>
+
+<p>In the short term, you&rsquo;ll still be able to spec :hide and :effect using the now deprecated should_have_rjs, and hopefully we&rsquo;ll be able to come up w/ some solution for should have_rjs(:hide/:effect) before 0.9, when we are slated to remove all the deprecated features.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/03/01/spec-expectations-and-test-unit-testcase-together-again-at-last/">Spec::Expectations and Test::Unit::TestCase, together again at last</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-03-01T16:56:40+01:00" pubdate data-updated="true">Mar 1<span>st</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In <a href="http://www.robsanheim.com/">Rob Sanheim</a>&rsquo;s blog <a href="http://www.robsanheim.com/2006/12/29/bdd-in-rails-testspec-and-rspec/">comparing test/spec w/ rspec</a>, Rob pointed out that he had &ldquo;been following RSpec, the better known Ruby BDD library for awhile, but decided against it since it just doesn&rsquo;t look practical for use in an established project with around ~400 test cases.&rdquo;</p>
+
+<p>As it turns out, rspec-0.8 has done a much better job of isolating components. It&rsquo;s not quite ideal yet, but it is sufficient to support using RSpec&rsquo;s expectations right in your Test::Unit::TestCases.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2007/03/01/spec-expectations-and-test-unit-testcase-together-again-at-last/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/02/28/rspec-0-8-0-released/">RSpec-0.8.0 Released</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-02-28T21:35:01+01:00" pubdate data-updated="true">Feb 28<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We finally released RSpec-0.8.0 today. Check out the <a href="http://rspec.rubyforge.org">rspec website</a> for details.</p>
+
+<p>Happy Spec&#8217;ing!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/02/26/matchers-doing-double-duty/">matchers doing double duty</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-02-26T01:31:13+01:00" pubdate data-updated="true">Feb 26<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When we added <a href="http://blog.davidchelimsky.net/articles/2007/02/21/generated-spec-names-keep-specs-dryer">generated spec descriptions</a> to RSpec, we got a surprise second use for Matchers nearly for FREE!</p>
+
+<p>With only a slight modification to <a href="http://rspec.rubyforge.org/rdoc/classes/Spec/Mocks.html">Spec::Mocks</a>, we are able to use the Matchers as Mock Argument Constraints as well. For example, #equal(obj) can now be used as an Expectation Matcher:</p>
+
+<pre><code>&lt;code&gt;x = 5
+x.should equal(3)
+
+=&gt; expected 3, got 5 (using .equal?)&lt;/code&gt;
+</code></pre>
+
+<p>or a Mock Argument Constraint Matcher</p>
+
+<pre><code>&lt;code&gt;thing = mock("thing")
+thing.should_receive(:msg).with(equal(3))
+thing.msg(5)
+
+=&gt; Mock 'thing' expected :msg with (equal 3) but received it with (5)
+&lt;/code&gt;
+</code></pre>
+
+<p>Thanks to Dan North for pointing me to <a href="http://code.google.com/p/hamcrest/">Hamcrest</a> when we were first discussing the new expectation mechanism. It turns out that <a href="http://code.google.com/p/hamcrest/">Hamcrest</a> and <a href="http://www.jmock.org/">jMock</a> already employ a similar idea in Java, in which a common set of Matchers is utilized by both projects.</p>
+
+<p>This is a brand new addition, and is not yet fully baked. As of now (rev 1533), there are no special methods added for better mock syntax, but we&rsquo;ll probably add things like #greater_than(n) so you can say #with(greater_than(n)) instead of #with(be > n), although that WILL work, however strange the syntax.</p>
+
+<p>Trunksters: this is available as of rev 1533.</p>
+
+<p>Everyone else: this will be released with rspec-0.8.0</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/02/21/generated-spec-names-keep-specs-dryer/">generated spec names keep specs DRYer</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-02-21T18:35:01+01:00" pubdate data-updated="true">Feb 21<span>st</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/02/18/custom-expectation-matchers/">custom expectation matchers</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-02-18T17:16:42+01:00" pubdate data-updated="true">Feb 18<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>RSpec 0.8 introduces the concept of &ldquo;Expectation Matchers&rdquo;:/articles/2007/02/18/expectation-matchers to RSpec. Not only does this simplify RSpec&rsquo;s own internals, but it also makes it really simple to write your own custom expectation matchers.</p>
+
+<p>Here&rsquo;s an example that came from a <a href="http://rubyforge.org/pipermail/rspec-devel/2007-February/001982.html">question</a> on the <a href="http://rubyforge.org/pipermail/rspec-devel/">rspec-devel mailing list</a>.</p>
+
+<p>Evgeny wanted a simple, DRY way to specify that a Rails model class should require specific fields. Here&rsquo;s what I came up with. I&rsquo;m not convinced this is the best approach to this problem, but I&rsquo;m presenting it here to demonstrate the simplicity of creating a custom matcher.</p>
+
+<pre><code>&lt;code&gt;module ModelSpecHelper
+class Require
+  def initialize(attr)
+    @attr = attr
+  end
+
+  def matches?(model)
+    @model = model
+    model.send("#{@attr.to_s}=".to_sym, nil)
+    return !model.valid?
+  end
+
+  def failure_message
+    "expected #{@model.inspect} to require #{@attr.inspect}"
+  end
+end
+
+def require(attr)
+  Require.new(attr)
+end
+end
+
+context "User behaviour" do
+include ModelSpecHelper
+
+setup do
+  @user = User.new(:email =&gt; 'a@b.com', :zip =&gt; '02134')
+end
+
+specify "should require email" do
+  @user.should require(:email)
+end
+
+specify "should require zip" do
+  @user.should require(:zip)
+end
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>The only thing I&rsquo;m not comfortable with is that these specs are bound together with the setup. If you don&rsquo;t initialize the required attributes in setup and only one of the required attributes is actually implemented in the model, all of them will pass anyway (false positive).</p>
+
+<p>I guess that could be solved by adding a parameter to #require:</p>
+
+<pre><code>&lt;code&gt;def require(attr, valid_value)
+Require.new(attr, valid_value)
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>Then #matches? could assign nil to the attr and expect #valid? to return false and then assign valid_value to the attr and expect #valid? to return true. The failure message could say something like &ldquo;model was not valid even when email was assigned &lsquo;<a href="&#109;&#x61;&#x69;&#108;&#116;&#111;&#58;&#x61;&#64;&#x62;&#x2e;&#99;&#111;&#x6d;">&#97;&#x40;&#x62;&#x2e;&#x63;&#x6f;&#109;</a>&rsquo;. You must ensure that all required attributes are assigned values before calling #should require.&rdquo;</p>
+
+<p>Making that change would be cake! Again, the point here is to show how easy custom matchers are to implement. Coming up w/ the right syntax and messaging is another problem, but RSpec does its best to stay out of your way as you explore that problem.</p>
+
+<p>So I encourage you to explore custom matchers if you&rsquo;re using RSpec >= 0.8, and I look forward to hearing about your experiences doing so. I also encourage you to consider publishing your own libraries of custom matchers that you find generally useful.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/02/18/expectation-matchers/">expectation matchers</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-02-18T16:14:41+01:00" pubdate data-updated="true">Feb 18<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>Expectation Matchers</h3>
+
+<p>RSpec 0.8 introduces a new approach to setting and verifying expectations called Expectation Matchers.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2007/02/18/expectation-matchers/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/02/16/rspec-exts/">rspec-exts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-02-16T20:38:39+01:00" pubdate data-updated="true">Feb 16<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://rashkovskii.com">Yurii Rashkovskii</a> has just released 0.1 of <a href="http://rubyforge.org/projects/rspec-ext/">RSpec Extensions</a>.</p>
+
+<p>This is a really exciting thing to see as there are a LOT of good ideas about extending RSpec that we&rsquo;ve been cautious about adding in an effort to keep things simple, focussed and general. Hats off to Yurii for taking it upon himself to get his ideas out to the rest of the community.</p>
+
+<p>My hope is that, as rspec matures, more extension libraries like this will appear and that, as specific bits of functionality prove their usefulness in a general way, we&rsquo;ll be able to incorporate them into rspec down the road.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/15/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/13/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec&#8217;s new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

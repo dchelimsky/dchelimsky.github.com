@@ -1,0 +1,194 @@
+---
+author: David
+comments: false
+date: 2008-09-22 18:39:00+00:00
+layout: post
+slug: cucumber
+title: Cucumber
+wordpress_id: 1220
+---
+
+Aslak Hellesøy's [Cucumber](http://github.com/aslakhellesoy/cucumber) library will be replacing RSpec's Story Runner **after** the RSpec 1.1.5 release (coming soon).
+
+
+
+
+
+
+Cucumber is a bottom up re-write of the Story Runner, and features a grammar parser using [Treetop](http://treetop.rubyforge.org/). When I first started working on support for plain text stories, I chose to roll my own parsing rather than writing a grammar for a number of reasons, but it turns out that we get some great benefits from it.
+
+
+
+
+
+
+### Cucumber supports multiple spoken languages:
+
+
+
+
+
+
+So now you can say:
+
+
+
+
+
+    
+    
+    Funcionalidade: Adição
+    Para evitar erros bobos
+    Como um péssimo matemático
+    Eu quero saber como somar dois números
+    
+    Cenário: Adicionar dois números
+      Dado que eu digitei 50 na calculadora
+      E que eu digitei 70 na calculadora
+      Quando eu aperto o botão de soma
+      Então o resultado na calculadora deve ser 120
+    
+
+
+
+
+
+Que legal! (How cool is **that**?)
+
+
+
+
+
+
+There are already several languages supported, and adding new ones is fairly trivial, so we'll likely support adding your own languages after some time.
+
+
+
+
+
+
+### Improved backtraces
+
+
+
+
+
+
+Cucumber includes line numbers from the plain text Feature files, making it much, much easier to understand failures. (NOTE: we're calling them Features now instead of Stories - look for another post on that subject soon)
+
+
+
+
+
+
+### Simpler configuration
+
+
+
+
+
+
+Cucumber eliminates steps_for and using_steps_for. Simply define steps using the Given, When and Then methods:
+
+
+
+
+
+    
+    
+    #features/steps/accounts.rb
+    Given /I have \$(\d+) in my (.*) account/ do |dollars, account_type|
+    ...
+    end
+    
+
+
+
+
+
+Now require the files with the step definitions you need:
+
+
+
+
+
+    
+    
+    cucumber -r features/steps/accounts.rb features/transfer_money
+    
+
+
+
+
+
+... and you're off. For most cases you don't even need that granularity, you can just say …
+
+
+
+
+
+    
+    <code>cucumber features</code>
+
+
+
+
+
+
+... and cucumber will require any .rb files it finds in the features directory before running the feature files.
+
+
+
+
+
+
+### Fewer surprises
+
+
+
+
+
+
+When RSpec's Story Runner finds more than one step definition that can handle a step, the first one it finds wins. This can lead to some painful debugging sessions.
+
+
+
+
+
+
+When Cucumber finds more than one step definition that can handle a step, you get an error telling you which step definitions are competing, including their location (file and line number), so you can easily see and resolve the conflict.
+
+
+
+
+
+
+### What this means for you if you're already using Story Runner
+
+
+
+
+
+
+Cucumber is only a few months old and is nearly feature compatible with RSpec's Story Runner and already adds a lot of powerful new features. Aslak has converted many, many stories to cucumber features, and is [posting about his experiences](http://github.com/aslakhellesoy/cucumber/wikis/migration-from-rspec-stories) and refining the process as he goes. By the time we release cucumber as the official scenario runner, the migration path will be well documented and inexpensive.
+
+
+
+
+
+
+As for a time frame, that's difficult to say. We've been promising the 1.1.5 release for some time and for one reason or another it keeps getting pushed back. We'll likely wait for the rails 2.2 release and make sure that it is compatible. Rumor has it that is coming soon, but it was coming soon several weeks ago as well, so we'll have to wait and see.
+
+
+
+
+
+
+In the mean time, we are freezing development on Story Runner so that we can focus on Cucumber development. Before we officially release cucumber as part of rspec, we'll create a separate project up on github for just the story runner (likely named rspec-stories) so the code will be available for teams that want to continue to use and/or maintain it.
+
+
+
+
+
+
+I'll follow up here and on the [rspec-users mailing list](http://rubyforge.org/mailman/listinfo/rspec-users) (which is mirrored by the [rspec google group](http://groups.google.com/group/rspec)) as things progress.

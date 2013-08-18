@@ -1,0 +1,1191 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="Slides from my RubyConf 2010 talks in São Paulo, Montevideo, and New Orleans: Maintaining balance while reducing duplication
+">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/page/5">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/11/13/rubyconf-slides-2/">RubyConf 2010 Presentations</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-11-13T15:13:09+01:00" pubdate data-updated="true">Nov 13<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Slides from my RubyConf 2010 talks in São Paulo, Montevideo, and New Orleans:</p>
+
+<p><a href="http://blog.davidchelimsky.net/wp-content/uploads/2010/11/duplication.pdf">Maintaining balance while reducing duplication</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/11/07/specifying-mixins-with-shared-example-groups-in-rspec-2/">Specifying mixins with shared example groups in RSpec-2</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-11-07T18:41:24+01:00" pubdate data-updated="true">Nov 7<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One question that comes up on the <a href="http://rubyforge.org/mailman/listinfo/rspec-users">rspec-users mailing list</a> / <a href="http://groups.google.com/group/rspec">google group</a> is: &ldquo;How do I specify modules that get mixed into other modules and classes?&rdquo;</p>
+
+<p>This is a great question and, naturally, leads to a wide variety of answers depending on context. I&rsquo;m going to approach this generally, and explain my viewpoint about it, but keep in mind that <em>context is everything</em>, and YMMV. That said:</p>
+
+<h2>In theory</h2>
+
+<p>With a tool like <a href="http://relishapp.com/rspec">RSpec</a>, the goal is to specify responsibilities of objects from the perspective of their consumers. Consider this structure:</p>
+
+<pre><code>module M
+end
+
+class C
+ include M
+end
+</code></pre>
+
+<p>If module M is included in class C, consumers of class C have no reason to know that module M is involved. They just care about the behaviour. Same is true of classes A, B, and D, if they each include module M. Keeping in mind that each host class/module/object (those that include or extend M) can override any of the behaviour of M, <em><strong>each host should be specified independently</strong></em>.</p>
+
+<p>Additionally, if module M enforces some rule, like host objects (i.e. classes and modules that include or extend M) must implement method F, then that responsibility belongs to M, and should be specified in the context of M, not any of its host classes/objects. These rules can be further broken down into rules enforced at mix-in time and rules enforced at runtime.</p>
+
+<p>So we&rsquo;re interested in specifying two fundamentally different things</p>
+
+<ul>
+<li>the behaviour of each class/object that mixes in M in response to events triggered by their consumers</li>
+<li>the behaviour of M in response to being mixed-in</li>
+</ul>
+
+
+<h2>In practice</h2>
+
+<h3>Specifying the behaviour of a module in response to being mixed in</h3>
+
+<p>Imagine we are developing a module that exposes a bunch of methods related to a person&rsquo;s age: <code>can_vote?</code>, <code>can_drink?</code>, etc. For this to work, the host object needs to supply the birthdate of the person in question. These sorts of requirements are often documented for us by library providers, but less often required programatically. It would be nice to provide a clear message to the developer when</p>
+
+<p>For this, I&rsquo;ll typically mix M into anonymous classes and objects and specify what happens:</p>
+
+<pre><code>describe AgeBasedApprovable do
+  it "requires host object to provide a 'birthdate' method" do
+    host = Object.new
+    expect do
+      host.extend(AgeBasedApprovable)
+    end.to raise_error(/Objects that extend AgeBasedApprovable must provide a 'birthdate' method/)
+  end
+end
+</code></pre>
+
+<h3>Specifying the behaviour of host classes/objects</h3>
+
+<p>For this, I&rsquo;ve used a combination of shared example groups and custom macros in the past, but the macros are not necessary any longer. Thanks to some lively discussion [1-5], and code from <a href="https://wincent.com/">Wincent Colaiuta</a>, <a href="http://twitter.com/ashleymoran">Ashley Moran</a> and <a href="http://twitter.com/myronmarston">Myron Marston</a>, shared example groups just got <em>awesome</em> in <a href="http://relishapp.com/rspec">rspec-2.0</a>! They can now be parameterized and/or customized in three different ways. The biggest change came from having <code>it_should_behave_like</code> (and its new alias, <code>it_behaves_like</code>), generate a nested example group instead of mixing a module directly into the host group. This means that this:</p>
+
+<pre><code>shared_examples_for M do
+  it "does something" do
+    # ....
+  end
+end
+
+describe C do
+  it_behaves_like M
+end
+</code></pre>
+
+<p>&hellip; is equivalent to this:</p>
+
+<pre><code>describe C do
+  context "behaves like M" do 
+    it "does something" do
+      # ....
+    end
+  end
+end
+</code></pre>
+
+<p>In rspec-1, shared groups are modules that get mixed into the host group, which means material defined in the shared group can impact the host group in surprising ways. With this new structure in rspec-2, the nested group is a completely separate group, and the combination of sharing behaviour (through inheritance) and isolating behaviour (through encapsulation) provides power we never had before in RSpec.</p>
+
+<h2>Customizing shared example groups</h2>
+
+<p>Here are three techniques for customizing shared groups:</p>
+
+<h3>Parameterization</h3>
+
+<pre><code>describe Host do
+  it_should_behave_like M, Host.new
+end
+</code></pre>
+
+<p>Here, the result of Host.new is passed to the shared group as a block parameter, making that value available at the group level (each example group is a class), and the instance level (each example runs in an <em>instance</em> of that class). So &hellip;</p>
+
+<pre><code>shared_examples_for M do |host|
+  it "can access #{host} in the docstring" do
+    host.do_something # it can access the host _in_ the example
+  end
+end
+</code></pre>
+
+<h3>Methods defined in host group</h3>
+
+<pre><code>describe Host do
+  let(:foo) { Host.new }
+  it_should_behave_like M
+end
+</code></pre>
+
+<p>In this case, the <code>foo()</code> method defined by <code>let()</code> is inherited by the generated nested group, and available within any of the examples defined in the shared group.</p>
+
+<pre><code>shared_examples_for M do
+  it "does something" do
+    foo
+  end
+end
+</code></pre>
+
+<p>NOTE that instance methods that are inherited like this are not available in the class scope of the generated example group, and are therefore not available for use in docstings:</p>
+
+<pre><code>shared_examples_for M do
+  it "does some #{foo}" do # this would raise an error
+    # ...
+  end
+end
+</code></pre>
+
+<h3>Methods defined in an extension block</h3>
+
+<pre><code>describe Host do
+  it_should_behave_like M do
+    let(:foo) { Host.new }
+  end
+end
+</code></pre>
+
+<p>The block passed to <code>it_should_behave_like()</code> is eval&rsquo;d after the shared group is eval&rsquo;d, allowing you to define default implementations of methods in the shared group. This means we can define groups that programmatically enforce rules for the host groups. For example:</p>
+
+<pre><code>shared_examples_for M do
+  def foo
+    raise "Groups that include shared examples for M must provide a foo method"
+  end
+
+  it "does something needing foo" do
+    foo
+  end
+end 
+</code></pre>
+
+<p>Now library authors can now ship shared groups that will programmatically instruct end users how to use them!</p>
+
+<p>[1] <a href="http://github.com/rspec/rspec-core/issues/issue/71">http://github.com/rspec/rspec-core/issues/issue/71</a></p>
+
+<p>[2] <a href="http://github.com/rspec/rspec-core/issues/issue/74">http://github.com/rspec/rspec-core/issues/issue/74</a></p>
+
+<p>[3] <a href="http://groups.google.com/group/rspec/browse_thread/thread/f5620df1c42874bf#">http://groups.google.com/group/rspec/browse_thread/thread/f5620df1c42874bf#</a></p>
+
+<p>[4] <a href="http://groups.google.com/group/rspec/browse_thread/thread/16d553ee2e51ccbd#">http://groups.google.com/group/rspec/browse_thread/thread/16d553ee2e51ccbd#</a></p>
+
+<p>[5] <a href="http://groups.google.com/group/rspec/browse_thread/thread/a23d5fb84a31f11e#">http://groups.google.com/group/rspec/browse_thread/thread/a23d5fb84a31f11e#</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/11/07/rspec-21-is-released/">rspec-2.1 is released</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-11-07T18:34:24+01:00" pubdate data-updated="true">Nov 7<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>rspec-core-2.1.0 / 2010-11-07</h3>
+
+<p><a href="http://relishapp.com/rspec/rspec-core/v/2-1">Cucumber features</a></p>
+
+<p><a href="http://rdoc.info/gems/rspec-core/2.1.0/frames">RDoc</a> # will be generated by 2010-11-08</p>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.0.1...v2.1.0">full changelog</a></p>
+
+<ul>
+<li><p>Enhancments</p>
+
+<ul>
+<li>Add skip_bundler option to rake task to tell rake task to ignore the
+presence of a Gemfile (jfelchner)</li>
+<li>Add gemfile option to rake task to tell rake task what Gemfile to look
+for (defaults to &lsquo;Gemfile&rsquo;)</li>
+<li>Allow passing caller trace into Metadata to support extensions (Glenn
+Vanderburg)</li>
+<li>Add deprecation warning for Spec::Runner.configure to aid upgrade from
+RSpec-1</li>
+<li>Add deprecated Spec::Rake::SpecTask to aid upgrade from RSpec-1</li>
+<li>Add &lsquo;autospec&rsquo; command with helpful message to aid upgrade from RSpec-1</li>
+<li>Add support for filtering with tags on CLI (Lailson Bandeira)</li>
+<li>Add a helpful message about RUBYOPT when require fails in bin/rspec
+(slyphon)</li>
+<li>Add &ldquo;-Ilib&rdquo; to the default rcov options (Tianyi Cui)</li>
+<li>Make the expectation framework configurable (default rspec, of course)
+(Justin Ko)</li>
+<li>Add &lsquo;pending&rsquo; to be conditional (Myron Marston)</li>
+<li>Add explicit support for :if and :unless as metadata keys for conditional run
+of examples (Myron Marston)</li>
+<li>Add &mdash;fail-fast command line option (Jeff Kreeftmeijer)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Eliminate stack overflow with &ldquo;subject { self }&rdquo;</li>
+<li>Require &lsquo;rspec/core&rsquo; in the Raketask (ensures it required when running rcov)</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-expectations-2.1.0 / 2010-11-07</h3>
+
+<p><a href="http://relishapp.com/rspec/rspec-expectations/v/2-1">Cucumber features</a></p>
+
+<p><a href="http://rdoc.info/gems/rspec-expectations/2.1.0/frames">RDoc</a> # will be generated by 2010-11-08</p>
+
+<p><a href="http://github.com/rspec/rspec-expectations/compare/v2.0.1...v2.1.0">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>be_within(delta).of(expected) matcher (Myron Marston)</li>
+<li>Lots of new Cucumber features (Myron Marston)</li>
+<li>Raise error if you try &ldquo;should != expected&rdquo; on Ruby-1.9 (Myron Marston)</li>
+<li>Improved failure messages from throw_symbol (Myron Marston)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Eliminate hard dependency on RSpec::Core (Myron Marston)</li>
+<li>have_matcher &ndash; use pluralize only when ActiveSupport inflections are indeed
+defined (Josep M Bach)</li>
+<li>throw_symbol matcher no longer swallows exceptions (Myron Marston)</li>
+<li>fix matcher chaining to avoid name collisions (Myron Marston)</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-mocks-2.1.0 / 2010-11-07</h3>
+
+<p><a href="http://relishapp.com/rspec/rspec-mocks/v/2-1">Cucumber features</a></p>
+
+<p><a href="http://rdoc.info/gems/rspec-mocks/2.1.0/frames">RDoc</a> # will be generated by 2010-11-08</p>
+
+<p><a href="http://github.com/rspec/rspec-mocks/compare/v2.0.1...v2.1.0">full changelog</a></p>
+
+<ul>
+<li>Bug fixes
+
+<ul>
+<li>Fix serialization of stubbed object (Josep M Bach)</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-rails-2.1.0 / 2010-11-07</h3>
+
+<p><a href="http://relishapp.com/rspec/rspec-rails/v/2-1">Cucumber features</a></p>
+
+<p><a href="http://rdoc.info/gems/rspec-rails/2.1.0/frames">RDoc</a> # will be generated by 2010-11-08</p>
+
+<p><a href="http://github.com/rspec/rspec-rails/compare/v2.0.1...v2.1.0">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>Move errors_on to ActiveModel to support other AM-compliant ORMs</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Check for presence of ActiveRecord instead of checking Rails config
+(gets rspec out of the way of multiple ORMs in the same app)</li>
+</ul>
+</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/19/rspec-201-is-released/">rspec-2.0.1 is released!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-19T06:43:44+02:00" pubdate data-updated="true">Oct 19<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is primarily a bug-fix release for rspec-core:</p>
+
+<h3>rspec-core-2.0.1</h3>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.0.0...v2.0.1">full changelog</a></p>
+
+<ul>
+<li>Bug fixes
+
+<ul>
+<li>restore color when using spork + autotest</li>
+<li>Pending examples without docstrings render the correct message (Josep M. Bach)</li>
+<li>Fixed bug where a failure in a spec file ending in anything but _spec.rb would
+fail in a confusing way.</li>
+<li>Support backtrace lines from erb templates in html formatter (Alex Crichton)</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-expectations-2.0.1</h3>
+
+<p><a href="http://github.com/rspec/rspec-expectations/compare/v2.0.0...v2.0.1">full changelog</a></p>
+
+<ul>
+<li>Enhancements
+
+<ul>
+<li>Make dependencies on other rspec gems consistent across gems</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-mocks-2.0.1</h3>
+
+<p><a href="http://github.com/rspec/rspec-mocks/compare/v2.0.0...v2.0.1">full changelog</a></p>
+
+<ul>
+<li>Enhancements
+
+<ul>
+<li>Make dependencies on other rspec gems consistent across gems</li>
+</ul>
+</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/15/rspec-rails-201-is-released/">rspec-rails-2.0.1 is released!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-15T16:30:15+02:00" pubdate data-updated="true">Oct 15<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The rails-3.0.1 release excluded a change that I had naively expected to be included. This upgrade is only necessary if you write view specs and are upgrading to rails-3.0.1. To upgrade, all you need to do is change your Gemfile to read:</p>
+
+<pre><code>gem "rspec-rails", "2.0.1"
+</code></pre>
+
+<p>And then run</p>
+
+<pre><code>bundle update rspec-rails
+</code></pre>
+
+<h2>Release Notes</h2>
+
+<h3>2.0.1 / 2010-10-15</h3>
+
+<p><a href="http://github.com/rspec/rspec-rails/compare/v2.0.0...v2.0.1">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>Add option to not generate request spec (&mdash;skip-request-specs)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Updated the mock_[model] method generated in controller specs so it adds
+any stubs submitted each time it is called.</li>
+<li>Fixed bug where view assigns weren&rsquo;t making it to the view in view specs in Rails-3.0.1.
+(Emanuele Vicentini)</li>
+</ul>
+</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/11/rspec-200-is-released/">RSpec-2.0.0 is released!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-11T00:45:54+02:00" pubdate data-updated="true">Oct 11<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This marks the end of a year-long effort that improves RSpec in a number of ways, including <a href="http://blog.davidchelimsky.net/2010/01/25/rspec-20-in-the-works/">modularity, cleaner code, and much better integration with Rails-3 than was possible before</a>.</p>
+
+<h3>Docs, with a little bit of relish</h3>
+
+<p>In addition to the documentation available at all the places mentioned <a href="http://blog.davidchelimsky.net/2010/07/01/rspec-2-documentation/">my earlier post</a>, we&rsquo;ve also got all of the <a href="http://github.com/aslakhellesoy/cucumber">Cucumber</a> features posted to Justin Ko&rsquo;s new Cucumber presentation app, relish.</p>
+
+<p><a href="http://relishapp.com/rspec">http://relishapp.com/rspec</a></p>
+
+<p>We&rsquo;ll also have the RDoc up on <a href="http://rdoc.info">http://rdoc.info</a> in a day or so.</p>
+
+<h3>Thanks!</h3>
+
+<p>Big thanks to 80+ contributors who submitted patches for RSpec-2.0.0, including [1]:</p>
+
+<p>Aan, Adam Walters, Akira Matsuda, Alex Crichton, Anderson Dias, Andre Arko, Andreas Neuhaus, Ashley Moran, Ben Armston, Ben Rady, Brasten Sager, Brian J Reath, Carlhuda, Chad Humphries, Charles Lowell, Chris Redinger, Chuck Remes, Corey Ehmke, Corey Haines, Dan Peterson, Dave Newman, David Genord II, David S. Kang, Ethan Gunderson, Gonçalo Silva, Greg Sterndale, Hans de Graaff, Iain Hecker, Jacques Crocker, Jean-Daniel Guyot, Jeff Ramnani, Jim Breen, Johan Kiviniemi, Josep Mª Bach, Josh Graham, Joshua Nichols, Kabari Hendrick, Kristian M, Lailson B, Len Smith, Leonardo Bessa, Les Hill, Luis Lavena, Marcin Kulik, Markus Schirp, Matt Remsik, Matt Yoho, Matthew Todd, Michael Niessner, Mike Gehard, Myron Marston, Nate Jackson, Neeraj Singh, Nestor Ovroy, Nick Ang, Nicolas Braem, Paul Rosania, Phil Smith, Postmodern, Prasad, Rob Sanheim, Roman Chernyatchik, Ryan Bigg, Ryan Briones, Sam Pohlenz, Scott Taylor, Shin-ichiro OGAWA, Thibaud Guillaume-Gentil, Tim Connor, Tim Harper, Tom Stuart, Vít Ondruch, Wincent Colaiuta, aslakhellesoy, eira, garren smith, grosser, hasimo, justinko, rup, speedmax, wycats</p>
+
+<p>Extra special thanks go to:</p>
+
+<ul>
+<li><p>Chad Humphries for contributing his Micronaut gem which is the basis for rspec-core-2</p></li>
+<li><p>Yehuda Katz, Carl Lerche, and José Valim, for their assistance with getting rspec-rails-2 to take advantage of new APIs in Rails-3, and for shepherding patches to Rails that made it far simpler for testing extensions like rspec-rails to hook into Rails&#8217; testing infrastructure. Their work here has significantly reduced the risk that Rails point-releases will break rspec-rails.</p></li>
+<li><p>Myron Marston for a wealth of thoughtful contributions including Cucumber features that we can all learn from</p></li>
+<li><p>Justin Ko for his direct contributions to rspec, and for <a href="http://relishapp.com/">relish</a>, which makes executable documentation act more like documentation.</p></li>
+</ul>
+
+
+<h3>What&rsquo;s next?</h3>
+
+<h4>rspec-rails-2 for rails-2</h4>
+
+<p>There are a couple of projects floating around that support rspec-2 and rails-2. I haven&rsquo;t had the chance to review any of these myself, but my hope is that we&rsquo;ll have be an official rspec-2 for rails-2 gem in the coming months.</p>
+
+<h4>rspec-1 maintenance</h4>
+
+<p>rspec-1 will continue to get maintenance releases, but these will be restricted, primarily, to bug fixes. Any new features will go into rspec-2, and will likely not be back-ported.</p>
+
+<p>[1] Contributor names were generated from the git commit logs.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/10/rspec-131-rspec-rails-133-are-released/">rspec-1.3.1 / rspec-rails-1.3.3 are released</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-10T04:53:47+02:00" pubdate data-updated="true">Oct 10<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I just released rspec-1.3.1 and rspec-rails-1.3.3.</p>
+
+<p>These are mostly bug fixes that have been sitting around for all to long as I focused on rspec-2 (coming very soon).</p>
+
+<p>Report issues for rspec[-rails]-1.x to <a href="https://rspec.lighthouseapp.com/projects/5645">https://rspec.lighthouseapp.com/projects/5645</a>.</p>
+
+<p>Docs:</p>
+
+<p><a href="http://rspec.info/">http://rspec.info/</a></p>
+
+<p><a href="http://rdoc.info/gems/rspec/1.3.1/frames">http://rdoc.info/gems/rspec/1.3.1/frames</a></p>
+
+<p><a href="http://rdoc.info/gems/rspec-rails/1.3.3/frames">http://rdoc.info/gems/rspec-rails/1.3.3/frames</a></p>
+
+<p>Cheers,
+David</p>
+
+<h3>rspec-1.3.1 / 2010-10-09</h3>
+
+<ul>
+<li>enhancements</li>
+<li>Array =~ matcher works with subclasses of Array (Matthew Peychich &amp; Pat Maddox)</li>
+<li><p>config.suppress_deprecation_warnings!</p></li>
+<li><p>bug fixes</p></li>
+<li>QuitBacktraceTweaker no longer eats all paths with &lsquo;lib&rsquo;
+(Tim Harper &ndash; #912)</li>
+<li>Fix delegation of stubbed values on superclass class-level methods.
+(Scott Taylor &ndash; #496 &ndash; #957)</li>
+<li><p>Fix pending to work with ruby-1.9</p></li>
+<li><p>deprecations</p></li>
+<li>share_as (will be removed from rspec-core-2.0)</li>
+<li>simple_matcher (will be removed from rspec-core-2.0)</li>
+</ul>
+
+
+<h3>rspec-rails-1.3.3 / 2010-10-09</h3>
+
+<ul>
+<li>enhancements</li>
+<li><p>replace use of &lsquo;returning&rsquo; with &lsquo;tap&rsquo;</p></li>
+<li><p>bug fixes</p></li>
+<li>support message expectation on template.render with locals (Sergey
+Nebolsin). Closes #941.</li>
+<li>helper instance variable no longer persists across examples
+(alex rothenberg). Closes #627.</li>
+<li>mock_model stubs marked_for_destruction? (returns false).</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/05/rspec-200rc-is-released/">RSpec-2.0.0.rc is released!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-05T06:46:46+02:00" pubdate data-updated="true">Oct 5<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>See <a href="http://blog.davidchelimsky.net/2010/07/01/rspec-2-documentation">http://blog.davidchelimsky.net/2010/07/01/rspec-2-documentation</a> for links to all sorts of documentation on rspec-2.</p>
+
+<p>Plan is to release rspec-2.0.0 (final) within the next week, so please install, upgrade, etc, and report issues to:</p>
+
+<p><a href="http://github.com/rspec/rspec-core/issues">http://github.com/rspec/rspec-core/issues</a></p>
+
+<p><a href="http://github.com/rspec/rspec-expectations/issues">http://github.com/rspec/rspec-expectations/issues</a></p>
+
+<p><a href="http://github.com/rspec/rspec-mocks/issues">http://github.com/rspec/rspec-mocks/issues</a></p>
+
+<p><a href="http://github.com/rspec/rspec-rails/issues">http://github.com/rspec/rspec-rails/issues</a></p>
+
+<p>Many thinks to all of the contributors who got us here!</p>
+
+<h2>rspec-core-2.0.0.rc / 2010-10-05</h2>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.0.0.beta.22...v2.0.0.rc">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>implicitly require unknown formatters so you don&rsquo;t have to require the file explicitly on the commmand line (Michael Grosser)</li>
+<li>add &mdash;out/-o option to assign output target</li>
+<li>added fail_fast configuration option to abort on first failure</li>
+<li>support a Hash subject (its([:key]) { should == value }) (Josep M. Bach)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Explicitly require rspec version to fix broken rdoc task (Hans de Graaff)</li>
+<li>Ignore backtrace lines that come from other languages, like Java or Javascript (Charles Lowell)</li>
+<li>Rake task now does what is expected when setting (or not setting) fail_on_error and verbose</li>
+<li>Fix bug in which before/after(:all) hooks were running on excluded nested groups (Myron Marston)</li>
+<li>Fix before(:all) error handling so that it fails examples in nested groups, too (Myron Marston)</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>rspec-expectations-2.0.0.rc / 2010-10-05</h2>
+
+<p><a href="http://github.com/rspec/rspec-expectations/compare/v2.0.0.beta.22...v2.0.0.rc">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>require &lsquo;rspec/expectations&rsquo; in a T::U or MiniUnit suite (Josep M. Bach)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>change by 0 passes/fails correctly (Len Smith)</li>
+<li>Add description to satisfy matcher</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>rspec-mocks-2.0.0.rc / 2010-10-05</h2>
+
+<p><a href="http://github.com/rspec/rspec-mocks/compare/v2.0.0.beta.22...v2.0.0.rc">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>support passing a block to an expecttation block (Nicolas Braem)
+
+<ul>
+<li>obj.should_receive(:msg) {|&block;| &hellip; }</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Fix YAML serialization of stub (Myron Marston)</li>
+<li>Fix rdoc rake task (Hans de Graaff)</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>rspec-rails-2.0.0.rc / 2010-10-05</h2>
+
+<p><a href="http://github.com/rspec/rspec-rails/compare/v2.0.0.beta.22...v2.0.0.rc">full changelog</a></p>
+
+<ul>
+<li>Enhancements
+
+<ul>
+<li>add &mdash;webrat-matchers flag to scaffold generator (for view specs)</li>
+<li>separate ActiveModel and ActiveRecord APIs in mock_model and stub_model</li>
+<li>ControllerExampleGroup uses controller as the implicit subject by default (Paul Rosania)</li>
+</ul>
+</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/09/13/rspec-200beta22-is-released/">RSpec-2.0.0.beta.22 is released!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-13T04:23:23+02:00" pubdate data-updated="true">Sep 13<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We&rsquo;re getting very close to a 2.0 release candidate, so if you&rsquo;re not already using rspec-2 (with or without rails-3), now is the time to start. I need your feedback, so from here on in I&rsquo;ll be sending out announcements and release notes for each beta release.</p>
+
+<p>As for rspec-2 with rails-2, there are a few efforts underway to make that work, but that will be in the form of a separate gem and our priority is getting rspec-2 out the door.</p>
+
+<p>Please report issues or submit pull requests (yes, pull requests are fine now that github has integrated them so well with issues) to the appropriate repos:</p>
+
+<ul>
+<li><a href="http://github.com/rspec/rspec-core/issues">http://github.com/rspec/rspec-core/issues</a></li>
+<li><a href="http://github.com/rspec/rspec-expectations/issues">http://github.com/rspec/rspec-expectations/issues</a></li>
+<li><a href="http://github.com/rspec/rspec-mocks/issues">http://github.com/rspec/rspec-mocks/issues</a></li>
+<li><a href="http://github.com/rspec/rspec-rails/issues">http://github.com/rspec/rspec-rails/issues</a></li>
+</ul>
+
+
+<p>Here are release notes for each gem in this beta release, drawn from the nascent History.md files in each project.</p>
+
+<h4>rspec-core-2.0.0.beta.22 / 2010-09-12</h4>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.0.0.beta.20...v2.0.0.beta.22">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>removed at_exit hook</li>
+<li>CTRL-C stops the run (almost) immediately
+
+<ul>
+<li>first it cleans things up by running the appropriate after(:all) and after(:suite) hooks</li>
+<li>then it reports on any examples that have already run</li>
+</ul>
+</li>
+<li>cleaned up rake task
+
+<ul>
+<li>generate correct task under variety of conditions</li>
+<li>options are more consistent</li>
+<li>deprecated redundant options</li>
+</ul>
+</li>
+<li>run &lsquo;bundle exec autotest&rsquo; when Gemfile is present</li>
+<li>support ERB in .rspec options files (Justin Ko)</li>
+<li>depend on bundler for development tasks (Myron Marston)</li>
+<li>add example_group_finished to formatters and reporter (Roman Chernyatchik)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>support paths with spaces when using autotest (Andreas Neuhaus)</li>
+<li>fix module_exec with ruby 1.8.6 (Myron Marston)</li>
+<li>remove context method from top-level
+
+<ul>
+<li>was conflicting with irb, for example</li>
+</ul>
+</li>
+<li>errors in before(:all) are now reported correctly (Chad Humphries)</li>
+</ul>
+</li>
+<li><p>Removals</p>
+
+<ul>
+<li>removed -o &mdash;options-file command line option
+
+<ul>
+<li>use ./.rspec and ~/.rspec</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>rspec-expectations-2.0.0.beta.22 / 2010-09-12</h4>
+
+<p><a href="http://github.com/rspec/rspec-expectations/compare/v2.0.0.beta.20...v2.0.0.beta.22">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>diffing improvements
+
+<ul>
+<li>diff multiline strings</li>
+<li>don&rsquo;t diff single line strings</li>
+<li>don&rsquo;t diff numbers (silly)</li>
+<li>diff regexp + multiline string</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>should[_not] change now handles boolean values correctly</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>rspec-mocks-2.0.0.beta.22 / 2010-09-12</h4>
+
+<p><a href="http://github.com/rspec/rspec-mocks/compare/v2.0.0.beta.20...v2.0.0.beta.22">full changelog</a></p>
+
+<ul>
+<li>Bug fixes
+
+<ul>
+<li>fixed regression that broke obj.stub_chain(:a, :b => :c)</li>
+<li>fixed regression that broke obj.stub_chain(:a, :b) { :c }</li>
+<li>respond_to? always returns true when using as_null_object</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>2.0.0.beta.22 / 2010-09-12</h4>
+
+<p><a href="http://github.com/rspec/rspec-rails/compare/v2.0.0.beta.20...v2.0.0.beta.22">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>autotest mapping improvements (Andreas Neuhaus)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>delegate flunk to assertion delegate</li>
+</ul>
+</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/30/the-rspec-book-has-entered-the-production-process/">The RSpec Book has entered the production process!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-30T04:28:18+02:00" pubdate data-updated="true">Jul 30<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;m thrilled to announce that <a href="http://pragprog.com/titles/achbd/the-rspec-book">The RSpec Book</a> has entered the production process!</p>
+
+<p>For those of you unfamiliar with the publishing industry, as I was before this project, &ldquo;has entered the production process&rdquo; does <em>not</em> mean that it&rsquo;s off to the printer. What it <em>does</em> mean is that it is currently being indexed so readers will be able to find the stuff they&rsquo;re looking for. After indexing it will be copyedited (in which someone with better grammar and spelling than any of the authors possess makes the book more readable) and typeset, and <em>then</em> off to the printer.</p>
+
+<p>If all goes to plan (yes, there actually is a plan!), <code>books.should be\_on\_shelves</code> in late September, early October.</p>
+
+<p>That light at the end of the tunnel is, finally, <em>not</em> an oncoming train!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/6/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/4/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec&#8217;s new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,369 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Thoughts on the Dance-Off - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="In his Great Test Framework Dance-Off at RailsConf 2008, Josh Susser compared rspec with test/spec and shoulda. All in all I&rsquo;d say he was very &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/2008/06/07/thoughts-on-the-dance-off">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Thoughts on the Dance-Off</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-06-07T22:43:28+02:00" pubdate data-updated="true">Jun 7<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>In his <a href="http://en.oreilly.com/rails2008/public/schedule/detail/1833">Great Test Framework Dance-Off</a> at <a href="http://en.oreilly.com/rails2008/public/content/home">RailsConf 2008</a>, <a href="http://blog.hasmanythrough.com/">Josh Susser</a> compared <a href="http://rspec.info">rspec</a> with <a href="http://rubyforge.org/projects/test-spec/">test/spec</a> and <a href="http://www.thoughtbot.com/projects/shoulda">shoulda</a>. All in all I&rsquo;d say he was very fair in his comparisons and I&rsquo;d recommend checking out his <a href="http://hasmanythrough.com/gtfdo/gtfdo.pdf">slides</a>.</p>
+
+<p>There were a couple of dings Josh handed rspec and I&rsquo;d like to respond to them. This is not intended to sell you on using rspec if you&rsquo;re not already using it. In fact, you&rsquo;ll see that I agree with a some of Josh&rsquo;s criticisms.</p>
+
+<p>I&rsquo;d much rather see developers using frameworks like test/spec and shoulda than not using anything more expressive than test/unit out of the box, but I also cringe when I hear that someone chose a different framework for reasons that are based on inaccurate or incomplete information. I take full responsibility for that. If you&rsquo;re basing decisions on inaccurate or incomplete information it&rsquo;s because I haven&rsquo;t made the accurate and complete information available to you. This post is one step towards addressing that problem.</p>
+
+<!-- more -->
+
+
+<h3>Performance</h3>
+
+<p>rspec currently runs slower than test/unit and the lightweight frameworks that sit on top of test/unit like test/spec and shoulda. Fortunately, this is something that can be addressed and will become a priority for us in the coming months.</p>
+
+<h3>Underlying Complexity</h3>
+
+<p>rspec is admittedly a complex and weighty beast. I think this is the result of several problems for which we are starting to look at solutions. We&rsquo;ve already started to take some steps towards reducing the amount of code that gets loaded (formatters are lazy loaded &ndash; only the ones you use get loaded) and we have more work to do on that front.</p>
+
+<p>There are also some efficiencies we can gain by merging the example group and story runners. Right now they both have some good things and some bad, and merging them should give us an opporunity to reduce the bad and take advantage of the good.</p>
+
+<p>For me, the biggest issue is the lack of a rich, formalized extension API. There are some extension points we&rsquo;ve exposed and documented, but this can definitely be improved.</p>
+
+<p>This is going to be a priority for me in the coming months. I think that once we have that in place, we can start to pull out some of the weight in rspec into plugins that get published separately in much the same vain as Rails and Merb are doing now.</p>
+
+<h3>Custom Matchers</h3>
+
+<p>In Josh&rsquo;s talk he pointed out that you can create custom assertions in 4 lines in test/unit frameworks while in rspec it took 30 or so lines. He did point out that the 30 line approach gives you far more control over error messages and that it covers the positive and negative matchers in one shot, but also commented that this extra power comes at a cost.</p>
+
+<p>What Josh didn&rsquo;t know at the time, and this is definitely worthy of a ding for us not documenting things well enough, is rspec&rsquo;s <code>simple_matcher</code> method that let&rsquo;s you create simple matchers in just a few lines. Here&rsquo;s the example in test/unit from Josh&rsquo;s talk:</p>
+
+<pre><code>def assert_sorted(actual, message=nil, &amp;block)
+expected = actual.sort(&amp;block)
+assert_equal expected, actual, "Order is wrong:"
+end
+assert_sorted(tags) { |a,b| a.name &lt;=&gt; b.name }
+</code></pre>
+
+<p>And here&rsquo;s the same thing with <code>simple_matcher</code>:</p>
+
+<pre><code>def be_sorted
+simple_matcher("a sorted list") {|actual| actual.sort == actual}
+end
+[1,2,3].should be_sorted
+</code></pre>
+
+<p>The block is handed the actual value. If the block returns true, the expectation passes. If it returns false, it fails with the following message:</p>
+
+<pre><code>expected "a sorted list" but got [1, 3, 2]
+</code></pre>
+
+<p>If you say <code>[1,2,3].should_not be_sorted</code> you&rsquo;d get this message instead=:</p>
+
+<pre><code>expected not to get "a sorted list", but got [1, 2, 3]
+</code></pre>
+
+<p>As of now, you don&rsquo;t get any control over the failure message other than the string you pass to the <code>simple_matcher</code> method, but I plan to add an optional hash that, if present, will give you more granular control over that message.</p>
+
+<p>FYI &ndash; Josh was kind enough to <a href="http://blog.hasmanythrough.com/2008/6/1/the-great-test-framework-dance-off">post this on his blog</a> when I sent it to him. Thanks for that Josh.</p>
+
+<h3>Macros</h3>
+
+<p>Josh really likes the fact that shoulda ships with a bunch of macros like <code>should_only_allow_numeric_values_for</code> and <code>should_render_template</code>. This allows you to structure contexts like this (from the shoulda website):</p>
+
+<pre><code>context "on GET to :show for first record" do
+setup do
+  get :show, :id =&gt; 1
+end
+
+should_assign_to :user
+should_respond_with :success
+should_render_template :show
+should_not_set_the_flash
+
+should "do something else really cool" do
+  assert_equal 1, assigns(:user).id
+end
+end
+</code></pre>
+
+<p>This is awesome stuff, and rspec-rails definitely lacks a built in set of macros like this. You can use technoweenie&rsquo;s <a href="http://github.com/technoweenie/rspec_on_rails_on_crack">rspec_on_rails_on_crack</a> plugin, does, however, to create rspec example groups like this:</p>
+
+<pre><code>describe ThingsController, "GET #index" do
+fixtures :things
+
+act! { get :index }
+
+before do
+  @things = []
+  Thing.stub!(:find).with(:all).and_return(@things)
+end
+
+it_assigns :things
+it_renders :template, :index
+end
+</code></pre>
+
+<p>You can also create your own custom macro-level matchers quite simply. Take shoulda&rsquo;s <code>should_respond_with :success</code> from the example above. Here&rsquo;s how you&rsquo;d define that in rspec:</p>
+
+<pre><code>module ControllerExampleGroupHelper
+module ClassMethods
+  def should_respond_with(expected_response)
+    it "should respond with #{expected_response}" do
+      response.should be(expected_response)
+    end
+  end
+end
+
+class &lt;&lt; self
+  def included(mod)
+    mod.extend ClassMethods
+  end
+end
+end
+
+Spec::Runner.configure do |config|
+config.include(ControllerExampleGroupHelper, :type =&gt; :controller)
+end
+</code></pre>
+
+<p>This adds the <code>should_respond_with</code> method to all of your controller example groups. Obviously, you can just add methods to the <code>ControllerExampleGroupHelper::ClassMethods</code> module and make them available as well.</p>
+
+<p>Here&rsquo;s how you might use this one:</p>
+
+<pre><code>describe ThingsController do
+context "handling GET /things/1" do
+  before(:each) { get :show, :id =&gt; "1" }
+  should_respond_with :success
+end
+end
+</code></pre>
+
+<p>This outputs the following:</p>
+
+<pre><code>ThingsController handling GET /things/1
+- should respond with success
+</code></pre>
+
+<p>Of course, what we really need is an rspec-shoulda plugin that ships all of these for you. Ideally this could be done by simply making the shoulda macros available in rspec example groups, but my first impression is that shoulda is too tightly tied to test/unit to do that. I&rsquo;m looking into that possibility though.</p>
+
+<h3>In Summary</h3>
+
+<p>I&rsquo;m excited to see that rspec is inspiring other frameworks and that they are challenging rspec to improve on itself. Look for such improvements over the coming months.</p>
+
+<p>I think that whether you choose to use rspec, shoulda, rspec&rsquo;s mocks or mocha or flexmock, etc, etc, this is a great time for testing frameworks in Ruby and I&rsquo;m excited to be part of this r-evolution.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-06-07T22:43:28+02:00" pubdate data-updated="true">Jun 7<span>th</span>, 2008</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rspec/'>RSpec</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.davidchelimsky.net/blog/2008/06/07/thoughts-on-the-dance-off/" data-via="dchelimsky" data-counturl="http://blog.davidchelimsky.net/blog/2008/06/07/thoughts-on-the-dance-off/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2008/05/29/rspec-waving-bye-bye-to-implicit-module-inclusion/" title="Previous Post: RSpec waving 'bye bye' to implicit module inclusion">&laquo; RSpec waving 'bye bye' to implicit module inclusion</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2008/06/16/slides-from-railsconf/" title="Next Post: Slides from RailsConf">Slides from RailsConf &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

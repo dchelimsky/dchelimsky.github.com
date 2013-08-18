@@ -1,0 +1,325 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Filtering examples in rspec-2 - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="In RSpec-2, every example group and example has associated metadata, to which you can append arbitrary information. This allows you to slice and dice &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/2010/06/14/filtering-examples-in-rspec-2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Filtering examples in rspec-2</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-14T15:08:20+02:00" pubdate data-updated="true">Jun 14<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>In <a href="">RSpec-2</a>, every example group and example has associated metadata, to which you can append arbitrary information. This allows you to slice and dice a spec suite in a variety of ways.</p>
+
+<h3>Adding arbitrary metadata</h3>
+
+<p>The <code>describe</code> and <code>it</code> methods, and their aliases, each accept a hash as the last argument before the block:</p>
+
+<pre><code>describe "something", :this =&gt; {:is =&gt; :arbitrary} do
+it "does something", :and =&gt; "so is this" do
+  # ...
+end
+end
+</code></pre>
+
+<h3><code>filter_run</code></h3>
+
+<p>The keys in these hashes can be accessed in a number of ways via <code>RSpec.configure</code>. If, for example, you&rsquo;re working on a specific example and don&rsquo;t want to run the full suite, you can use the <code>filter_run</code> method on the configuration like this:</p>
+
+<pre><code># in spec/spec_helper.rb
+RSpec.configure do |c|
+c.filter_run :focus =&gt; true
+end
+
+# in spec/any_spec.rb
+describe "something" do
+it "does something", :focus =&gt; true do
+  # ....
+end
+end
+</code></pre>
+
+<p>Now if you run <code>rspec spec</code>, it will only run that one example, no matter how many others there are in the suite.</p>
+
+<p>This works for examples and groups, so if you want to run all the examples in one group that you&rsquo;re focusing on, but nothing else, you can do this:</p>
+
+<pre><code>RSpec.configure do |c|
+c.filter_run :focus =&gt; true
+end
+
+describe "something", :focus =&gt; true do
+it "does something" do
+  # ....
+end
+it "does something else" do
+  # ....
+end
+end
+</code></pre>
+
+<p>The <code>rspec</code> command would now run both of the examples in that group.</p>
+
+<h3><code>filter_run_excluding</code></h3>
+
+<p>This is the inverse of <code>filter_run</code>. It excludes any examples or groups that match the filter:</p>
+
+<pre><code>RSpec.configure do |c|
+c.filter_run_excluding :slow =&gt; true
+end
+
+describe "something", :slow =&gt; true do
+it "does something" do
+  # ....
+end
+it "does something else" do
+  # ....
+end
+end
+</code></pre>
+
+<p>The <code>rspec</code> command would now run all the other examples in the suite, but not these two.</p>
+
+<p>NOTE: <code>filter_run_excluding</code> was added in beta.12, which was just released this morning.</p>
+
+<h3><code>lambda</code></h3>
+
+<p>You can filter on runtime conditions by assigning a lambda to a key. If your app is expected to behave differently in different versions of Ruby, you can use a <code>lambda</code> with <code>filter_run_excluding</code> like this:</p>
+
+<pre><code>RSpec.configure do |c|
+c.filter_run_excluding :ruby =&gt; lambda {|version|
+  !(RUBY_VERSION.to_s =~ /^#{version.to_s}/)
+}
+end
+
+describe "something" do
+it "does something", :ruby =&gt; 1.8 do
+  # ....
+end
+it "does something", :ruby =&gt; 1.9 do
+  # ....
+end
+end
+</code></pre>
+
+<p>This example comes directly from rspec-core&rsquo;s own <code>spec_helper.rb</code>.</p>
+
+<p>RSpec passes 1.8 and 1.9 to the lambda, which accepts it as the <code>version</code> block argument. If the lambda returns <code>true</code>, the example is <em>excluded</em> from the run (because we&rsquo;re using <code>filter_run_excluding</code>). Now the first example will only run if the ruby version is 1.8. Similarly, the latter example only runs under 1.9.</p>
+
+<h3>(no) command line support (yet)</h3>
+
+<p>We plan to add some sort of command line API to access these filters, but we&rsquo;re not sure yet what this is going to look like. There is an <a href="http://github.com/rspec/rspec-core/issues/37">open issue in github issues for rspec-core</a> . Please feel free to review and add any comments there.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-14T15:08:20+02:00" pubdate data-updated="true">Jun 14<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rspec/'>RSpec</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.davidchelimsky.net/blog/2010/06/14/filtering-examples-in-rspec-2/" data-via="dchelimsky" data-counturl="http://blog.davidchelimsky.net/blog/2010/06/14/filtering-examples-in-rspec-2/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2010/03/15/rspec-2-and-autotest/" title="Previous Post: rspec-2 and autotest">&laquo; rspec-2 and autotest</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/06/24/why-you-want-a-topic-branch-when-contributing-to-git-hosted-projects/" title="Next Post: Why you want a topic branch when contributing to git-hosted projects">Why you want a topic branch when contributing to git-hosted projects &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

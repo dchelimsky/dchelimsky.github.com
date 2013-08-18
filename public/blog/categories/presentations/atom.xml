@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Presentations | David Chelimsky]]></title>
+  <link href="http://blog.davidchelimsky.net/blog/categories/presentations/atom.xml" rel="self"/>
+  <link href="http://blog.davidchelimsky.net/"/>
+  <updated>2013-08-18T10:57:37+02:00</updated>
+  <id>http://blog.davidchelimsky.net/</id>
+  <author>
+    <name><![CDATA[David]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Windy City Rails]]></title>
+    <link href="http://blog.davidchelimsky.net/blog/2009/07/18/windy-city-rails/"/>
+    <updated>2009-07-18T09:12:50+02:00</updated>
+    <id>http://blog.davidchelimsky.net/blog/2009/07/18/windy-city-rails</id>
+    <content type="html"><![CDATA[<p>I&rsquo;m presenting at <a href="http://windycityrails.org/">Windy City Rails</a> in September. This is just the second year of this exciting midwest Rails conference, but the <a href="http://windycityrails.org/schedule">schedule looks most impressive</a>. Talks range from <a href="http://windycityrails.org/sessions#rappin">How To Test Absolutely Anything</a> to <a href="http://windycityrails.org/sessions#wampler">Better Ruby through Functional Programming</a> to a <a href="http://windycityrails.org/sessions#katz">Rails 3 Update</a> from <a href="http://yehudakatz.com/">Yehuda Katz</a>, Rails core&rsquo;s newest member and the man who is bringing the best of Merb to Rails 3.</p>
+
+<p>Last year I did a <a href="http://vimeo.com/5573653">presentation about BDD</a> and, with such a wide subject, ran out of time before I got through most of it. This year, the  organizers of the conference have given me the opportunity to talk for three full hours! Count &lsquo;em. Three!</p>
+
+<p>It&rsquo;s actually not just me talking (whew!). It&rsquo;s a tutorial entitled <a href="http://windycityrails.org/sessions#chelimsky">Behaviour Driven Rails with RSpec and Cucumber</a>. I&rsquo;m planning an intensive skills development workshop, taking attendees through the development of a feature in a Rails app from planning to writing Cucumber scenarios to driving out code with RSpec. This is going to be about as close as you&rsquo;ll get to a BDD immersion in three hours, so I hope to see you there whether you&rsquo;re just learning about BDD now or you&rsquo;ve already been doing it for a while.</p>
+
+<p>See you in September!</p>
+]]></content>
+  </entry>
+  
+</feed>

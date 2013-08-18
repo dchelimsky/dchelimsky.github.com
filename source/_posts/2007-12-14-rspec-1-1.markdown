@@ -1,0 +1,337 @@
+---
+author: David
+comments: false
+date: 2007-12-14 06:54:52+00:00
+layout: post
+slug: rspec-1-1
+title: RSpec 1.1
+wordpress_id: 51
+categories:
+- RSpec
+---
+
+The RSpec Development Team is pleased as glug (that's kind of like punch, but more festive) to announce RSpec-1.1.0.
+
+
+
+
+
+
+Thanks to all who have contributed patches over the last few months. Big thanks to Dan North and Brian Takita for their important work on this release. Dan contributed his rbehave framework which is now the Story Runner. Brian patiently did a TON of refactoring around interoperability with Test::Unit, and the result is a much cleaner RSpec core, and a clean adapter model that gets loaded when Test::Unit is on the path.
+
+
+
+
+
+
+RSpec 1.1 brings four significant changes for RSpec users:
+
+
+
+
+
+
+
+
+  * The RSpec Story Runner
+
+
+  * Nested Example Groups
+
+
+  * Support for Rails 2.0.1
+
+
+  * Test::Unit interoperability
+
+
+
+
+
+
+#### Story Runner
+
+
+
+
+
+
+The RSpec Story Runner is Dan North's rbehave framework merged into RSpec. The Story Runner is a framework for expressing high level requirements in the form of executable User Stories with Scenarios that represent Customer Acceptance Tests.
+
+
+
+
+
+
+RSpec 1.1 also ships with a Ruby on Rails extension called RailsStory, which lets you write executable user stories for your rails apps as well.
+
+
+
+
+
+
+#### Nested Example Groups
+
+
+
+
+
+
+Now you can nest groups to organize things a bit better:
+
+
+
+
+
+    
+    <code>
+    describe RubyDeveloper do
+    
+    before(:each) do
+      @ruby_developer = RubyDeveloper.new
+    end
+    
+    describe "using RSpec 1.1.0" do
+    
+      before(:each) do
+        @ruby_developer.use_rspec('1.1.0')
+      end
+    
+      it "should be able to nest example groups" do
+        @ruby_developer.should be_able_to_nest_example_groups
+      end
+    
+    end
+    
+    describe "using RSpec 1.0.1" do
+    
+      before(:each) do
+        @ruby_developer.use_rspec('1.0.8')
+      end
+    
+      it "should not be able to nest example groups" do
+        @ruby_developer.should_not be_able_to_nest_example_groups
+      end
+    
+    end
+    
+    end
+    </code>
+
+
+
+
+
+Running this outputs:
+
+
+
+
+
+    
+    
+    RubyDeveloper using RSpec 1.1.0
+    - should be able to nest example groups
+    
+    RubyDeveloper using RSpec 1.0.8
+    - should not be able to nest example groups
+    
+
+
+
+
+
+== Support for Rails 2.0.1
+
+
+
+
+
+    
+    
+    gem install rails
+    rails myapp
+    ruby script/plugin install http://rspec.rubyforge.org/svn/tags/REL_1_1_0/rspec
+    ruby script/plugin install http://rspec.rubyforge.org/svn/tags/REL_1_1_0/rspec_on_rails
+    script/generate rspec
+    
+
+
+
+
+
+#### Test::Unit Interoperability
+
+
+
+
+
+
+Contrary to popular belief, Spec::Rails, RSpec's Ruby on Rails plugin, has been a Test::Unit wrapper since the the 0.7 release in November of 2006. RSpec 1.1 ups the ante though, offering a smooth transition from Test::Unit to RSpec with or without Rails:
+
+
+
+
+
+
+1. Start with a TestCase:
+
+
+
+
+
+    
+    <code>
+    require 'test/unit'
+    
+    class TransitionTest < Test::Unit::TestCase
+    def test_should_be_smooth
+      transition = Transition.new(
+        :from => "Test::Unit::TestCase",
+        :to => "Spec::ExampleGroup"
+      )
+      assert_equal "really smooth", transition.in_practice
+    end
+    end
+    </code>
+
+
+
+
+
+2. Require 'spec'
+
+
+
+
+
+    
+    <code>
+    require 'test/unit'
+    require 'spec'
+    
+    class TransitionTest < Test::Unit::TestCase
+    def test_should_be_smooth
+      transition = Transition.new(
+        :from => "Test::Unit::TestCase",
+        :to => "Spec::ExampleGroup"
+      )
+      assert_equal "really smooth", transition.in_practice
+    end
+    end
+    </code>
+
+
+
+
+
+3. Convert TestCase to ExampleGroup
+
+
+
+
+
+    
+    <code>
+    require 'test/unit'
+    require 'spec'
+    
+    describe "transitioning from TestCase to ExampleGroup" do
+    def test_should_be_smooth
+      transition = Transition.new(
+        :from => "Test::Unit::TestCase",
+        :to => "Spec::ExampleGroup"
+      )
+      assert_equal "really smooth", transition.in_practice
+    end
+    end
+    </code>
+
+
+
+
+
+4. Convert test methods to examples
+
+
+
+
+
+    
+    <code>
+    require 'test/unit'
+    require 'spec'
+    
+    describe "transitioning from TestCase to ExampleGroup" do
+    it "should be smooth" do
+      transition = Transition.new(
+        :from => "Test::Unit::TestCase",
+        :to => "Spec::ExampleGroup"
+      )
+      assert_equal "really smooth", transition.in_practice
+    end
+    end
+    </code>
+
+
+
+
+
+5. Convert assertions to expectations
+
+
+
+
+
+    
+    <code>
+    require 'test/unit'
+    require 'spec'
+    
+    describe "transitioning from TestCase to ExampleGroup" do
+    it "should be smooth" do
+      transition = Transition.new(
+        :from => "Test::Unit::TestCase",
+        :to => "Spec::ExampleGroup")
+      transition.in_practice.should == "really smooth"
+    end
+    end
+    </code>
+
+
+
+
+
+6. Un-require test/unit
+
+
+
+
+
+    
+    <code>
+    require 'spec'
+    
+    describe "transitioning from TestCase to ExampleGroup" do
+    it "should be smooth" do
+      transition = Transition.new(
+        :from => "Test::Unit::TestCase",
+        :to => "Spec::ExampleGroup"
+      )
+      transition.in_practice.should == "really smooth"
+    end
+    end
+    </code>
+
+
+
+
+
+At every one of these steps after step 2, you can run the file with the ruby command and you'll be getting RSpec's developer friendly output. This means that you can transition things as gradually as you like: no wholesale changes.
+
+
+
+
+
+
+That's the story. Thanks again to all who contributed and to all who continue do so.

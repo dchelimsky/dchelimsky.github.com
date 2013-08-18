@@ -1,0 +1,161 @@
+---
+author: David
+comments: false
+date: 2008-05-27 06:07:25+00:00
+layout: post
+slug: rspec-1-1-4
+title: RSpec-1.1.4
+wordpress_id: 64
+---
+
+We released RSpec-1.1.4 today. It's mostly a maintenance release but there are a few of cool new features that you may want to know about and take advantage of.
+
+
+
+
+
+
+### hash_including
+
+
+
+
+
+
+One thing that has always been a drag is having to specify every key/value pair in a hash that is received as an argument. This is especially painful in Rails controller examples because Rails adds some data to the hash and the examples really don't care about that extra data.
+
+
+
+
+
+
+Enter `hash_including()`.
+
+
+
+
+
+
+This is a mock argument matcher that let's you expect a hash including certain key/value pairs regardless of anything else that shows up in the hash. So instead of:
+
+
+
+
+
+    
+    
+    account.should_receive(:deposit).with({:amount => 37.42, :date => anything()})
+    
+
+
+
+
+
+you can just say:
+
+
+
+
+
+    
+    
+    account.should_receive(:deposit).with(hash_including(:amount => 37.42))
+    
+
+
+
+
+
+and keep the example focused on what you're really interested in
+
+
+
+
+
+
+Thanks to [Rick DeNatale](http://talklikeaduck.denhaven2.com/) who submitted this feature request and the patch to implement it.
+
+
+
+
+
+
+### The heckler returns
+
+
+
+
+
+
+RSpec wasn't correctly supporting heckle for a while but the spec-heckler is back in action. For those unfamiliar, you can read about heckle at [zenspider's blog](http://blog.zenspider.com/2007/06/heckle-version-141-has-been-re.html).
+
+
+
+
+
+
+Here's how you heckle your Animal model in your PetStore app:
+
+
+
+
+
+    
+    
+    spec spec/models/animal_spec.rb --heckle Animal
+    
+
+
+
+
+
+Thanks to [Antti Tarvainen](http://tarvainen.wordpress.com/) for resurrecting this one.
+
+
+
+
+
+
+### stub_model
+
+
+
+
+
+
+This is for rails developers who like writing view examples with `mock_model()` but are sick and tired of having to stub every single attribute that gets referenced in a view.
+
+
+
+
+
+
+Instead of creating a mock object like `mock_model()` does, `stub_model()` creates an instance of a real model class, but cuts off it's connection to the database, raising an error any time it tries to connect to the database.
+
+
+
+
+
+
+This is inspired by projects like [unit_record](http://www.dcmanges.com/blog/rails-unit-record-test-without-the-database) and [NullDB](http://agilewebdevelopment.com/plugins/nulldb), but let's you do things at a more granular level - allowing you to hit the db in some cases (where you think you really need it) and not in others.
+
+
+
+
+
+
+Of course, you may prefer to the sort of "protection" you get from those projects, which ensure that no code touches the DB at all. If you do, have at it. This is just another option for you.
+
+
+
+
+
+
+### All this and more
+
+
+
+
+
+
+These are just a few of the issues addressed in 1.1.4. For more information, check out the [changelog](http://rspec.info/changes.html) and [lighthouse](http://rspec.lighthouseapp.com/projects/5645).
