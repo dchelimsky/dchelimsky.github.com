@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Autotest | David Chelimsky]]></title>
-  <link href="http://blog.davidchelimsky.net/blog/categories/autotest/atom.xml" rel="self"/>
-  <link href="http://blog.davidchelimsky.net/"/>
-  <updated>2013-08-18T17:24:48+02:00</updated>
-  <id>http://blog.davidchelimsky.net/</id>
+  <link href="http://dchelimsky.github.io/blog/categories/autotest/atom.xml" rel="self"/>
+  <link href="http://dchelimsky.github.io/"/>
+  <updated>2013-08-18T17:39:18+02:00</updated>
+  <id>http://dchelimsky.github.io/</id>
   <author>
     <name><![CDATA[David]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[rspec-2.5.0 is released!]]></title>
-    <link href="http://blog.davidchelimsky.net/blog/2011/02/06/rspec-250-is-released/"/>
+    <link href="http://dchelimsky.github.io/blog/2011/02/06/rspec-250-is-released/"/>
     <updated>2011-02-06T17:08:41+01:00</updated>
-    <id>http://blog.davidchelimsky.net/blog/2011/02/06/rspec-250-is-released</id>
+    <id>http://dchelimsky.github.io/blog/2011/02/06/rspec-250-is-released</id>
     <content type="html"><![CDATA[<p>rspec-2.5 is a minor upgrade, and is fully backward compatible with rspec-2.4. It includes several bug fixes, enhancements, and one deprecation. See the changelog below for details.</p>
 
 <p>We had a little glitch publishing the docs to <a href="http://relishapp.com/rspec">http://relishapp.com/rspec</a>, so the 2.5 docs won&rsquo;t be up for another day or two, so I&rsquo;ll detail the noticable differences here.</p>
@@ -171,9 +171,9 @@ parent group.</li>
   
   <entry>
     <title type="html"><![CDATA[rspec-2 and autotest]]></title>
-    <link href="http://blog.davidchelimsky.net/blog/2010/03/15/rspec-2-and-autotest/"/>
+    <link href="http://dchelimsky.github.io/blog/2010/03/15/rspec-2-and-autotest/"/>
     <updated>2010-03-15T12:59:15+01:00</updated>
-    <id>http://blog.davidchelimsky.net/blog/2010/03/15/rspec-2-and-autotest</id>
+    <id>http://dchelimsky.github.io/blog/2010/03/15/rspec-2-and-autotest</id>
     <content type="html"><![CDATA[<p>[Updated on 17 March, 2010]</p>
 
 <p>I just released rspec-2.0.0.beta.4 with support for <code>autotest</code>, among other enhancements. Autotest integration is going to be a bit different in rspec-2. We&rsquo;re removing the <code>autospec</code> command, which did nothing but set an environment variable and call <code>autotest</code>.</p>
@@ -189,9 +189,9 @@ parent group.</li>
   
   <entry>
     <title type="html"><![CDATA[limiting scope of autotest]]></title>
-    <link href="http://blog.davidchelimsky.net/blog/2008/03/05/limiting-scope-of-autotest/"/>
+    <link href="http://dchelimsky.github.io/blog/2008/03/05/limiting-scope-of-autotest/"/>
     <updated>2008-03-05T08:07:48+01:00</updated>
-    <id>http://blog.davidchelimsky.net/blog/2008/03/05/limiting-scope-of-autotest</id>
+    <id>http://dchelimsky.github.io/blog/2008/03/05/limiting-scope-of-autotest</id>
     <content type="html"><![CDATA[<p>If you use <a href="http://zentest.rubyforge.org/ZenTest/classes/Autotest.html">autotest</a> with <a href="http://rspec.info">rspec</a> or test/unit, you&rsquo;ve probably had this experience (or one like it):</p>
 
 <p>You want to add some new behaviour to a model object, so you write a spec, watch it fail, make it pass, and then wait until the entire spec suite runs. Even if you&rsquo;ve got a fast-running suite, this can be painful sometimes.</p>
@@ -241,9 +241,9 @@ end
   
   <entry>
     <title type="html"><![CDATA[RSpec-1.1.2 and ZenTest-3.8.0]]></title>
-    <link href="http://blog.davidchelimsky.net/blog/2008/01/15/rspec-1-1-2-and-zentest-3-8-0/"/>
+    <link href="http://dchelimsky.github.io/blog/2008/01/15/rspec-1-1-2-and-zentest-3-8-0/"/>
     <updated>2008-01-15T07:15:55+01:00</updated>
-    <id>http://blog.davidchelimsky.net/blog/2008/01/15/rspec-1-1-2-and-zentest-3-8-0</id>
+    <id>http://dchelimsky.github.io/blog/2008/01/15/rspec-1-1-2-and-zentest-3-8-0</id>
     <content type="html"><![CDATA[<p>The <a href="http://rspec.info">RSpec-1.1.2</a> release includes changes to keep RSpec compatible with autotest in <a href="http://zentest.rubyforge.org/ZenTest/">ZenTest-3.8.0</a>. This new ZenTest release boasts an improved cascading configuration model that works well for subclasses (like those that ship with RSpec) <strong>and</strong> allows users to override the mappings of specs (or tests) to code as well as the list of files that get ignored by autotest.</p>
 
 <p>To support this, Autotest now loads the following files in the following order:</p>
