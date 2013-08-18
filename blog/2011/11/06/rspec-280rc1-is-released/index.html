@@ -1,0 +1,478 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>rspec-2.8.0.rc1 is released - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="I just released rspec-2.8.0.rc1, which includes releases of rspec-core,
+rspec-expectations, rspec-mocks, and rspec-rails. Changelogs for each are at &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://dchelimsky.github.io/blog/2011/11/06/rspec-280rc1-is-released">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:dchelimsky.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">rspec-2.8.0.rc1 is released</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-06T18:02:40+01:00" pubdate data-updated="true">Nov 6<span>th</span>, 2011</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I just released rspec-2.8.0.rc1, which includes releases of rspec-core,
+rspec-expectations, rspec-mocks, and rspec-rails. Changelogs for each are at:</p>
+
+<ul>
+<li><a href="https://github.com/rspec/rspec-core/blob/master/Changelog.md">rspec-core</a></li>
+<li><a href="https://github.com/rspec/rspec-expectations/blob/master/Changelog.md">rspec-expectations</a></li>
+<li><a href="https://github.com/rspec/rspec-mocks/blob/master/Changelog.md">rspec-mocks</a></li>
+<li><a href="https://github.com/rspec/rspec-rails/blob/master/Changelog.md">rspec-rails</a></li>
+</ul>
+
+
+<h2>What&rsquo;s new</h2>
+
+<p>Nothing really changed in rspec-rails or rspec-mocks, but rspec-core and
+rspec-expectations have both gotten some nice improvements.</p>
+
+<h3>Configuration (rspec-core)</h3>
+
+<p>rspec-core offers a number of configuration options which can be declared on
+the command line, in a config file (<code>.rspec</code>, <code>~/.rspec</code>, or custom location),
+as well as in an <code>RSpec.configure</code> block (in <code>spec/spec_helper.rb</code> by
+convention). Before this release, some options, but not all, could be stored in
+config files and then overridden on the command line. The problems were that it
+was inconsistent (not all options worked this way), and we couldn&rsquo;t override
+options that were set in <code>RSpec.configure</code> blocks.</p>
+
+<p>With this release, almost all options declared in <code>RSpec.configure</code> can be
+overridden from the command line, and <code>--tag</code> options can override their
+inverses. For example, if you have this in <code>.rspec</code>:</p>
+
+<pre><code>--tag ~slow:true
+</code></pre>
+
+<p>That means &ldquo;exclude examples tagged <code>:slow =&gt; true</code>&rdquo;. So the following example
+would be excluded:</p>
+
+<pre><code>it "does something", :slow =&gt; true do
+  # ...
+end
+</code></pre>
+
+<p>You can also exclude that example from <code>RSpec.configure</code> like this:</p>
+
+<pre><code>RSpec.configure do |c|
+  c.filter_run_excluding :slow =&gt; true
+end
+</code></pre>
+
+<p>Note: the naming is different for historical reasons, and we will reconcile
+that in a future release, but for now, just know that <code>--tag</code> on the command
+line and in <code>.rspec</code> is synonymous with <code>filter_run_[including|excluding]</code> in
+<code>RSpec.configure</code>.</p>
+
+<h3>Override from command line</h3>
+
+<p>Whether the default is stored in <code>.rspec</code> or <code>RSpec.configure</code>, it can be overridden
+from the command line like this:</p>
+
+<pre><code>rspec --tag slow:true
+</code></pre>
+
+<h3>&ldquo;Profiles&rdquo; in custom options files</h3>
+
+<p>The <code>rspec</code> command has an <code>--options</code> option that let&rsquo;s store command line args in
+arbitrary files and tell RSpec where to find them. For example, you could set things
+up so your normal spec run excludes the groups and examples marked <code>:slow</code> by putting
+this in <code>.rspec</code>:</p>
+
+<pre><code>--tag ~slow
+</code></pre>
+
+<p>Now add a <code>.slow</code> file with:</p>
+
+<pre><code>--tag slow
+</code></pre>
+
+<p>Now run <code>rspec</code> to run everything but the slow specs, and run <code>rspec --options
+.slow</code> or <code>rspec -O.slow</code> to run the slow ones.</p>
+
+<h3>Override from Rake task</h3>
+
+<p>RSpec&rsquo;s Rake task supports an <code>rspec_opts</code> config option, which means you can
+set up different groupings from rake tasks as well. The fast/slow example above
+would look like this:</p>
+
+<pre><code>namespace :spec do
+  desc "runs the fast specs"
+  RSpec::Core::RakeTask.new(:fast) do |t|
+    t.rspec_opts = '--options .fast'
+  end
+  RSpec::Core::RakeTask.new(:slow) do |t|
+    t.rspec_opts = '--options .slow'
+  end
+end
+</code></pre>
+
+<p>Or ..</p>
+
+<pre><code>namespace :spec do
+  desc "runs the fast specs"
+  RSpec::Core::RakeTask.new(:fast) do |t|
+    t.rspec_opts = '--tag ~slow'
+  end
+  RSpec::Core::RakeTask.new(:slow) do |t|
+    t.rspec_opts = '--tag slow'
+  end
+end
+</code></pre>
+
+<h3>Implicit <code>true</code> value for tags/filters</h3>
+
+<p>This is not new in rspec-2.8, but all the tags/filters in the example above can
+be written without explicitly typing <code>true</code>:</p>
+
+<pre><code>--tag slow
+--tag ~slow
+
+
+
+
+
+
+
+RSpec.configure {|c| c.filter_run_excluding :slow}
+
+it "does something", :slow do
+</code></pre>
+
+<p>You have to set a config option to enable this in rspec-2.x:</p>
+
+<pre><code>RSpec.configure {|c| c.treat_symbols_as_metadata_keys_with_true_values = true}
+</code></pre>
+
+<p>In rspec-3.0, this will be the default, but without setting this value in 2.x
+you&rsquo;ll get a deprecation warning when you try to configure things this way.
+It&rsquo;s ugly, I know, but this enabled us to introduce the new behavior without
+breaking compatibility with some suites in a minor release.</p>
+
+<h3>Ordering</h3>
+
+<p>With 2.8, you can now run the examples in random order, using the new <code>--order</code>
+option:</p>
+
+<pre><code>--order rand
+</code></pre>
+
+<p>The order is randomized with some reasonable caveats:</p>
+
+<ul>
+<li>top level example groups are randomized</li>
+<li>nested groups are randomized within their parent group</li>
+<li>examples are randomized within their group</li>
+</ul>
+
+
+<p>This provides a very useful level of randomization while maintaining the
+integrity of before/after <code>hooks</code>, <code>subject</code>, <code>let</code>, etc.</p>
+
+<p>If you want to run the examples in the default ordering (file-system load
+order for files and declaration order for groups/examples), you can override
+the order from the command line:</p>
+
+<pre><code>--order default
+</code></pre>
+
+<h3>Pseudo-randomization</h3>
+
+<p>The randomization is managed by Ruby&rsquo;s pseudo-randomization. This means that if
+you find an order dependency and want to debug/fix it, you can fix the order by
+providing the same seed for each run:</p>
+
+<pre><code>--order rand:1234
+</code></pre>
+
+<p>The seed is printed to the console with each run, so you can just copy it to the
+command. You can also just specify the seed, which RSpec will assume means you want
+to run with <code>--order rand</code>:</p>
+
+<pre><code>--seed 1234
+</code></pre>
+
+<p>Every time you run the suite with the same seed, the examples will run in the
+same &ldquo;random&rdquo; order.</p>
+
+<h3>Built-in matchers are all classes in rspec-expectations</h3>
+
+<p>The <a href="http://rubydoc.info/github/rspec/rspec-expectations/master/RSpec/Matchers">Matcher
+DSL</a>
+in rspec-expectations makes it dead simple to define custom matchers that suit
+your domain. The problem is that it is <a href="https://github.com/rspec/rspec-expectations/blob/master/benchmarks/matcher_dsl_vs_classes.rb">several times slower than defining a
+class to do
+so</a>.
+While this doesn&rsquo;t make much difference when you have a custom matcher that you
+use a few dozen times (where talking hundredths of seconds here), it does make
+a difference if every single matcher invocation in your entire suite suffers
+this problem.</p>
+
+<p>The short term fix is that all of the built-in matchers have been
+re-implemented as classes rather than using the DSL to declare them. This has
+the added benefit of making it easier to navigate the code and RDoc</p>
+
+<p>Longer term, we&rsquo;ll try to refactor the internals of the matcher DSL so that it
+generates a class at declaration time. Eventually.</p>
+
+<h3>Summing up</h3>
+
+<p>So that&rsquo;s it. Nothing ground breaking. Nothing compatibility
+breaking. But some nice new features and improvements that will make your life
+just a little bit nicer when you upgrade. We&rsquo;re doing a release candidate
+because enough changed internally that I want to give you time to try it out,
+so please, please do so! And please report any issues you&rsquo;re having with this
+upgrade to:</p>
+
+<ul>
+<li><a href="https://github.com/rspec/rspec-core/issues">rspec-core</a></li>
+<li><a href="https://github.com/rspec/rspec-expectations/issues">rspec-expectations</a></li>
+<li><a href="https://github.com/rspec/rspec-mocks/issues">rspec-mocks</a></li>
+<li><a href="https://github.com/rspec/rspec-rails/issues">rspec-rails</a></li>
+</ul>
+
+
+<p>Assuming there are no significant issues, I&rsquo;ll release 2.8 final within a week
+or two.</p>
+
+<p>Happy spec&#8217;ing!</p>
+
+<p>David</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-06T18:02:40+01:00" pubdate data-updated="true">Nov 6<span>th</span>, 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/bdd/'>BDD</a>, <a class='category' href='/blog/categories/rspec/'>RSpec</a>, <a class='category' href='/blog/categories/ruby/'>Ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://dchelimsky.github.io/blog/2011/11/06/rspec-280rc1-is-released/" data-via="dchelimsky" data-counturl="http://dchelimsky.github.io/blog/2011/11/06/rspec-280rc1-is-released/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/10/20/rspec-core-271-is-released/" title="Previous Post: rspec-core 2.7.1 is released!">&laquo; rspec-core 2.7.1 is released!</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/01/05/rspec-28-is-released/" title="Next Post: RSpec-2.8 is released!">RSpec-2.8 is released! &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'davidchelimskysblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://dchelimsky.github.io/blog/2011/11/06/rspec-280rc1-is-released/';
+        var disqus_url = 'http://dchelimsky.github.io/blog/2011/11/06/rspec-280rc1-is-released/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

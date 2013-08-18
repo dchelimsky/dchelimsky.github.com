@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>RSpec plays nice with others - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="RSpec 0.9 is coming soon, and promises to do a better job of playing nice with others. RSpec plays nice with you. There&rsquo;s a new configuration &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://dchelimsky.github.io/blog/2007/04/01/rspec-plays-nice-with-others">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:dchelimsky.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">RSpec plays nice with others</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-04-01T15:58:50+02:00" pubdate data-updated="true">Apr 1<span>st</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>RSpec 0.9 is coming soon, and promises to do a better job of playing nice with others.</p>
+
+<h4>RSpec plays nice with you.</h4>
+
+<p>There&rsquo;s a new configuration mechanism inspired by the one in Rails:</p>
+
+<pre><code>&lt;code&gt;Spec::Runner.configure do |config|
+config.use_transactional_fixtures = true
+#etc
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>This mostly affects Spec::Rails users, but as new features become configurable, this will be the &ldquo;how&rdquo;.</p>
+
+<h4>RSpec plays nice with mocha.</h4>
+
+<p>Update 4/25 &ndash; 0.9 will be released with support for flexmock as well as mocha.</p>
+
+<p>Speaking of new configurable features, RSpec 0.9 will play nice with other mock frameworks. The first release is going to support using mocha, but we&rsquo;re hoping to follow this with support for flexmock as well. So now, in a spec_helper.rb, you can do this:</p>
+
+<pre><code>&lt;code&gt;Spec::Runner.configure do |config|
+config.mock_with :mocha
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>This tells RSpec to load up mocha instead of RSpec&rsquo;s mock framework, Spec::Mocks. One nice thing about using mocha with RSpec is that, in my opinion, the different syntax illuminates the different semantics:</p>
+
+<ul>
+<li><h1>expects for pre-action, interaction expectations</h1></li>
+<li><h1>should for post-action, (typically) state expectations</h1></li>
+</ul>
+
+
+<p>Sure, we could get similar syntax by aliasing #should_receive, but there are a lot of people who simply prefer mocha or flexmock and we want to invite them all to use RSpec without giving up their preferred mocking framework.</p>
+
+<h4>RSpec even plays nice with &lsquo;test/unit&rsquo;</h4>
+
+<p>For some time now, RSpec has allowed you to bring the myriad plugins and add-ons associated with &lsquo;test/unit&rsquo; by deriving the binding in which examples are run from Test::Unit::TestCase (like so…)</p>
+
+<pre><code>&lt;code&gt;describe Thing do
+inherit Test::Unit::TestCase
+#...
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>With RSpec 0.9, we&rsquo;ve added the reverse: Spec::Expectations and Spec::Matchers made available to your &lsquo;test/unit&rsquo; tests with a simple require statement:</p>
+
+<pre><code>&lt;code&gt;require 'test/unit'
+require 'spec/test_case_adapter'
+
+class ThingTest &lt; Test::Unit::TestCase
+def setup
+  @thing = Thing.new
+end
+
+def test_thing_should_be_friendly
+  @thing.should be_friendly
+end
+end
+&lt;/code&gt;
+</code></pre>
+
+<h4>RSpec plays nice with your diet</h4>
+
+<p>With RSpec 0.9, RSpec is finally sugar-free!</p>
+
+<p>We&rsquo;ll miss the underscores that followed #should, and I&rsquo;m personally grateful to Rich Kilmer for the very, very cool patch that not only allowed us to eliminate all of those nasty dots, but taught me one of my first serious lessons in meta-programming. However, as time went on we discovered that continuing to support that sugar was going to be an ongoing struggle between RSpec and any system it was being used to describe that happened to like #method_missing as much as RSpec did. And so we bid it a bittersweet &ldquo;adieu&rdquo;.</p>
+
+<p>Of course, if you&rsquo;re missing some sweetener, there&rsquo;s always the natural sweeteners in mocha ….</p>
+
+<p>Describe it with RSpec-0.9. Coming soon to a gems directory near you.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-04-01T15:58:50+02:00" pubdate data-updated="true">Apr 1<span>st</span>, 2007</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://dchelimsky.github.io/blog/2007/04/01/rspec-plays-nice-with-others/" data-via="dchelimsky" data-counturl="http://dchelimsky.github.io/blog/2007/04/01/rspec-plays-nice-with-others/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2007/03/11/describe-it-with-rspec/" title="Previous Post: Describe it with RSpec">&laquo; Describe it with RSpec</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2007/04/04/inferred-controllers-and-helpers-in-spec-rails/" title="Next Post: Inferred Controllers and Helpers in Spec::Rails">Inferred Controllers and Helpers in Spec::Rails &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,411 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Validations are behavior, associations are structure - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="TL;DR: TDD is about specifying behavior, not structure.
+Validations are behavior, and should be specified.
+Associations are structure, and need not &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://dchelimsky.github.io/blog/2012/02/12/validations-are-behavior-associations-are-structure">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:dchelimsky.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Validations are behavior, associations are structure</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-12T23:53:27+01:00" pubdate data-updated="true">Feb 12<span>th</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>TL;DR:</h2>
+
+<ul>
+<li>TDD is about specifying behavior, not structure.</li>
+<li>Validations are behavior, and should be specified.</li>
+<li>Associations are structure, and need not be.</li>
+</ul>
+
+
+<h2>Disclaimer</h2>
+
+<p>This is my personal viewpoint, though it is not mine alone. YMMV.</p>
+
+<h2>Declarations</h2>
+
+<p>ActiveRecord provides a declarative interface for describing the structure and
+behavior of a model:</p>
+
+<figure class='code'><figcaption><span>article.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Article</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">validates_presence_of</span> <span class="ss">:title</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:comments</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>While syntactically similar, these two declarations do fundamentally different
+things.</p>
+
+<h2>Validations are behavior</h2>
+
+<p>The <code>validates_presence_of :title</code> declaration changes the behavior of
+the <code>save</code> method (and other methods that use <code>save</code>), and should be specified
+explicitly. Here&rsquo;s an example using shoulda matchers:</p>
+
+<figure class='code'><figcaption><span>validate_presence_of_title.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Article</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">validate_presence_of</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Even though the matcher&rsquo;s name looks just like the likely implementation, the
+<code>validate_presence_of</code> matcher specifies that you can not save an <code>Article</code>
+without a non-nil value for <code>title</code>, not that the
+<code>validates_presence_of(:title)</code> declaration exists.</p>
+
+<h2>Associations are structure</h2>
+
+<p>The <code>has_many</code> declaration exposes a <code>comments</code> method to clients that appears
+to be a collection of <code>Comment</code> objects. Doing Test-Driven Development, you
+would add this declaration when a specified behavior requires it e.g.</p>
+
+<figure class='code'><figcaption><span>with_comments_by.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Article</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;#with_comments_by&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;finds articles with comments by the submitted comment_author&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">article</span> <span class="o">=</span> <span class="no">Factory</span><span class="p">(</span><span class="ss">:article</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">article</span><span class="o">.</span><span class="n">comments</span> <span class="o">&lt;&lt;</span> <span class="no">Factory</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="ss">:comment</span><span class="p">,</span> <span class="ss">:author</span> <span class="o">=&gt;</span> <span class="s2">&quot;jdoe&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="no">Article</span><span class="o">.</span><span class="n">with_comments_by</span><span class="p">(</span><span class="s2">&quot;jdoe&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">should</span> <span class="n">eq</span><span class="p">(</span><span class="o">[</span><span class="n">article</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This example needs a <code>comments</code> method that returns a collection in order to
+pass.  If it doesn&rsquo;t exist already (because no other example drove you to add
+it), this would be all the motivation you need to introduce it. You don&rsquo;t need
+an example that says <code>it "should have_many(:comments)"</code>.</p>
+
+<h2>Testing the framework</h2>
+
+<p>Some will argue that we don&rsquo;t need to spec validations either, suggesting that
+<code>it "should validate_presence_of(:title)"</code> is testing the Rails framework,
+which we trust is already tested.  If you think of TDD as a combination of
+specification, documentation, and regression testing, then this argument falls
+short on the specification/documentation front because the validation is
+behavior and, thus, the spec should specify the validation.</p>
+
+<p>Even if you view testing as nothing more than a safety net against regressions,
+the argument still falls down in the face of refactoring. If we add a <code>Review</code>
+class that also <code>has_many(:comments)</code> and <code>validates_presence_of(:title)</code>, and
+we want to extract that behavior to a <code>Postable</code> module that gets included in
+both <code>Article</code> and <code>Review</code>, we&rsquo;d want a regression test to fail if we failed
+to include either of those declarations in the <code>Postable</code> module.</p>
+
+<h2>But declarations are already declarative!</h2>
+
+<p>Another argument is that declarations supply sufficient documentation. e.g. we
+can look at <code>rental_contract.rb</code> and know that it validates the presence of
+<code>:rentable</code>:</p>
+
+<figure class='code'><figcaption><span>rental_contract.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">RentalContract</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:monthly_charges</span>
+</span><span class='line'>  <span class="n">has_one</span> <span class="ss">:rentable</span><span class="p">,</span> <span class="ss">:polymorphic</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">validates_presence_of</span> <span class="ss">:rentable</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">default_monthly_charge</span>
+</span><span class='line'>    <span class="n">price</span> <span class="o">/</span> <span class="n">months_applied</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is an interesting argument that I think has some merit, but I think it
+would require an extraordinarily disciplined and consistent approach of using
+declarations 100% of the time in model files such that each one <em>is the spec</em>
+for that model, e.g.</p>
+
+<figure class='code'><figcaption><span>contract.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Contract</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">validates_presence_of</span> <span class="ss">:name</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:monthly_expenses</span>
+</span><span class='line'>  <span class="n">calculates_default_monthly_charge</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>100% may sound extreme, but as soon as we define a single method body in any
+one of the models, the declarative nature of the file begins to degrade, and so
+does its fitness for the purpose of specification. Plus, if we can only
+understand the expected behavior of a model by looking at <em>both</em> its spec and
+its implementation, we&rsquo;ve lost some of the power of a test-driven approach.</p>
+
+<h2>What do you think?</h2>
+
+<p>Do you spec associations? If so, what value do you get from doing so? If not,
+have you run into situations where you wished you had?</p>
+
+<p>Same questions for validations.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-12T23:53:27+01:00" pubdate data-updated="true">Feb 12<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rspec/'>RSpec</a>, <a class='category' href='/blog/categories/ruby/'>Ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://dchelimsky.github.io/blog/2012/02/12/validations-are-behavior-associations-are-structure/" data-via="dchelimsky" data-counturl="http://dchelimsky.github.io/blog/2012/02/12/validations-are-behavior-associations-are-structure/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/01/05/rspec-rails-281-is-released/" title="Previous Post: rspec-rails-2.8.1 is released">&laquo; rspec-rails-2.8.1 is released</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/03/18/rspec-290-is-released/" title="Next Post: rspec-2.9.0 is released!">rspec-2.9.0 is released! &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'davidchelimskysblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://dchelimsky.github.io/blog/2012/02/12/validations-are-behavior-associations-are-structure/';
+        var disqus_url = 'http://dchelimsky.github.io/blog/2012/02/12/validations-are-behavior-associations-are-structure/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

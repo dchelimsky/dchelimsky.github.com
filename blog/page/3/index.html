@@ -1,0 +1,1048 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="This is a bug fix release that should install correctly regardless of which version of rubygems you are running. rspec-core-2.6.3 / 2011-05-24 full &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://dchelimsky.github.io/blog/page/3">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:dchelimsky.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/05/24/rspec-core-263-is-released/">rspec-core-2.6.3 is released!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-24T15:17:00+02:00" pubdate data-updated="true">May 24<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011/05/24/rspec-core-263-is-released/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a bug fix release that should install correctly regardless of which version of rubygems you are running.</p>
+
+<h3>rspec-core-2.6.3 / 2011-05-24</h3>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.6.2...v2.6.3">full changelog</a></p>
+
+<ul>
+<li>Bug fixes
+
+<ul>
+<li>Explicitly convert exit code to integer, avoiding TypeError when return
+value of run is IO object proxied by <code>DRb::DRbObject</code> (Julian Scheid)</li>
+<li>Clarify behavior of <code>--example</code> command line option</li>
+<li>Build using a rubygems-1.6.2 to avoid downstream yaml parsing error</li>
+</ul>
+</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/05/22/rspec-rails-261beta1-is-released/">rspec-rails-2.6.1.beta1 is released!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-22T08:08:11+02:00" pubdate data-updated="true">May 22<span>nd</span>, 2011</time>
+        
+         | <a href="/blog/2011/05/22/rspec-rails-261beta1-is-released/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a beta release intended to provide something that works with
+rails-3.1.0.rc1. It is <em>not</em> compatible with <code>rails-3.1.0.beta1</code> or
+<code>rake-0.9.0</code> (make sure you specify rake-0.8.7 in your Gemfile), but it is
+compatible with every other release of <code>rails</code> from <code>3.0.0</code> through
+<code>3.1.0.rc1</code>.</p>
+
+<h3>rspec-rails-2.6.1.beta1 / 2011-05-22</h3>
+
+<p><a href="http://github.com/rspec/rspec-rails/compare/v2.6.0...v2.6.1.beta1">full changelog</a></p>
+
+<p>This release is compatible with rails-3.1.0.rc1, but not rails-3.1.0.beta1</p>
+
+<ul>
+<li>Bug fixes
+
+<ul>
+<li>fix controller specs with anonymous controllers with around filters</li>
+<li>exclude spec directory from rcov metrics</li>
+<li>guard against calling prerequisites on nil default rake task (Jack Dempsey)</li>
+</ul>
+</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/05/19/rspec-core-261-is-released/">rspec-core-2.6.1 is released!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-19T17:31:20+02:00" pubdate data-updated="true">May 19<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011/05/19/rspec-core-261-is-released/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a bug fix release, restoring integration with with rcov.</p>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.6.0...v2.6.1">full changelog</a></p>
+
+<ul>
+<li>Bug fixes
+
+<ul>
+<li>Don&rsquo;t extend nil when filters are nil</li>
+<li><code>require 'rspec/autorun'</code> when running rcov.</li>
+</ul>
+</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/05/12/rspec-260-is-released/">rspec-2.6.0 is released</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-12T14:58:12+02:00" pubdate data-updated="true">May 12<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011/05/12/rspec-260-is-released/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>rspec-core-2.6.0</h3>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.5.1...v2.6.0">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li><code>shared_context</code> (Damian Nurzynski)
+
+<ul>
+<li>extend groups matching specific metadata with:
+
+<ul>
+<li>method definitions</li>
+<li>subject declarations</li>
+<li>let/let! declarations</li>
+<li>etc (anything you can do in a group)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>its([:key])</code> works for any subject with #[]. (Peter Jaros)</li>
+<li><code>treat_symbols_as_metadata_keys_with_true_values</code> (Myron Marston)</li>
+<li>Print a deprecation warning when you configure RSpec after defining
+an example.  All configuration should happen before any examples are
+defined. (Myron Marston)</li>
+<li>Pass the exit status of a DRb run to the invoking process. This causes
+specs run via DRb to not just return true or false. (Ilkka Laukkanen)</li>
+<li>Refactoring of <code>ConfigurationOptions#parse_options</code> (Rodrigo Rosenfeld Rosas)</li>
+<li>Report excluded filters in runner output (tip from andyl)</li>
+<li>Clean up messages for filters/tags.</li>
+<li>Restore &mdash;pattern/-P command line option from rspec-1</li>
+<li>Support false as well as true in config.full_backtrace= (Andreas Tolf Tolfsen)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Don&rsquo;t stumble over an exception without a message (Hans Hasselberg)</li>
+<li>Remove non-ascii characters from comments that were choking rcov (Geoffrey
+Byers)</li>
+<li>Fixed backtrace so it doesn&rsquo;t include lines from before the autorun at_exit
+hook (Myron Marston)</li>
+<li>Include RSpec::Matchers when first example group is defined, rather
+than just before running the examples.  This works around an obscure
+bug in ruby 1.9 that can cause infinite recursion. (Myron Marston)</li>
+<li>Don&rsquo;t send <code>example_group_[started|finished]</code> to formatters for empty groups.</li>
+<li>Get specs passing on jruby (Sidu Ponnappa)</li>
+<li>Fix bug where mixing nested groups and outer-level examples gave
+unpredictable :line_number behavior (Artur Małecki)</li>
+<li>Regexp.escape the argument to &mdash;example (tip from Elliot Winkler)</li>
+<li>Correctly pass/fail pending block with message expectations</li>
+<li>CommandLine returns exit status (0/1) instead of true/false</li>
+<li>Create path to formatter output file if it doesn&rsquo;t exist (marekj).</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-expectations-2.6.0</h3>
+
+<p><a href="http://github.com/rspec/rspec-expectations/compare/v2.5.0...v2.6.0">full changelog</a></p>
+
+<ul>
+<li><p>Enhancments</p>
+
+<ul>
+<li><code>change</code> matcher accepts Regexps (Robert Davis)</li>
+<li>better descriptions for have_xxx matchers (Magnus Bergmark)</li>
+<li>range.should cover(*values) (Anders Furseth)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Removed non-ascii characters that were choking rcov (Geoffrey Byers)</li>
+<li>change matcher dups arrays and hashes so their before/after states can be
+compared correctly.</li>
+<li>Fix the order of inclusion of RSpec::Matchers in
+Test::Unit::TestCase and MiniTest::Unit::TestCase to prevent a
+SystemStackError (Myron Marston)</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-mocks-2.6.0</h3>
+
+<p><a href="http://github.com/rspec/rspec-mocks/compare/v2.5.0...v2.6.0">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>Add support for <code>any_instance.stub</code> and <code>any_instance.should_receive</code> (Sidu
+Ponnappa and Andy Lindeman)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>fix bug in which multiple chains with shared messages ending in hashes
+failed to return the correct value</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-rails-2.6.0</h3>
+
+<p><a href="http://github.com/rspec/rspec-rails/compare/v2.5.0...v2.6.0">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>rails 3 shortcuts for routing specs (Joe Fiorini)</li>
+<li>support nested resources in generators (Tim McEwan)</li>
+<li>require &lsquo;rspec/rails/mocks&rsquo; to use <code>mock_model</code> without requiring the whole
+rails framework</li>
+<li>Update the controller spec generated by the rails scaffold generator:
+
+<ul>
+<li>Add documentation to the generated spec</li>
+<li>Use <code>any_instance</code> to avoid stubbing finders</li>
+<li>Use real objects instead of <code>mock_model</code></li>
+</ul>
+</li>
+<li>Update capybara integration to work with capy 0.4 and 1.0.0.beta</li>
+<li>Decorate paths passed to <code>[append|prepend]_view_paths</code> with empty templates
+unless rendering views. (Mark Turner)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>fix typo in &ldquo;rake spec:statsetup&rdquo; (Curtis Schofield)</li>
+<li>expose named routes in anonymous controller specs (Andy Lindeman)</li>
+<li>error when generating namespaced scaffold resources (Andy Lindeman)</li>
+<li>Fix load order issue w/ Capybara (oleg dashevskii)</li>
+<li>Fix monkey patches that broke due to internal changes in rails-3.1.0.beta1</li>
+</ul>
+</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/05/06/rspec-260rc6-is-released/">rspec-2.6.0.rc6 is released!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-06T13:59:52+02:00" pubdate data-updated="true">May 6<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011/05/06/rspec-260rc6-is-released/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We&rsquo;re doing one more release candidate to update rspec-rails to work with rails-3.1.0.beta1. This will hopefully be the last release candidate, with a final release coming in just a few days.</p>
+
+<h3>rspec-rails-2.6.0.rc6</h3>
+
+<p><a href="http://github.com/rspec/rspec-rails/compare/v2.6.0.rc4...v2.6.0.rc6">full changelog</a></p>
+
+<ul>
+<li>Bug fixes
+
+<ul>
+<li>Fix load order issue w/ Capybara (oleg dashevskii)</li>
+<li>Relax the dependencies on rails gems to >= 3.0 (Joel Moss)</li>
+<li>Fix monkey patches that broke due to internal changes in rails-3.1.0.beta1</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-core-2.6.0.rc6</h3>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.6.0.rc4...v2.6.0.rc6">full changelog</a></p>
+
+<ul>
+<li>Enhancements
+
+<ul>
+<li>Restore &mdash;pattern/-P command line option from rspec-1</li>
+<li>Support false as well as true in config.full_backtrace= (Andreas Tolf Tolfsen)</li>
+</ul>
+</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/05/01/rspec-260rc4-is-released/">rspec-2.6.0.rc4 is released!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-01T14:55:44+02:00" pubdate data-updated="true">May 1<span>st</span>, 2011</time>
+        
+         | <a href="/blog/2011/05/01/rspec-260rc4-is-released/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This release addresses issues that were raised in the rspec-core-2.6.0.rc2 release.</p>
+
+<p>NOTE: this was originally released as rc3, but there was a problem related to rubygems that made it uninstallable.</p>
+
+<h3>rspec-core-2.6.0.rc4</h3>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.6.0.rc2...v2.6.0.rc4">full changelog</a></p>
+
+<h4>Enhancements</h4>
+
+<ul>
+<li>Clean up messages for filters/tags.</li>
+</ul>
+
+
+<h3>rspec-mocks-2.6.0.rc4</h3>
+
+<p><a href="http://github.com/rspec/rspec-mocks/compare/v2.6.0.rc2...v2.6.0.rc4">full changelog</a></p>
+
+<h4>Bug fixes</h4>
+
+<ul>
+<li>Support multiple calls to any_instance in the same example (Sidu Ponnappa)</li>
+</ul>
+
+
+<h3>rspec-rails-2.6.0.rc4</h3>
+
+<p><a href="http://github.com/rspec/rspec-rails/compare/v2.6.0.rc2...v2.6.0.rc4">full changelog</a></p>
+
+<h4>Enhancements</h4>
+
+<ul>
+<li>Update the controller spec generated by the rails scaffold generator:
+
+<ul>
+<li>Add documentation to the generated spec</li>
+<li>Use <code>any_instance</code> to avoid stubbing finders</li>
+<li>Use real objects instead of <code>mock_model</code></li>
+</ul>
+</li>
+<li>Update capybara integration to work with capy 0.4 and 1.0.0.beta</li>
+<li>Decorate paths passed to <code>[append|prepend]_view_paths</code> with empty templates
+unless rendering views. (Mark Turner)</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/04/30/rspec-260rc3-is-released/">rspec-2.6.0.rc3 is released!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-04-30T14:25:54+02:00" pubdate data-updated="true">Apr 30<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011/04/30/rspec-260rc3-is-released/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>UPDATE: there was a problem related to rubygems that made this release uninstallable, so it&rsquo;s been yanked and <a href="http://blog.davidchelimsky.net/2011/05/01/rspec-260rc4-is-released/">rc4 has been released</a>.</p>
+
+<p>This release addresses issues that were raised in the rspec-core-2.6.0.rc2 release.</p>
+
+<h3>rspec-core-2.6.0.rc3</h3>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.6.0.rc2...v2.6.0.rc3">full changelog</a></p>
+
+<h4>Enhancements</h4>
+
+<ul>
+<li>Clean up messages for filters/tags.</li>
+</ul>
+
+
+<h3>rspec-mocks-2.6.0.rc3</h3>
+
+<p><a href="http://github.com/rspec/rspec-mocks/compare/v2.6.0.rc2...v2.6.0.rc3">full changelog</a></p>
+
+<h4>Bug fixes</h4>
+
+<ul>
+<li>Support multiple calls to any_instance in the same example (Sidu Ponnappa)</li>
+</ul>
+
+
+<h3>rspec-rails-2.6.0.rc3</h3>
+
+<p><a href="http://github.com/rspec/rspec-rails/compare/v2.6.0.rc2...v2.6.0.rc3">full changelog</a></p>
+
+<h4>Enhancements</h4>
+
+<ul>
+<li>Update the controller spec generated by the rails scaffold generator:
+
+<ul>
+<li>Add documentation to the generated spec</li>
+<li>Use <code>any_instance</code> to avoid stubbing finders</li>
+<li>Use real objects instead of <code>mock_model</code></li>
+</ul>
+</li>
+<li>Update capybara integration to work with capy 0.4 and 1.0.0.beta</li>
+<li>Decorate paths passed to <code>[append|prepend]_view_paths</code> with empty templates
+unless rendering views. (Mark Turner)</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/04/18/rspec-260rc2-is-released/">rspec-2.6.0.rc2 is released!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-04-18T08:01:36+02:00" pubdate data-updated="true">Apr 18<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011/04/18/rspec-260rc2-is-released/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We&rsquo;re releasing rspec-2.6.0.rc2 as a release candidate as there are some internal changes that we&rsquo;d like to see put through their paces before doing a final release. Note that the changes I speak of are internal. There are no new deprecations in this release, nor any backward-incompatible changes.</p>
+
+<p>There are, however, some new features that we&rsquo;re really excited about. Please do check it out and please do report any issues to the appropriate github issue tracker:</p>
+
+<ul>
+<li><a href="http://github.com/rspec/rspec-core/issues">rspec-core</a></li>
+<li><a href="http://github.com/rspec/rspec-expectations/issues">rspec-expectations</a></li>
+<li><a href="http://github.com/rspec/rspec-mocks/issues">rspec-mocks</a></li>
+<li><a href="http://github.com/rspec/rspec-rails/issues">rspec-rails</a></li>
+</ul>
+
+
+<h3>rspec-core-2.6.0.rc2</h3>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.5.1...v2.6.1.rc2">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li><code>shared_context</code> (Damian Nurzynski)
+
+<ul>
+<li>extend groups matching specific metadata with:
+
+<ul>
+<li>method definitions</li>
+<li>subject declarations</li>
+<li>let/let! declarations</li>
+<li>etc (anything you can do in a group)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>its([:key])</code> works for any subject with #[]. (Peter Jaros)</li>
+<li><code>treat_symbols_as_metadata_keys_with_true_values</code> (Myron Marston)</li>
+<li>Print a deprecation warning when you configure RSpec after defining
+an example.  All configuration should happen before any examples are
+defined. (Myron Marston)</li>
+<li>Pass the exit status of a DRb run to the invoking process. This causes
+specs run via DRb to not just return true or false. (Ilkka Laukkanen)</li>
+<li>Refactoring of ConfigurationOptions#parse_options (Rodrigo Rosenfeld Rosas)</li>
+<li>Report excluded filters in runner output (tip from andyl)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Don&rsquo;t stumble over an exception without a message (Hans Hasselberg)</li>
+<li>Remove non-ascii characters from comments that were choking rcov (Geoffrey
+Byers)</li>
+<li>Fixed backtrace so it doesn&rsquo;t include lines from before the autorun at_exit
+hook (Myron Marston)</li>
+<li>Include RSpec::Matchers when first example group is defined, rather
+than just before running the examples.  This works around an obscure
+bug in ruby 1.9 that can cause infinite recursion. (Myron Marston)</li>
+<li>Don&rsquo;t send example_group_[started|finished] to formatters for empty groups.</li>
+<li>Get specs passing on jruby (Sidu Ponnappa)</li>
+<li>Fix bug where mixing nested groups and outer-level examples gave
+unpredictable :line_number behavior (Artur Małecki)</li>
+<li>Regexp.escape the argument to &mdash;example (tip from Elliot Winkler)</li>
+<li>Correctly pass/fail pending block with message expectations</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-expectations-2.6.0.rc2</h3>
+
+<p><a href="http://github.com/rspec/rspec-expectations/compare/v2.5.0...v2.6.1.rc2">full changelog</a></p>
+
+<ul>
+<li><p>Enhancments</p>
+
+<ul>
+<li><code>change</code> matcher accepts Regexps (Robert Davis)</li>
+<li>better descriptions for have_xxx matchers (Magnus Bergmark)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Removed non-ascii characters that were choking rcov (Geoffrey Byers)</li>
+<li>change matcher dups arrays and hashes so their before/after states can be
+compared correctly.</li>
+<li>Fix the order of inclusion of RSpec::Matchers in
+Test::Unit::TestCase and MiniTest::Unit::TestCase to prevent a
+SystemStackError (Myron Marston)</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-mocks-2.6.0.rc2</h3>
+
+<p><a href="http://github.com/rspec/rspec-mocks/compare/v2.5.0...v2.6.1.rc2">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>Add support for any_instance.stub and any_instance.should_receive (Sidu
+Ponnappa and Andy Lindeman)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>fix bug in which multiple chains with shared messages ending in hashes
+failed to return the correct value</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-rails-2.6.0.rc2</h3>
+
+<p><a href="http://github.com/rspec/rspec-rails/compare/v2.5.0...v2.6.1.rc2">full changelog</a></p>
+
+<ul>
+<li><p>Enhancments</p>
+
+<ul>
+<li>rails 3 shortcuts for routing specs (Joe Fiorini)</li>
+<li>support nested resources in generators (Tim McEwan)</li>
+<li>require &lsquo;rspec/rails/mocks&rsquo; to use <code>mock_model</code> without requiring the whole
+rails framework</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>fix typo in &ldquo;rake spec:statsetup&rdquo; (Curtis Schofield)</li>
+<li>expose named routes in anonymous controller specs (Andy Lindeman)</li>
+<li>error when generating namespaced scaffold resources (Andy Lindeman)</li>
+</ul>
+</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/04/12/rspec-132-and-rspec-rails-134-are-released/">rspec-1.3.2 and rspec-rails-1.3.4 are released!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-04-12T05:59:10+02:00" pubdate data-updated="true">Apr 12<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011/04/12/rspec-132-and-rspec-rails-134-are-released/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>rspec-1.3.2 and rspec-rails-1.3.4 have been released!</p>
+
+<p>This is primarily a bug-fix release of the rspec-1.x series, and is recommended for all users who have not yet upgraded to rspec-2.</p>
+
+<p>rspec-rails-1.3 users will need to upgrade to rspec-rails-1.3.4, which depends on rspec ~> 1.3.2 (meaning 1.3.2 and up, but not 2.0).</p>
+
+<h3>rspec 1.3.2</h3>
+
+<ul>
+<li>Enhancements</li>
+<li>Raise a meaningful error when an argument-scoped stub is called with the
+wrong args (Alexey)</li>
+<li><p>Dev: ignore .rbc files (Myron Marston)</p></li>
+<li><p>Bug fixes</p></li>
+<li>Fix regression in which an expectation should return the value from a
+previously defined stub of the same method (Tom Stuart)</li>
+<li>Support heckling class methods (Dan Kubb)</li>
+<li>Only try to pass messages to the superclass if the superclass responds to
+the method (Andrew Selder)</li>
+</ul>
+
+
+<p>rspec-rails-1.3.4 is released!</p>
+
+<h3>rspec-rails 1.3.4</h3>
+
+<ul>
+<li>No new code</li>
+<li>Depends on rspec ~> 1.3.2</li>
+<li>rspec-rails 1.3.3 depended on rspec-1.3.1 explicitly, so this
+release allows you to upgrade to rspec-1.3.2 with rspec-rails.</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/02/06/rspec-core-251-is-released/">rspec-core-2.5.1 is released!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-02-06T18:25:04+01:00" pubdate data-updated="true">Feb 6<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011/02/06/rspec-core-251-is-released/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>rspec-core-2.5.1</h3>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.5.0...v2.5.1">full changelog</a></p>
+
+<h4>This release breaks compatibility with rspec/autotest/bundler integration, but does so in order to greatly simplify it.</h4>
+
+<p>With the release of rspec-core-2.5.1, if you want the generated autotest command to include <code>bundle exec</code>, require Autotest&rsquo;s bundler plugin in a <code>.autotest</code> file in the project&rsquo;s root directory or in your home directory:</p>
+
+<pre><code>require "autotest/bundler"
+</code></pre>
+
+<p>Now you can just type &lsquo;autotest&rsquo; on the commmand line and it will work as you expect.</p>
+
+<p>If you don&rsquo;t want &lsquo;bundle exec&rsquo;, there is nothing you have to do.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/4/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/2/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec&#8217;s new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'davidchelimskysblog';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

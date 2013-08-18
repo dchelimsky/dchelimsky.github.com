@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>The RSpec Book -- Beta 10 and Progress Report - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="Beta 10????? When the hell are we going to start chopping down some trees? Well, first, here&rsquo;s what&rsquo;s new in Beta 10 of The RSpec Book: &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://dchelimsky.github.io/blog/2009/09/23/the-rspec-book-beta-10-and-progress-report">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:dchelimsky.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">The RSpec Book -- Beta 10 and Progress Report</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-09-23T15:09:15+02:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2009</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Beta 10????? When the hell are we going to start chopping down some trees? Well, first, here&rsquo;s what&rsquo;s new in Beta 10 of <a href="http://www.pragprog.com/titles/achbd/the-rspec-book">The RSpec Book</a>:</p>
+
+<h3>Automating the Browser with Webrat and Selenium</h3>
+
+<p>This new chapter from Bryan Helmkamp shows you how to drive Cucumber scenarios right through your browser using Webrat and Selenium. You&rsquo;ll type a single command and watch a browser fire up and walk through each scenario step by step right before your very eyes, and then see a standard Cucumber report in the shell. It&rsquo;s a sight to behold, and a great way to drive out behaviour that requires JavaScript.</p>
+
+<p>And now, for your reading pleasure &hellip;</p>
+
+<!-- more -->
+
+
+<h3>Progress Report</h3>
+
+<p>I&rsquo;m sure that all of you post-first-time authors out there know what I mean when I say that working on this book has been a fascinating case study in how <em>not</em> to write a book. First, we&rsquo;re writing about not just one, but no less that six moving targets: RSpec, Cucumber, Rails, Webrat, Selenium and, of course BDD itself.</p>
+
+<p>When we started this book, BDD was seen primarily as <a href="http://techblog.daveastels.com/2005/07/05/a-new-look-at-test-driven-development/">a new look at test driven development</a>. The book was focused only on RSpec and TDD through this new lens. Had we stuck to that we might be talking about the third edition by now, but while we were writing, BDD was on the move.</p>
+
+<h4>BDD in 2009</h4>
+
+<p>Today, BDD has evolved to a full-stack agile process derived from Extreme Programming (XP). Rather than being a variation of TDD, it comprises TDD (and ATDP, DDD, etc, etc). And so has the book evolved to incorporate the application of these ideas to the practical use of an evolving toolset.</p>
+
+<p>Also consider that four of the authors are primary maintainers of said moving targets (including BDD itself). Structuring a project like this leads to a different meaning of BDD entirely &hellip;</p>
+
+<h4>Book Driven Development</h4>
+
+<p>I can&rsquo;t count the number of times that I&rsquo;ve been writing about how to do something or set something up in RSpec or Cucumber and I&rsquo;ve thought &ldquo;Really? We could do better than that!&rdquo; Each of those revelations led to software updates, followed by me poring through the book to update related content.</p>
+
+<p>The end result is better software <em>and</em> a better book, benefiting RSpec and Cucumber users and The RSpec Book readers alike.</p>
+
+<h4>What remains to be done?</h4>
+
+<p>At this point we&rsquo;re pretty close to the end of this journey.
+We&rsquo;ve got two chapters left to write, plus some bookends (and beginnings &ndash; foreword, preface, and appendices). I also need to review pretty much everything because lots of things that we wrote about earlier in the process have changed.</p>
+
+<p>After all that, we&rsquo;ll have a final technical review, copyediting, indexing, and then off to print! So we&rsquo;re in the final phases now and I look forward to reporting that the book is off to print in the not too distant future. How &ldquo;not too distant&rdquo; I hesitate to say, because so far I&rsquo;m batting 000 in terms of release predictions (and I thought estimating software delivery was a challenge!).</p>
+
+<p>In the mean time, I&rsquo;ll be posting updates here as we progress, along with some discussion of the material in the book.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-09-23T15:09:15+02:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2009</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/bdd/'>BDD</a>, <a class='category' href='/blog/categories/cucumber/'>Cucumber</a>, <a class='category' href='/blog/categories/rspec/'>RSpec</a>, <a class='category' href='/blog/categories/the-rspec-book/'>The RSpec Book</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://dchelimsky.github.io/blog/2009/09/23/the-rspec-book-beta-10-and-progress-report/" data-via="dchelimsky" data-counturl="http://dchelimsky.github.io/blog/2009/09/23/the-rspec-book-beta-10-and-progress-report/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2009/09/15/let-it-be-less/" title="Previous Post: let it be @-less">&laquo; let it be @-less</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2009/09/25/get-off-the-couch-with-me/" title="Next Post: get off (the couch) with me">get off (the couch) with me &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'davidchelimskysblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://dchelimsky.github.io/blog/2009/09/23/the-rspec-book-beta-10-and-progress-report/';
+        var disqus_url = 'http://dchelimsky.github.io/blog/2009/09/23/the-rspec-book-beta-10-and-progress-report/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

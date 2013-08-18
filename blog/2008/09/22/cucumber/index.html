@@ -1,0 +1,285 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cucumber - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="Aslak Hellesøy&rsquo;s Cucumber library will be replacing RSpec&rsquo;s Story Runner after the RSpec 1.1.5 release (coming soon). Cucumber is a &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://dchelimsky.github.io/blog/2008/09/22/cucumber">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:dchelimsky.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Cucumber</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-09-22T20:39:00+02:00" pubdate data-updated="true">Sep 22<span>nd</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Aslak Hellesøy&rsquo;s <a href="http://github.com/aslakhellesoy/cucumber">Cucumber</a> library will be replacing RSpec&rsquo;s Story Runner <strong>after</strong> the RSpec 1.1.5 release (coming soon).</p>
+
+<p>Cucumber is a bottom up re-write of the Story Runner, and features a grammar parser using <a href="http://treetop.rubyforge.org/">Treetop</a>. When I first started working on support for plain text stories, I chose to roll my own parsing rather than writing a grammar for a number of reasons, but it turns out that we get some great benefits from it.</p>
+
+<h3>Cucumber supports multiple spoken languages:</h3>
+
+<p>So now you can say:</p>
+
+<pre><code>Funcionalidade: Adição
+Para evitar erros bobos
+Como um péssimo matemático
+Eu quero saber como somar dois números
+
+Cenário: Adicionar dois números
+  Dado que eu digitei 50 na calculadora
+  E que eu digitei 70 na calculadora
+  Quando eu aperto o botão de soma
+  Então o resultado na calculadora deve ser 120
+</code></pre>
+
+<p>Que legal! (How cool is <strong>that</strong>?)</p>
+
+<p>There are already several languages supported, and adding new ones is fairly trivial, so we&rsquo;ll likely support adding your own languages after some time.</p>
+
+<h3>Improved backtraces</h3>
+
+<p>Cucumber includes line numbers from the plain text Feature files, making it much, much easier to understand failures. (NOTE: we&rsquo;re calling them Features now instead of Stories &ndash; look for another post on that subject soon)</p>
+
+<h3>Simpler configuration</h3>
+
+<p>Cucumber eliminates steps_for and using_steps_for. Simply define steps using the Given, When and Then methods:</p>
+
+<pre><code>#features/steps/accounts.rb
+Given /I have \$(\d+) in my (.*) account/ do |dollars, account_type|
+...
+end
+</code></pre>
+
+<p>Now require the files with the step definitions you need:</p>
+
+<pre><code>cucumber -r features/steps/accounts.rb features/transfer_money
+</code></pre>
+
+<p>&hellip; and you&rsquo;re off. For most cases you don&rsquo;t even need that granularity, you can just say …</p>
+
+<pre><code>&lt;code&gt;cucumber features&lt;/code&gt;
+</code></pre>
+
+<p>&hellip; and cucumber will require any .rb files it finds in the features directory before running the feature files.</p>
+
+<h3>Fewer surprises</h3>
+
+<p>When RSpec&rsquo;s Story Runner finds more than one step definition that can handle a step, the first one it finds wins. This can lead to some painful debugging sessions.</p>
+
+<p>When Cucumber finds more than one step definition that can handle a step, you get an error telling you which step definitions are competing, including their location (file and line number), so you can easily see and resolve the conflict.</p>
+
+<h3>What this means for you if you&rsquo;re already using Story Runner</h3>
+
+<p>Cucumber is only a few months old and is nearly feature compatible with RSpec&rsquo;s Story Runner and already adds a lot of powerful new features. Aslak has converted many, many stories to cucumber features, and is <a href="http://github.com/aslakhellesoy/cucumber/wikis/migration-from-rspec-stories">posting about his experiences</a> and refining the process as he goes. By the time we release cucumber as the official scenario runner, the migration path will be well documented and inexpensive.</p>
+
+<p>As for a time frame, that&rsquo;s difficult to say. We&rsquo;ve been promising the 1.1.5 release for some time and for one reason or another it keeps getting pushed back. We&rsquo;ll likely wait for the rails 2.2 release and make sure that it is compatible. Rumor has it that is coming soon, but it was coming soon several weeks ago as well, so we&rsquo;ll have to wait and see.</p>
+
+<p>In the mean time, we are freezing development on Story Runner so that we can focus on Cucumber development. Before we officially release cucumber as part of rspec, we&rsquo;ll create a separate project up on github for just the story runner (likely named rspec-stories) so the code will be available for teams that want to continue to use and/or maintain it.</p>
+
+<p>I&rsquo;ll follow up here and on the <a href="http://rubyforge.org/mailman/listinfo/rspec-users">rspec-users mailing list</a> (which is mirrored by the <a href="http://groups.google.com/group/rspec">rspec google group</a>) as things progress.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-09-22T20:39:00+02:00" pubdate data-updated="true">Sep 22<span>nd</span>, 2008</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://dchelimsky.github.io/blog/2008/09/22/cucumber/" data-via="dchelimsky" data-counturl="http://dchelimsky.github.io/blog/2008/09/22/cucumber/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2008/07/01/how-i-got-started-programming/" title="Previous Post: How I got started programming">&laquo; How I got started programming</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2008/09/23/windy-city-rails-conf/" title="Next Post: Windy City Rails Conf">Windy City Rails Conf &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

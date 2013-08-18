@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>custom expectation matchers - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="RSpec 0.8 introduces the concept of &ldquo;Expectation Matchers&rdquo;:/articles/2007/02/18/expectation-matchers to RSpec. Not only does this &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://dchelimsky.github.io/blog/2007/02/18/custom-expectation-matchers">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:dchelimsky.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">custom expectation matchers</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-02-18T17:16:42+01:00" pubdate data-updated="true">Feb 18<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>RSpec 0.8 introduces the concept of &ldquo;Expectation Matchers&rdquo;:/articles/2007/02/18/expectation-matchers to RSpec. Not only does this simplify RSpec&rsquo;s own internals, but it also makes it really simple to write your own custom expectation matchers.</p>
+
+<p>Here&rsquo;s an example that came from a <a href="http://rubyforge.org/pipermail/rspec-devel/2007-February/001982.html">question</a> on the <a href="http://rubyforge.org/pipermail/rspec-devel/">rspec-devel mailing list</a>.</p>
+
+<p>Evgeny wanted a simple, DRY way to specify that a Rails model class should require specific fields. Here&rsquo;s what I came up with. I&rsquo;m not convinced this is the best approach to this problem, but I&rsquo;m presenting it here to demonstrate the simplicity of creating a custom matcher.</p>
+
+<pre><code>&lt;code&gt;module ModelSpecHelper
+class Require
+  def initialize(attr)
+    @attr = attr
+  end
+
+  def matches?(model)
+    @model = model
+    model.send("#{@attr.to_s}=".to_sym, nil)
+    return !model.valid?
+  end
+
+  def failure_message
+    "expected #{@model.inspect} to require #{@attr.inspect}"
+  end
+end
+
+def require(attr)
+  Require.new(attr)
+end
+end
+
+context "User behaviour" do
+include ModelSpecHelper
+
+setup do
+  @user = User.new(:email =&gt; 'a@b.com', :zip =&gt; '02134')
+end
+
+specify "should require email" do
+  @user.should require(:email)
+end
+
+specify "should require zip" do
+  @user.should require(:zip)
+end
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>The only thing I&rsquo;m not comfortable with is that these specs are bound together with the setup. If you don&rsquo;t initialize the required attributes in setup and only one of the required attributes is actually implemented in the model, all of them will pass anyway (false positive).</p>
+
+<p>I guess that could be solved by adding a parameter to #require:</p>
+
+<pre><code>&lt;code&gt;def require(attr, valid_value)
+Require.new(attr, valid_value)
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>Then #matches? could assign nil to the attr and expect #valid? to return false and then assign valid_value to the attr and expect #valid? to return true. The failure message could say something like &ldquo;model was not valid even when email was assigned &lsquo;<a href="&#109;&#x61;&#x69;&#108;&#x74;&#111;&#58;&#x61;&#64;&#x62;&#46;&#99;&#111;&#x6d;">&#x61;&#64;&#98;&#x2e;&#99;&#x6f;&#x6d;</a>&rsquo;. You must ensure that all required attributes are assigned values before calling #should require.&rdquo;</p>
+
+<p>Making that change would be cake! Again, the point here is to show how easy custom matchers are to implement. Coming up w/ the right syntax and messaging is another problem, but RSpec does its best to stay out of your way as you explore that problem.</p>
+
+<p>So I encourage you to explore custom matchers if you&rsquo;re using RSpec >= 0.8, and I look forward to hearing about your experiences doing so. I also encourage you to consider publishing your own libraries of custom matchers that you find generally useful.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-02-18T17:16:42+01:00" pubdate data-updated="true">Feb 18<span>th</span>, 2007</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rspec/'>RSpec</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://dchelimsky.github.io/blog/2007/02/18/custom-expectation-matchers/" data-via="dchelimsky" data-counturl="http://dchelimsky.github.io/blog/2007/02/18/custom-expectation-matchers/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2007/02/18/expectation-matchers/" title="Previous Post: expectation matchers">&laquo; expectation matchers</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2007/02/21/generated-spec-names-keep-specs-dryer/" title="Next Post: generated spec names keep specs DRYer">generated spec names keep specs DRYer &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

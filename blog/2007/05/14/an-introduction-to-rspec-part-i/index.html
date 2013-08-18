@@ -1,0 +1,687 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>an introduction to RSpec - Part I - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="Here&rsquo;s an introductory tutorial for those of you interested in getting started with RSpec. Background Behaviour Driven Development is an Agile &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://dchelimsky.github.io/blog/2007/05/14/an-introduction-to-rspec-part-i">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:dchelimsky.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">an introduction to RSpec - Part I</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-05-14T17:25:57+02:00" pubdate data-updated="true">May 14<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Here&rsquo;s an introductory tutorial for those of you interested in getting started with RSpec.</p>
+
+<h4>Background</h4>
+
+<p>Behaviour Driven Development is an Agile development process that comprises aspects of Acceptance Test Driven Planning, Domain Driven Design and Test Driven Development. RSpec is a BDD tool aimed at TDD in the context of BDD.</p>
+
+<p>You could say that RSpec is what is traditionally known as a unit testing framework, but we prefer to describe it as &ldquo;a Domain Specific Language for describing the expected behaviour of a system with executable examples.&rdquo;</p>
+
+<p>Also, the process that this tutorial guides you through is Test Driven Development at its core, but we use words like &ldquo;behaviour&rdquo; and &ldquo;example&rdquo; instead of &ldquo;test case&rdquo; and &ldquo;test method&rdquo;.</p>
+
+<p>To understand why we choose this nomenclature, and more detailed history of BDD and RSpec&rsquo;s evolution, check out the writings of &ldquo;Dan North&rdquo;:<a href="http://dannorth.net/tags/agile/bdd/,">http://dannorth.net/tags/agile/bdd/,</a> &ldquo;Dave Astels&rdquo;:<a href="http://daveastels.com/articles/2005/07/05/a-new-look-at-test-driven-development,">http://daveastels.com/articles/2005/07/05/a-new-look-at-test-driven-development,</a> and &ldquo;Brian Marick&rdquo;:<a href="http://exampler.com/.">http://exampler.com/.</a></p>
+
+<p>Throughout the tutorial, I&rsquo;ll address some of the philosophy behind various choices that are made, but you&rsquo;ll have a much better understanding of them (or at least a context to put them in) if you peruse these recommended readings.</p>
+
+<!-- more -->
+
+
+<h4>Prerequisites</h4>
+
+<ul>
+<li><p>Ruby 1.8.4 or later</p></li>
+<li><p>The latest RSpec gem (0.9.4 as of this writing).</p></li>
+</ul>
+
+
+<p>To install the RSpec gem, open up a command shell and type …</p>
+
+<pre><code>&gt; gem install rspec
+</code></pre>
+
+<h4>Getting Started</h4>
+
+<p>For this example, we&rsquo;ll describe and develop the beginnings of a User class, which can be assigned any number of roles. Start by creating a directory for the files for this tutorial:</p>
+
+<pre><code>&gt; mkdir rspec_tutorial
+&gt; cd rspec_tutorial
+</code></pre>
+
+<h4>The first example</h4>
+
+<p>RSpec provides a Domain Specific Language for describing the expected behaviour of a system with executable examples. The first methods we&rsquo;ll encounter are <code>describe</code> and <code>it</code>. These methods used to have other names (which are still supported but generally not recommended), but we use <code>describe</code> and <code>it</code> because they lead you to thinking more about behaviour than structure.</p>
+
+<p>Using your favorite editor, create a file in this directory named user_spec.rb and type the following:</p>
+
+<pre><code>&lt;code&gt;describe User do
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>The <code>describe</code> method creates an instance of <code>Behaviour</code>. So &ldquo;describe User&rdquo; is really saying &ldquo;describe the behaviour of the User class&rdquo;. I guess we could have named the method <code>describe_the_behaviour_of</code>, but there is a point at which clarity bumps up against verbosity, and we feel that point is before the first underscore in <code>describe_the_behaviour_of</code>.</p>
+
+<p>In the shell, type the following command:</p>
+
+<pre><code>&gt; spec user_spec.rb
+</code></pre>
+
+<p>The <code>spec</code> command gets installed when you install the rspec gem. It supports a large number of command line options. Most of the options are outside the scope of this tutorial, but you can learn about them by running the command without any arguments:</p>
+
+<pre><code>&gt; spec
+</code></pre>
+
+<p>Getting back to the task at hand, running <code>spec user_spec.rb</code> should have resulted in output that includes the following error:</p>
+
+<pre><code>./user_spec.rb:1: uninitialized constant User (NameError)
+</code></pre>
+
+<p>We haven&rsquo;t even written any examples and already RSpec is telling us what code we need to write. We need to create a User class to resolve this error, so create user.rb with the following:</p>
+
+<pre><code>&lt;code&gt;class User
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>&hellip; and require it in user_spec.rb:</p>
+
+<pre><code>&lt;code&gt;require 'user'
+
+describe User do
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>Now run the <code>spec</code> command again.</p>
+
+<pre><code>$ spec user_spec.rb
+
+Finished in 6.0e-06 seconds
+
+0 examples, 0 failures
+</code></pre>
+
+<p>The output shows that we have no examples yet, so lets add one. We&rsquo;ll start by describing the intent of example without any code.</p>
+
+<pre><code>&lt;code&gt;describe User do
+it "should be in any roles assigned to it" do
+end
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>The <code>it</code> method returns an instance of <code>Example</code>. This is a metaphor for an example of the behaviour that we are describing.</p>
+
+<p>Read that out loud. It is quite satisfying. We can thank <a href="http://dannorth.net">Dan North</a> for the names <code>describe</code> and <code>it</code>.</p>
+
+<p>Run the <code>spec</code>, but this time add the <code>--format</code> option:</p>
+
+<pre><code>$ spec user_spec.rb --format specdoc
+
+User
+- should be in any roles assigned to it
+
+Finished in 0.022865 seconds
+
+1 example, 0 failures
+</code></pre>
+
+<p>The <code>specdoc</code> format outputs the name of each Behaviour (the object created by the <code>describe</code> method) and each Example (the object created by the <code>it</code> method). This format comes from <a href="http://agiledox.sourceforge.net/">TestDox</a>, a tool which produces a similar report from the names of JUnit TestCases and methods within.</p>
+
+<p>Now add a Ruby statement that begins to express the described intent.</p>
+
+<pre><code>&lt;code&gt;describe User do
+it "should be in any roles assigned to it" do
+  user.should be_in_role("assigned role")
+end
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>&hellip; and run the <code>spec</code> command.</p>
+
+<pre><code>$ spec user_spec.rb --format specdoc
+
+User
+- should be in any roles assigned to it (ERROR - 1)
+
+1)
+NameError in 'User should be in any roles assigned to it'
+undefined local variable or method `user' for #&lt;#&lt;Class:0x14ed15c&gt;:0x14ecdd8&gt;
+./user_spec.rb:6:
+
+Finished in 0.017956 seconds
+
+1 example, 1 failure
+</code></pre>
+
+<p>There are a couple of things to note about this output. First, the text &ldquo;(ERROR &ndash; 1)&rdquo; tells us that there was an error in the &ldquo;should be in any roles assigned to it&rdquo; example. The &ldquo;1&rdquo; tells us that as we scroll down to the detailed failure report that this particular failure is described under &ldquo;1)&rdquo;. This will become more useful as the number of examples increases.</p>
+
+<p>Another thing to note is the absence of any references to RSpec code in the backtrace. RSpec filters that out by default, however you can see the entire backtrace by adding the <code>--backtrace</code> switch to the command.</p>
+
+<p>The output tells us that there is no <code>user</code>, so the next step is to make one:</p>
+
+<pre><code>&lt;code&gt;describe User do
+it "should be in any roles assigned to it" do
+  user = User.new
+  user.should be_in_role("assigned role")
+end
+end
+&lt;/code&gt;
+
+
+
+
+
+$ spec user_spec.rb --format specdoc
+
+User
+- should be in any roles assigned to it (ERROR - 1)
+
+1)
+NoMethodError in 'User should be in any roles assigned to it'
+undefined method `in_role?' for #&lt;User:0x14ec8ec&gt;
+./user_spec.rb:7:
+
+Finished in 0.020779 seconds
+
+1 example, 1 failure
+</code></pre>
+
+<p>Now we learn that User does not respond to <code>in_role?</code>, so we add that to User:</p>
+
+<pre><code>&lt;code&gt;class User
+def in_role?(role)
+end
+&lt;/code&gt;
+
+
+
+
+
+$ spec user_spec.rb --format specdoc
+
+User
+- should be in any roles assigned to it (FAILED - 1)
+
+1)
+'User should be in any roles assigned to it' FAILED
+expected in_role?("assigned role") to return true, got nil
+./user_spec.rb:7:
+
+Finished in 0.0172110000000001 seconds
+
+1 example, 1 failure
+</code></pre>
+
+<p>We now have a failing example, which is the first goal. We always want to see a meaningful failure before success because that&rsquo;s the only way we can be sure the success is the result of writing code in the right place in the system.</p>
+
+<p>To get this to pass, we do the simplest thing that could possibly work:</p>
+
+<pre><code>&lt;code&gt;class User
+def in_role?(role)
+  true
+end
+&lt;/code&gt;
+
+
+
+
+
+$ spec user_spec.rb --format specdoc
+
+User
+- should be in any roles assigned to it
+
+Finished in 0.018173 seconds
+
+1 example, 0 failures
+</code></pre>
+
+<p>That passes, but we&rsquo;re not done yet. Take a look again at the example:</p>
+
+<pre><code>&lt;code&gt;describe User do
+it "should be in any roles assigned to it" do
+  user = User.new
+  user.should be_in_role("assigned role")
+end
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>Does that express the described intent? Not fully. The description says that the User &ldquo;should be in any roles assigned to it&rdquo;, but we haven&rsquo;t assigned any roles to it. Let&rsquo;s add that assignment to the example:</p>
+
+<pre><code>&lt;code&gt;describe User do
+it "should be in any roles assigned to it" do
+  user = User.new
+  user.assign_role("assigned role")
+  user.should be_in_role("assigned role")
+end
+end
+&lt;/code&gt;
+
+
+
+
+
+$ spec user_spec.rb --format specdoc
+
+User
+- should be in any roles assigned to it (ERROR - 1)
+
+1)
+NoMethodError in 'User should be in any roles assigned to it'
+undefined method `assign_role' for #&lt;User:0x14ec784&gt;
+./user_spec.rb:6:
+
+Finished in 0.018564 seconds
+
+1 example, 1 failure
+</code></pre>
+
+<p>Following the advice in the output, we now add the <code>assign_role</code> method to <code>User</code>.</p>
+
+<pre><code>&lt;code&gt;class User
+def in_role?(role)
+  true
+end
+
+def assign_role(role)
+end
+end
+&lt;/code&gt;
+
+
+
+
+
+$ spec user_spec.rb --format specdoc
+
+User
+- should be in any roles assigned to it
+
+Finished in 0.018998 seconds
+
+1 example, 0 failures
+</code></pre>
+
+<p>The example is passing again, but are we done yet? Scroll up a few lines and take a look at the current implementation of <code>User</code>. I think it&rsquo;s fair to say that this is NOT the implementation that we know we want to end up with. And this is the point in the process that makes TDD &ldquo;Test-Driven&rdquo;. Rather than implementing the code we <strong>think</strong> that we <strong>know</strong> that we want, we&rsquo;re going to proceed under the guidance of the principle that &ldquo;code does not exist until it is tested.&rdquo;</p>
+
+<p>Right now, the only requirement of this system that we&rsquo;ve expressed is that a &ldquo;User should be in any roles assigned to it&rdquo;, and the system meets that requirement. In order to push the code to the next step, we need to express more requirements with more executable examples.</p>
+
+<h4>The second example</h4>
+
+<p>As things stand now, a <code>User</code> will answer <code>true</code> when you ask it if it is any role, regardless of whether it has been assigned that role. We want the <code>User</code> to tell is it is not in a role which it has not been assigned, so let&rsquo;s add that example:</p>
+
+<pre><code>&lt;code&gt;describe User do
+it "should be in any roles assigned to it" do
+  user = User.new
+  user.assign_role("assigned role")
+  user.should be_in_role("assigned role")
+end
+
+it "should NOT be in any roles not assigned to it" do
+end
+end
+&lt;/code&gt;
+
+
+
+
+
+$ spec user_spec.rb --format specdoc
+
+User
+- should be in any roles assigned to it
+- should NOT be in any roles not assigned to it
+
+Finished in 0.018231 seconds
+
+2 examples, 0 failures
+</code></pre>
+
+<p>Now add a statement to express intent:</p>
+
+<pre><code>&lt;code&gt;describe User do
+it "should be in any roles assigned to it" do
+  user = User.new
+  user.assign_role("assigned role")
+  user.should be_in_role("assigned role")
+end
+
+it "should NOT be in any roles not assigned to it" do
+  user.should_not be_in_role("unassigned role")
+end
+end
+&lt;/code&gt;
+
+
+
+
+
+$ spec user_spec.rb --format specdoc
+
+User
+- should be in any roles assigned to it
+- should NOT be in any roles not assigned to it (ERROR - 1)
+
+1)
+NameError in 'User should NOT be in any roles not assigned to it'
+undefined local variable or method `user' for #&lt;#&lt;Class:0x14eca54&gt;:0x14ebce4&gt;
+./user_spec.rb:11:
+
+Finished in 0.018465 seconds
+
+2 examples, 1 failure
+</code></pre>
+
+<p>Now create the <code>User</code>:</p>
+
+<pre><code>&lt;code&gt;describe User do
+it "should be in any roles assigned to it" do
+  user = User.new
+  user.assign_role("assigned role")
+  user.should be_in_role("assigned role")
+end
+
+it "should NOT be in any roles not assigned to it" do
+  user = User.new
+  user.should_not be_in_role("unassigned role")
+end
+end
+&lt;/code&gt;
+
+
+
+
+
+$ spec user_spec.rb --format specdoc
+
+User
+- should be in any roles assigned to it
+- should NOT be in any roles not assigned to it (FAILED - 1)
+
+1)
+'User should NOT be in any roles not assigned to it' FAILED
+expected in_role?("unassigned role") to return false, got true
+./user_spec.rb:12:
+
+Finished in 0.019014 seconds
+
+2 examples, 1 failure
+</code></pre>
+
+<p>Once again we have an example that is failing in the way we want it to fail &ndash; the intent is correctly expressed, but the code is not behaving as expected.</p>
+
+<p>Doing the simplest thing that could possibly work, we can get the example to pass like so:</p>
+
+<pre><code>&lt;code&gt;class User
+def in_role?(role)
+  role == "assigned role"
+end
+
+def assign_role(role)
+end
+end
+&lt;/code&gt;
+
+
+
+
+
+$ spec user_spec.rb --format specdoc
+
+User
+- should be in any roles assigned to it
+- should NOT be in any roles not assigned to it
+
+Finished in 0.017194 seconds
+
+2 examples, 0 failures
+</code></pre>
+
+<p>Everything passes, but now we have duplication between the examples and the subject code. Time to refactor to remove the duplication!</p>
+
+<pre><code>&lt;code&gt;class User
+def in_role?(role)
+  role == @role
+end
+
+def assign_role(role)
+  @role = role
+end
+end
+&lt;/code&gt;
+
+
+
+
+
+$ spec user_spec.rb --format specdoc
+
+User
+- should be in any roles assigned to it
+- should NOT be in any roles not assigned to it
+
+Finished in 0.018199 seconds
+
+2 examples, 0 failures
+</code></pre>
+
+<p>At this point, you probably feel as though the implementation is not quite right yet. That feeling is based on an assumption that we should be able to assign any number of roles to a <code>User</code>. Part of that assumption comes from our initial example: &ldquo;should be in any roles assigned to it&rdquo;. Before diving in and changing the implementation, this is a great time to ask the customer whether that assumption is correct! If the answer is that a <code>User</code> can only be in one role at a time, then we&rsquo;re done with the code but we should probably re-phrase the examples to read &ldquo;should be in the role assigned to it&rdquo; and &ldquo;should NOT be in a role not assigned to it&rdquo;.</p>
+
+<p>If the answer is that a <code>User</code> can be in more than one role at a time, then we have more work to do. I&rsquo;ll address this scenario in Part II of this tutorial. Stay tuned …</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-05-14T17:25:57+02:00" pubdate data-updated="true">May 14<span>th</span>, 2007</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rspec/'>RSpec</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://dchelimsky.github.io/blog/2007/05/14/an-introduction-to-rspec-part-i/" data-via="dchelimsky" data-counturl="http://dchelimsky.github.io/blog/2007/05/14/an-introduction-to-rspec-part-i/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2007/05/02/dont-let-name_prefix-result-in-the-name-of-an-existing-model/" title="Previous Post: don't let :name_prefix result in the name of an existing model">&laquo; don't let :name_prefix result in the name of an existing model</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2007/05/26/raise_controller_errors/" title="Next Post: raise_controller_errors">raise_controller_errors &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,482 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Avoid stubbing methods invoked by a framework - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="In a github issue reported to
+the rspec-mocks project, the user had
+run into a problem in a Rails&#8217; controller spec in which an RSpec-generated &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://dchelimsky.github.io/blog/2011/09/23/avoid-stubbing-methods-invoked-by-a-framework">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:dchelimsky.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Avoid stubbing methods invoked by a framework</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-23T01:23:55+02:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2011</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>In a <a href="https://github.com/rspec/rspec-mocks/issues/78">github issue</a> reported to
+the <a href="https://github.com/rspec/rspec-mocks">rspec-mocks</a> project, the user had
+run into a problem in a Rails&#8217; controller spec in which an RSpec-generated test
+double didn&rsquo;t behave as expected. What follows is an edited version of the
+issue and my response, with the hope that it reaches a wider audience and/or
+sparks some conversation.</p>
+
+<h2>The reported problem: ActiveSupport::JSON::Encoding::CircularReferenceError using doubles</h2>
+
+<p>This spec &hellip;</p>
+
+<pre><code>require 'spec_helper'
+
+describe ListsController do
+  let(:list) { double("List") }
+
+  describe "GET 'index'" do
+    let(:expected) { [{id: "1", name: "test"}] }
+
+    before do
+      list.stub(:id){ "1" }
+      list.stub(:name){ "test" }
+      List.stub(:select){ [ list ] }
+    end
+
+    it "should return the list of lists" do
+      get :index, format: :json
+      response.body.should == expected.to_json
+    end
+  end
+end
+</code></pre>
+
+<p>&hellip; plus this implementation &hellip;</p>
+
+<pre><code>class ListsController &lt; ApplicationController
+  respond_to :json
+
+  expose(:lists) { List.select("id, name") }
+
+  def index
+    respond_with(lists)
+  end
+end
+</code></pre>
+
+<p>&hellip; produces this failure:</p>
+
+<pre><code>  Failure/Error: get :index, format: :json
+     ActiveSupport::JSON::Encoding::CircularReferenceError:
+       object references itself
+</code></pre>
+
+<h2>The deeper problem: this is a great example of when <em>not</em> to use stubs.</h2>
+
+<p>Here&rsquo;s why: there are three incorrect assumptions hiding behind the stubs!</p>
+
+<ol>
+<li><code>select</code> takes an Array: <code>List.select(["id","name"])</code>, but the example stubs it incorrectly.</li>
+<li>the id is numeric, but the example uses String.</li>
+<li>the json is wrapped: <code>{"list":{"id":1,"name":"test"}}</code>, but the example doesn&rsquo;t wrap it.</li>
+</ol>
+
+
+<p>Even if the stubs were properly aligned with reality, the reason for the error
+is that <code>respond_with(lists)</code> eventually calls <code>as_json</code> on the <code>list</code> object,
+which, in this example, is an RSpec double that doesn&rsquo;t implement <code>as_json</code>.
+We need to either use a <code>stub_model</code> (which does implement <code>as_json</code>), or
+explicitly stub it in the example:</p>
+
+<pre><code>list.stub(:as_json) { { list: {id: 1, name: "test"} } }
+</code></pre>
+
+<p>But I&rsquo;d avoid stubs altogether in this case. Stubs are great for well defined
+(and understood) public APIs <em>which are invoked by the code being specified</em>.
+In this case, we&rsquo;re stubbing an API (<code>as_json</code>) that is invoked by the Rails
+framework, not the code being specified. If the Rails framework ever changes
+how it renders json, this example would continue to pass, but it would be a
+false positive.</p>
+
+<h2>One possible remedy</h2>
+
+<h4>Here&rsquo;s how I&rsquo;d approach this outside-in (based on my own flow, design preferences, and target outcomes. YMMV.)</h4>
+
+<p>Start with a request spec:</p>
+
+<pre><code>require 'spec_helper'
+
+describe "Lists" do
+  describe "GET 'index.json'" do
+    it "returns the list of lists" do
+      list = List.create!(name: "test")
+      get "/lists.json"
+      response.body.should == [{list: {id: list.id, name: "test"}}].to_json
+    end
+  end
+end
+</code></pre>
+
+<p>This shows exactly what to expect, so when working on clients we can refer
+directly to this without having to dig into internals.</p>
+
+<p>Run this and it fails with <code>uninitialized constant List</code>, so generate the list
+resource:</p>
+
+<pre><code>rails generate resource list name:string
+rake db:migrate
+rake db:test:prepare
+</code></pre>
+
+<p>Run it again and it fails with <code>ActionView::MissingTemplate</code>. Now we have a
+couple of choices. The purist view says &ldquo;write a controller spec&rdquo;, but some
+people say controller specs are unnecessary if there are already request specs
+(or cukes) as they just add duplication.</p>
+
+<p>For me, the answer depends upon the complexity of the requirement as it
+compares to what we get for free from Rails. In this case, the only difference
+between the requirement and what Rails gives us for free is that we constrain
+the fields to <code>id</code> and <code>name</code> This is something we can implement in the model,
+so I&rsquo;d just implement this very simple controller code and move on:</p>
+
+<pre><code>class ListsController &lt; ApplicationController
+  respond_to :json
+
+  def index
+    respond_with List.all
+  end
+end
+</code></pre>
+
+<p>Now the request spec fails with:</p>
+
+<pre><code>expected: "[{\"list\":{\"id\":1,\"name\":\"test\"}}]"
+     got: "[{\"list\":{\"created_at\":\"2011-08-27T14:56:19Z\",\"id\":1,\"name\":\"test\",\"updated_at\":\"2011-08-27T14:56:19Z\"}}]"
+</code></pre>
+
+<p>We&rsquo;re getting more key/value pairs than we want. I want the model responsible
+for constraining the keys in the json (Rails implements json transformations in
+the context of the model, so why shouldn&rsquo;t we?), so I&rsquo;d add a model spec:</p>
+
+<pre><code>require 'spec_helper'
+
+describe List do
+  describe "#as_json" do
+    it "constrains keys to id and name" do
+      list = List.new(:name =&gt; "things")
+      list.as_json['list'].keys.should eq(%w[id name])
+    end
+  end
+end
+</code></pre>
+
+<p>This fails with:</p>
+
+<pre><code>expected ["id", "name"]
+     got ["created_at", "name", "updated_at"]
+</code></pre>
+
+<p>I expect to see <code>created_at</code> and <code>updated_at</code>, but I&rsquo;m surprised (initially) to
+see that <code>id</code> is missing. Thinking this through, it makes sense because the
+example generates the <code>list</code> using <code>new</code>, so no <code>id</code> is generated.  To get <code>id</code>
+to show up in the list of keys, we can use <code>create</code> instead of <code>new</code>, or we can
+explicitly set it. I&rsquo;m going to go with setting the id explicitly to avoid the
+db hit, accepting the self-imposed leaky abstraction. It&rsquo;s all trade-offs.</p>
+
+<pre><code>it "constrains fields to id and name" do
+  list = List.new(:name =&gt; "things")
+  list.id = 37
+  list.as_json['list'].keys.should eq(%w[id name])
+end
+</code></pre>
+
+<p>Now it fails with:</p>
+
+<pre><code>expected ["id", "name"]
+     got ["created_at", "id", "name", "updated_at"]
+</code></pre>
+
+<p>Now we can implement the constraint:</p>
+
+<pre><code>class List &lt; ActiveRecord::Base
+  def as_json
+    super({ only: %w[id name]})
+  end
+end
+</code></pre>
+
+<p>Now the model spec passes, but the request spec fails with:</p>
+
+<pre><code>ArgumentError:
+  wrong number of arguments (1 for 0)
+</code></pre>
+
+<p>This is because the <code>as_json</code> implementation fails to honor the <a href="http://api.rubyonrails.org/classes/ActiveModel/Serializers/JSON.html#method-i-as_json">Rails
+API</a>:</p>
+
+<pre><code>as_json(options = nil)
+</code></pre>
+
+<p><code>as_json</code> is called by the Rails framework with an options hash. Had we done
+this without the request spec and weren&rsquo;t aware of this information, we&rsquo;d have
+a bunch of passing specs but the app would blow up. Hooray for testing at
+multiple levels!</p>
+
+<p>So we add a new example to the model spec:</p>
+
+<pre><code>it "honors the submitted options hash" do
+  list = List.new(:name =&gt; "things")
+  list.id = 37
+  list.as_json(:only =&gt; :name)['list'].keys.should eq(%w[name])
+end
+</code></pre>
+
+<p>This fails with <code>wrong number of arguments (1 for 0)</code> as well, so now we adjust
+the model implementation:</p>
+
+<pre><code>def as_json(opts={})
+  super({ only: %w[id name]}.merge(opts))
+end
+</code></pre>
+
+<p>Now the model spec passes again, and so does the request spec! DONE!</p>
+
+<p>The result is a very nice balance of clarity, speed (in spite of the one db hit
+in the request spec) and flexibility. Any new endpoints we add will get the
+same json representation because it is expressed in the model (heeding the
+principle of least surprise). The model spec not only specifies how the model
+should represent itself as json, but it helps to explain how the rails
+framework uses the model. All of this with no stubbing at all, and especially
+no stubbing of APIs our code isn&rsquo;t invoking.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-23T01:23:55+02:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/bdd/'>BDD</a>, <a class='category' href='/blog/categories/rspec/'>RSpec</a>, <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/ruby/'>Ruby</a>, <a class='category' href='/blog/categories/test-doubles/'>Test Doubles</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://dchelimsky.github.io/blog/2011/09/23/avoid-stubbing-methods-invoked-by-a-framework/" data-via="dchelimsky" data-counturl="http://dchelimsky.github.io/blog/2011/09/23/avoid-stubbing-methods-invoked-by-a-framework/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/07/18/stop-typing-bundle-exec/" title="Previous Post: Stop typing "bundle exec"">&laquo; Stop typing "bundle exec"</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/10/16/rspec-270-is-released/" title="Next Post: rspec-2.7.0 is released!">rspec-2.7.0 is released! &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'davidchelimskysblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://dchelimsky.github.io/blog/2011/09/23/avoid-stubbing-methods-invoked-by-a-framework/';
+        var disqus_url = 'http://dchelimsky.github.io/blog/2011/09/23/avoid-stubbing-methods-invoked-by-a-framework/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

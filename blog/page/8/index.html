@@ -1,0 +1,735 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="We&rsquo;ve released version 4.0 of The RSpec Book beta. It&rsquo;s got a number of improvements per suggestions submitted by readers, as well as two &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://dchelimsky.github.io/blog/page/8">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:dchelimsky.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/04/14/the-rspec-book-beta-4-0/">The RSpec Book: Beta 4.0</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-04-14T01:26:00+02:00" pubdate data-updated="true">Apr 14<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We&rsquo;ve released version 4.0 of <a href="http://www.pragprog.com/titles/achbd/the-rspec-book">The RSpec Book</a> beta. It&rsquo;s got a number of improvements per <a href="http://www.pragprog.com/titles/achbd/errata">suggestions submitted by readers</a>, as well as two exciting new chapters.</p>
+
+<h4>New Chapter: Rails Controllers</h4>
+
+<p>Continuing inward on our outside-in journey, this chapter explores how (and <em>when</em>) to write controller specs. We also introduce approaches to dealing with some controller-specific spec&#8217;ing challenges like filters, global behaviour defined in application controller and sending email.</p>
+
+<h4>New Chapter: Extending RSpec</h4>
+
+<p>This chapter introduces techniques for extending RSpec to cater to domain-specific needs. Covered topics include custom example group classes, custom matchers (including an exciting new <a href="http://github.com/dchelimsky/rspec/blob/master/features/matchers/define_matcher.feature">matcher definition DSL</a>), macros and custom formatters. Whether customizing RSpec for your own app, or in order to ship domain-specific spec&#8217;ing extensions with the libraries you&rsquo;re releasing, this chapter is filled with really useful information that will help you make your specs easier to write <em>and</em> read.</p>
+
+<h4>Thanks (again, and again, and again)</h4>
+
+<p>Many thanks to all of you who are already participating in <a href="http://www.pragprog.com/titles/achbd/the-rspec-book">The RSpec Book</a> beta program and making so many great suggestions. Your ongoing contribution to this process remains invaluable for the book and all of its readers.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/03/31/the-rspec-book-beta-3-0/">The RSpec Book: Beta 3.0</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-03-31T06:20:00+02:00" pubdate data-updated="true">Mar 31<span>st</span>, 2009</time>
+        
+         | <a href="/blog/2009/03/31/the-rspec-book-beta-3-0/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We&rsquo;ve released version 3.0 of <a href="http://www.pragprog.com/titles/achbd/the-rspec-book">The RSpec Book</a> beta. It&rsquo;s got a number of improvements per <a href="http://www.pragprog.com/titles/achbd/errata">suggestions submitted by readers</a>, as well as two new chapters.</p>
+
+<h4>New Chapter: Evolving Existing Features</h4>
+
+<p>This is the next chapter in the Mastermind tutorial, in which we take the reader through the process of developing a command line version of the classic Mastermind game. In this chapter, we explore the problem of driving out changes to existing behaviour with new scenarios and code examples, all the while keeping the old code examples passing.</p>
+
+<h4>New Chapter: The Case for BDD</h4>
+
+<p>As the title suggests, this chapter lays out the case for Behaviour Driven Development as an over-arching methodology. You&rsquo;ll read about how and why so many traditional projects fail, the Agile Manifesto and the methodologies that emerged around it, and why so many teams continue to struggle in spite of best efforts to adopt these new methodologies.</p>
+
+<h4>Thanks</h4>
+
+<p>Many thanks to all of you who are already participating in <a href="http://www.pragprog.com/titles/achbd/the-rspec-book">The RSpec Book</a> beta program and making so many great suggestions. Your contribution to this process is invaluable for the book and all of its readers.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/03/16/rspec-1-2-0-and-rspec-rails-1-2-0/">rspec-1.2, rspec-rails-1.2 (and rails-2.3)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-03-16T18:24:00+01:00" pubdate data-updated="true">Mar 16<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>rspec-1.2.0 and rspec-rails-1.2.0 have been released!</p>
+
+<p>You&rsquo;ll need this upgrade if you&rsquo;re upgrading to rails-2.3.</p>
+
+<p>Be sure to read the change logs before upgrading. There have been a few changes that will impact some (not all) of you.</p>
+
+<p>rspec-1.2.0: <a href="http://rspec.rubyforge.org/rspec/1.2.0/">RDoc</a> | <a href="http://rspec.rubyforge.org/rspec/1.2.0/files/History_txt.html">History</a></p>
+
+<p>rspec-rails-1.2.0: <a href="http://rspec.rubyforge.org/rspec-rails/1.2.0/">RDoc</a> | <a href="http://rspec.rubyforge.org/rspec-rails/1.2.0/files/History_txt.html">History</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/03/15/rspec-rspec-rails-ruby-1-9/">rspec/rspec-rails/ruby-1.9</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-03-15T02:34:00+01:00" pubdate data-updated="true">Mar 15<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Better late than never:</p>
+
+<pre><code>&lt;code&gt;[david: rspec (master)]$ multiruby -S rake spec
+...
+Passed: v1_8_6_114, 1.8.7-p72, 1.9.1-p0
+
+[david: example_rails_app (master)] $ multiruby -S rake rspec:pre_commit
+...
+Passed: v1_8_6_114, 1.8.7-p72, 1.9.1-p0
+&lt;/code&gt;
+</code></pre>
+
+<p>Coming soon to a gem release near you.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/02/25/the-rspec-book-beta-2-0/">The RSpec Book - Beta 2.0</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-02-25T06:28:00+01:00" pubdate data-updated="true">Feb 25<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The <a href="http://www.pragprog.com">Pragmatic Programmers</a> have just released the <a href="http://www.pragprog.com/titles/achbd/the-rspec-book">The RSpec Book, Beta 2.0</a>. If you&rsquo;ve already purchased the beta book, you can go to <a href="http://www.pragprog.com/my_account">your account page</a> and you&rsquo;ll be able to download the new update.</p>
+
+<p>If you haven&rsquo;t purchased the beta book yet, now is a great time to <a href="http://www.pragprog.com/titles/achbd/the-rspec-book">join the party</a>! We just added three new chapters:</p>
+
+<h3>Evolving Requirements</h3>
+
+<p>This is the next chapter in the Mastermind tutorial, which takes you through the evolution of a command line version of the classic Mastermind board game. The earlier chapters introduce <a href="http://rspec.info">RSpec</a> and <a href="http://cukes.info">Cucumber</a>. This new chapter introduces Cucumber&rsquo;s new Scenario Outlines feature, which let&rsquo;s you express repetitive scenarios in FIT-inspired tabular format.</p>
+
+<h3>Simulating the Browser with Webrat</h3>
+
+<p><a href="http://www.brynary.com/">Bryan Helmkamp</a>, <a href="http://github.com/brynary/webrat">Webrat&rsquo;s</a> lead maintainer, builds on the Cucumber/Rails material in earlier chapters, driving those scenarios through the Rails stack with Webrat&rsquo;s simple, powerful API.</p>
+
+<h3>Rails Views</h3>
+
+<p><a href="http://mutuallyhuman.com/company/team">Zach</a> <a href="http://www.continuousthinking.com/">Dennis</a> shows you how to write RSpec code examples for Rails views. Using Webrat&rsquo;s <code>have_xpath</code> and <code>have_selector</code> matchers, and wrapping them in custom matchers targetted at your app, Zach shows you how to provide value throughout the life of the application with expressive, maintainable view specs.</p>
+
+<h2>Chapters from Beta 1.0</h2>
+
+<p>These new chapters build on the chapters we already released in Beta 1.0:</p>
+
+<ul>
+<li><p>Introduction</p></li>
+<li><p>Describing Application Behaviour with Cucumber</p></li>
+<li><p>Working from the Outside-In with RSpec</p></li>
+<li><p>Code Examples</p></li>
+<li><p>Expectations</p></li>
+<li><p>RSpec and Test::Unit</p></li>
+<li><p>Tools and Integration</p></li>
+<li><p>BDD in Rails</p></li>
+<li><p>Cucumber with Rails</p></li>
+</ul>
+
+
+<h2>Up Next</h2>
+
+<p>We&rsquo;ve got many more chapters coming over the next two or three updates, including chapters from <a href="http://dannorth.net">Dan North</a> and <a href="http://techblog.daveastels.com/">Dave Astels</a> on <a href="http://dannorth.net/introducing-bdd">Behaviour Driven Development</a> and <a href="http://www.mockobjects.com/">Mock Objects</a>, new material on integrating <a href="http://seleniumhq.org/">Selenium</a>, extending and customizing RSpec, and much, much more.</p>
+
+<p>Thanks to all who are already participating in the beta program. We&rsquo;ve gotten some great feedback so far. Some of it is already incorporated in the 2.0 beta release, and much more will be addressed in the upcoming releases. You&rsquo;re all making this a better book for everyone else who will read it, so thank you, thank you, thank you.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/02/13/feedback-on-the-rspec-book-beta/">Feedback on The RSpec Book (beta)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-02-13T12:00:00+01:00" pubdate data-updated="true">Feb 13<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Thank you to all who are participating in <a href="http://www.pragprog.com/titles/achbd/the-rspec-book">The RSpec Book</a> beta program. We&rsquo;ve already gotten some good feedback, and we look forward to more as we release updates over the coming weeks.</p>
+
+<p>For those of you who are reading the beta and would like to provide feedback, there are two outlets for you on the <a href="http://www.pragprog.com/">Pragmatic Programmers&#8217;</a> site.</p>
+
+<p>The <a href="http://www.pragprog.com/titles/achbd/errata">errata</a> page is for technical errors, typos, etc. Things that don&rsquo;t really require any discussion and are simple, task oriented fixes.</p>
+
+<p>Although the <a href="http://www.pragprog.com/titles/achbd/errata">errata</a> page lists <strong>Suggestion</strong> as a type of errata, the system provides no opportunity for a conversation. Therefore, if you are making a comment like &ldquo;I&rsquo;m not sure I agree with the statement on page 37&rdquo; or &ldquo;you say x here and y there, which is it?&rdquo;, etc, then the <a href="http://forums.pragprog.com/forums/95">forum</a> might be a better option. That way I (or any of the authors) can throw questions back at you to get a better feel for what you&rsquo;d like to see and how it might help.</p>
+
+<p>Of course, we&rsquo;d rather have your feedback than not, so if you&rsquo;re not interested in such a dialog, go ahead and stick to the one-way-street of the <a href="http://www.pragprog.com/titles/achbd/errata">errata</a> page.</p>
+
+<p>Again, thanks for the feedback thus far. You&rsquo;re helping to make this a better book for everyone else who will read it.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/02/02/rspec-works-with-test-unit/">RSpec works with test/unit</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-02-02T20:36:00+01:00" pubdate data-updated="true">Feb 2<span>nd</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[Updated to Sept 5, 2009]</p>
+
+<p>Did you know that <a href="http://github.com/dchelimsky/rspec">rspec</a> is interoperable with test/unit?</p>
+
+<p><a href="http://github.com/dchelimsky/rspec-rails">spec/rails</a> (formerly rspec_on_rails) has always run on test/unit and rspec (core) has had t/u interop capability for over a year now.</p>
+
+<p>Take, for example, this test in addition_test.rb:</p>
+
+<pre><code>require 'test/unit'
+
+class TestAddition &lt; Test::Unit::TestCase
+def test_add_1_and_2
+  assert_equal 3, 1 + 2
+end
+end
+
+
+
+
+
+
+
+$ ruby addition_test
+
+
+
+
+
+
+
+Loaded suite /Users/david/projects/ruby/tmp/tur/addition_test
+Started
+.
+Finished in 0.000289 seconds.
+
+1 tests, 1 assertions, 0 failures, 0 errors
+</code></pre>
+
+<p>Now, simply require &lsquo;spec/test/unit&rsquo;:</p>
+
+<pre><code>require 'rubygems'
+require 'spec/test/unit'
+
+class TestAddition &lt; Test::Unit::TestCase
+def test_add_1_and_2
+  assert_equal 3, 1 + 2
+end
+end
+</code></pre>
+
+<p>Run it with the spec command that is installed when you install rspec:</p>
+
+<pre><code>$ spec addition_test
+</code></pre>
+
+<p>And <em>tada</em>!</p>
+
+<pre><code>.
+
+Finished in 0.001451 seconds
+
+1 example, 0 failures
+</code></pre>
+
+<p>RSpec is running your tests!</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2009/02/02/rspec-works-with-test-unit/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/01/29/rspec-book-beta/">The RSpec Book is now in beta</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-01-29T21:42:00+01:00" pubdate data-updated="true">Jan 29<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://www.pragprog.com/titles/achbd/the-rspec-book">
+<img src="http://www.pragprog.com/images/covers/190x228/achbd.jpg" alt="The RSpec Book" />
+</a></p>
+
+<p>I’m pleased to announce the beta release of the Pragmatic Bookshelf’s <a href="http://www.pragprog.com/titles/achbd/the-rspec-book">The RSpec Book: Behaviour Driven Development with RSpec, Cucumber and Friends</a>!</p>
+
+<p>It’s been a long time coming, and there’s still a lot of work to do to get to print. The beta release has 9 of the 22 chapters we have planned. Most of what remains is almost done, but not quite ready to release yet. As with all of the Pragmatic beta books, we’ll do regular updates every few weeks as we wrap up the remaining chapters and incorporate your feedback. And please do provide feedback. We want this book to serve you well!</p>
+
+<p>There are six authors involved: Dave Astels, Zach Dennis, Aslak Hellesøy, Bryan Helmkamp, Dan North, and me. I’m honored to be in such good company here, with the guys who brought us BDD, to the developers and maintainers of RSpec, Cucumber and Webrat.</p>
+
+<p>You can read more (and buy the book!) at <a href="http://www.pragprog.com/titles/achbd/the-rspec-book">http://www.pragprog.com/titles/achbd/the-rspec-book</a></p>
+
+<p>On behalf of all the authors, I’d like to extend a special thank you to all of you who have contributed to the software and the conversation around RSpec, Cucumber, and BDD in general. RSpec would be nothing without the community that has evolved around it, so thank you, thank you, thank you!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/01/13/rspec-1-1-12-is-released/">rspec-1.1.12 is released</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-01-13T09:55:00+01:00" pubdate data-updated="true">Jan 13<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We just released rspec-1.1.12. You can read the changelogs for <a href="http://rspec.info/documentation/changes-rspec.html">rspec</a> and <a href="http://rspec.info/rails/changes-rspec-rails.html">rspec-rails</a> for all the details, but are some changes that you should definitely know about.</p>
+
+<h3>Cucumber is the new Story Runner</h3>
+
+<p>rspec-1.1.12 is the last release that will ship with the Story Runner bundled. With the next release, we will do the one and only gem release of <a href="http://github.com/dchelimsky/rspec-stories,">repo</a> so you won&rsquo;t be forced to upgrade to <a href="http://github.com/aslakhellesoy/cucumber.git.">Cucumber</a> Thanks to <a href="http://spicycode.com/">Chad Humphries</a> for stepping in and extracting the Story Runner to a separate repo.</p>
+
+<p>The Story Runner is <em>deprecated</em>, however, and we will not be maintaining it. If anybody wants to maintain it, you&rsquo;re welcome to. Just fork the <a href="http://github.com/dchelimsky/rspec-stories">repo</a> and have at it.</p>
+
+<p>Why are we deprecating the Story Runner? Because <a href="http://blog.aslakhellesoy.com">Aslak Hellesøy&rsquo;s</a> <a href="http://github.com/aslakhellesoy/cucumber.git">Cucumber</a> library kicks its ass. Easier setup means lower barrier to entry, building on treetop means great feedback with backtraces plus support for an ever-growing list of written languages. And <a href="http://wiki.github.com/aslakhellesoy/cucumber/migration-from-rspec-stories">migrating from RSpec Stories</a> is a snap. So what are you waiting for?</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2009/01/13/rspec-1-1-12-is-released/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/01/04/rspec-1-1-12-release-candidate/">rspec-1.1.12 release candidate</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-01-04T22:53:00+01:00" pubdate data-updated="true">Jan 4<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;m getting ready to do a 1.1.12 release of rspec and rspec-rails. Given the history of release-related compatibility problems, I offer you release candidate gems, which you can acquire thusly:</p>
+
+<p>UPDATE: new version (1.1.11.6) fixes dependency problem w/ github gems</p>
+
+<pre><code>&lt;code&gt;gem sources --add http://gems.github.com
+[sudo] gem install dchelimsky-rspec -v 1.1.11.6
+[sudo] gem install dchelimsky-rspec-rails -v 1.1.11.6
+&lt;/code&gt;
+</code></pre>
+
+<p>Release notes can be seen under Maintenance at:</p>
+
+<ul>
+<li><p><a href="http://github.com/dchelimsky/rspec/tree/master/History.txt">http://github.com/dchelimsky/rspec/tree/master/History.txt</a></p></li>
+<li><p><a href="http://github.com/dchelimsky/rspec-rails/tree/master/History.txt">http://github.com/dchelimsky/rspec-rails/tree/master/History.txt</a></p></li>
+</ul>
+
+
+<p>NOTE: This will be the last release of rspec-rails that supports rails &lt; 2.0</p>
+
+<p>If you are so inclined, please grab these gems, use them, and <a href="http://rspec.lighthouseapp.com/projects/5645-rspec">let me
+know if there are any problems</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/9/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/7/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec&#8217;s new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'davidchelimskysblog';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

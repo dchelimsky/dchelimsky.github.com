@@ -1,0 +1,792 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="Ryan Davis just posted about a problem he helped to diagnose that relates back to an earlier version of Spec::Ui (which ships with RSpec). The first &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://dchelimsky.github.io/blog/page/13">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:dchelimsky.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/06/01/web_spec-ghost-of-spec-ui-past/">web_spec: ghost of spec:ui past</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-06-01T00:37:35+02:00" pubdate data-updated="true">Jun 1<span>st</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://blog.zenspider.com/">Ryan Davis</a> just <a href="http://blog.zenspider.com/archives/2007/05/autotestrspecrubygems_problems.html">posted about a problem he helped to diagnose</a> that relates back to an earlier version of Spec::Ui (which ships with RSpec).</p>
+
+<p>The first version of Spec:Ui was called web_spec, and it (unfortunately and erroneously) got installed as a gem when you installed RSpec 0.7.5.</p>
+
+<p>If you have this in your gems directory, kindly send it on its merry way. It&rsquo;s broken, and will break your stuff (read <a href="http://blog.zenspider.com/archives/2007/05/autotestrspecrubygems_problems.html">Ryan&rsquo;s blog post</a> for details).</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/05/29/rspec-and-autotest/">rspec and autotest</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-05-29T15:19:11+02:00" pubdate data-updated="true">May 29<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>At <a href="http://conferences.oreillynet.com/rails/">RailsConf 2007</a> in Portland, I had the privilege of sitting down w/ <a href="http://zenspider.com">Ryan Davis</a> and working with him to improve the runtime relationship between <a href="http://rspec.rubyforge.org">RSpec</a> and <a href="http://zentest.rubyforge.org/ZenTest/">Autotest</a>. David Goodlad was at the table as well, and helped me work out some of the mappings so autotest runs the right examples when you change application code.</p>
+
+<p>The result is that with RSpec >= 1.0.3 and ZenTest >= 3.6.0, you can now use Autotest with RSpec on your Ruby projects, Rails or otherwise, simply by typing &ldquo;autotest&rdquo; in the project root. No additional plugins necessary. Sweet.</p>
+
+<p>One gotcha: Some have reported that when an example fails, autotest keeps running it over and over again until you get it to pass. This is due to a conflict between RSpec&rsquo;s and autotest&rsquo;s mechanisms for narrowing down the set of files to run. This is easily resolved by removing the following lines from spec/spec.opts:</p>
+
+<pre><code>--format
+failing_examples:previous_failures.txt
+--example
+previous_failures.txt
+</code></pre>
+
+<p>If you run &lsquo;script/generate rspec&rsquo;, these lines will not be included in the generated spec.opts file. Otherwise you can just delete them yourself.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/05/26/raise_controller_errors/">raise_controller_errors</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-05-26T23:24:36+02:00" pubdate data-updated="true">May 26<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Controller examples in Spec::Rails used to implicitly raise errors by overriding rescue_action like this:</p>
+
+<pre><code>&lt;code&gt;def rescue_action(e) do |e| raise e; end&lt;/code&gt;
+</code></pre>
+
+<p>This requires that you explicitly override rescue_action in your controllers if you want to see errors being raised. To make this a bit easier, I just added a new method (trunk r2041 &ndash; will be released in 1.0.4) for controller examples that lets you do this:</p>
+
+<pre><code>&lt;code&gt;describe SomeController do
+before(:each) do
+  raise_controller_errors
+end
+...
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>This causes the rescue_action above to get defined on the controller class at runtime. And to make it even easier, spec/spec_helper.rb now calls this by default:</p>
+
+<pre><code>&lt;code&gt;Spec::Runner.configure do |config|
+...
+config.before(:each, :behaviour_type =&gt; :controller) do
+  raise_controller_errors
+end
+...
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>So rescue_action will be defined by default, but you roll your own by deleting those lines in spec_helper.rb.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/05/14/an-introduction-to-rspec-part-i/">an introduction to RSpec - Part I</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-05-14T17:25:57+02:00" pubdate data-updated="true">May 14<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Here&rsquo;s an introductory tutorial for those of you interested in getting started with RSpec.</p>
+
+<h4>Background</h4>
+
+<p>Behaviour Driven Development is an Agile development process that comprises aspects of Acceptance Test Driven Planning, Domain Driven Design and Test Driven Development. RSpec is a BDD tool aimed at TDD in the context of BDD.</p>
+
+<p>You could say that RSpec is what is traditionally known as a unit testing framework, but we prefer to describe it as &ldquo;a Domain Specific Language for describing the expected behaviour of a system with executable examples.&rdquo;</p>
+
+<p>Also, the process that this tutorial guides you through is Test Driven Development at its core, but we use words like &ldquo;behaviour&rdquo; and &ldquo;example&rdquo; instead of &ldquo;test case&rdquo; and &ldquo;test method&rdquo;.</p>
+
+<p>To understand why we choose this nomenclature, and more detailed history of BDD and RSpec&rsquo;s evolution, check out the writings of &ldquo;Dan North&rdquo;:<a href="http://dannorth.net/tags/agile/bdd/,">http://dannorth.net/tags/agile/bdd/,</a> &ldquo;Dave Astels&rdquo;:<a href="http://daveastels.com/articles/2005/07/05/a-new-look-at-test-driven-development,">http://daveastels.com/articles/2005/07/05/a-new-look-at-test-driven-development,</a> and &ldquo;Brian Marick&rdquo;:<a href="http://exampler.com/.">http://exampler.com/.</a></p>
+
+<p>Throughout the tutorial, I&rsquo;ll address some of the philosophy behind various choices that are made, but you&rsquo;ll have a much better understanding of them (or at least a context to put them in) if you peruse these recommended readings.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2007/05/14/an-introduction-to-rspec-part-i/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/05/02/dont-let-name_prefix-result-in-the-name-of-an-existing-model/">don&#8217;t let :name_prefix result in the name of an existing model</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-05-02T02:19:51+02:00" pubdate data-updated="true">May 2<span>nd</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Here&rsquo;s something that bit me today. I&rsquo;ll bet it&rsquo;s documented somewhere, and it makes perfect sense, but maybe I can help you avoid this in case you missed the docs like I did.</p>
+
+<h3>The situation</h3>
+
+<p>I&rsquo;m working on an asset management system which includes Categories and Tags, which have a many-to-many relationship expressed by a CategorizedTag model.</p>
+
+<pre><code>&lt;code&gt;class Category &lt; ActiveRecord::Base
+has_many :tags, :through =&gt; :categorized_tags
+has_many :categorized_tags
+end
+
+class Tag &lt; ActiveRecord::Base
+has_many :categories, :through =&gt; :categorized_tags
+has_many :categorized_tags
+end
+
+class CategorizedTag &lt; ActiveRecord::Base
+belongs_to :category
+belongs_to :tag
+end
+&lt;/code&gt;
+</code></pre>
+
+<h3>The problem</h3>
+
+<p>In routes.rb, I wanted to nest tags inside categories:</p>
+
+<pre><code>&lt;code&gt;  map.resources :categories do |categories|
+  categories.resources :tags, :name_prefix =&gt; 'categorized_'
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>This seemed fine, but I got a nil-pointer error on categorized_tags_path in a view.</p>
+
+<h3>The fix</h3>
+
+<p>Guessing that there was a naming conflict with CategorizedTag, I tried this instead (&lsquo;category<em>&rsquo; instead of &lsquo;categorized</em>&rsquo;):</p>
+
+<pre><code>&lt;code&gt;  map.resources :categories do |categories|
+  categories.resources :tags, :name_prefix =&gt; 'category_'
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>Sure enough, category_tags_path worked just fine!</p>
+
+<h3>The moral</h3>
+
+<p>So make sure that when you use :name_prefix that it doesn&rsquo;t result in the name of an existing model.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/05/01/rspec-0-9-is-finally-released/">RSpec-0.9 is finally released</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-05-01T15:45:36+02:00" pubdate data-updated="true">May 1<span>st</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We finally released RSpec-0.9 today. We had a little trouble w/ 0.9.0, so we skipped ahead to 0.9.1.</p>
+
+<p>To get the gem:</p>
+
+<pre><code>gem install rspec
+</code></pre>
+
+<p>To install the Spec::Rails plugin:</p>
+
+<pre><code>ruby script/plugin install svn://rubyforge.org/var/svn/rspec/tags/REL_0_9_1/rspec
+ruby script/plugin install svn://rubyforge.org/var/svn/rspec/tags/REL_0_9_1/rspec_on_rails
+</code></pre>
+
+<p>This release comprises myriad improvements and changes, some of which I&rsquo;ve blogged about here, the rest of which you can <a href="http://rspec.rubyforge.org/changes.html">read about</a> on the <a href="http://rspec.rubyforge.org">rspec website</a>.</p>
+
+<p>Of special note is our growing list of <a href="http://rspec.rubyforge.org/team.html">contributors</a>. It is very exciting to be involved with a project that has such an active user group filled with imaginative people who have contributed some of RSpec&rsquo;s most exciting new features.</p>
+
+<p>Thank you, thank you, thank you to all who participate whether it is through patches, feature requests, bug reports, or simply interacting on the mailing lists. You&rsquo;ve all had an important impact on RSpec&rsquo;s growth.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/05/01/rspec-0-9-1-and-autotest-zentest-3-5-2/">RSpec-0.9.1 and Autotest (ZenTest-3.5.2)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-05-01T15:27:21+02:00" pubdate data-updated="true">May 1<span>st</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://zentest.rubyforge.org/ZenTest/classes/Autotest.html">Autotest</a> (part of <a href="http://zentest.rubyforge.org">ZenTest</a>) now supports <a href="http://rspec.rubyforge.org">RSpec</a>. This is fantastic news! For those of you who do not know about autotest, it is a program that runs in the background while you are writing your tests and code. Each time you make a change it automatically reruns your tests &ndash; and now your specs, too! This is a powerful addition to the TDD/BDD experience.</p>
+
+<p>Recent releases of both tools overlapped a bit so there are changes in <a href="http://rubyforge.org/frs/shownotes.php?release_id=11423">RSpec-0.9.1</a> that are not reflected yet in ZenTest. Also, while ZenTest-3.5.2 supports <a href="http://rspec.rubyforge.org/documentation/rails/index.html">Spec::Rails</a>, RSpec&rsquo;s <a href="http://rubyonrails.com">Ruby on Rails</a> plugin, it does not support non-Rails Ruby projects.</p>
+
+<p>I&rsquo;ve submitted a patch to the ZenTest project which addresses both of these issues. Until the patch is applied, or the issues are addressed in some other way, you can apply it yourself to get autotest working with RSpec for Rails and other projects. These steps work on a mac. I assume that the commands are quite similar for Linux and Cygwin users.</p>
+
+<ol>
+<li><p> Go to <a href="http://rubyforge.org/frs/?group_id=419">http://rubyforge.org/frs/?group_id=419</a> and download ZenTest-3.5.2.tgz</p></li>
+<li><p> Unpack the tar and</p>
+
+<p>tar zxvf ZenTest-3.5.2.tgz
+cd ZenTest-3.5.2</p></li>
+<li><p> Get and install the patch</p>
+
+<p>curl -O <a href="http://blog.davidchelimsky.net/files/ZenTest-3.5.2-rspec.patch">http://blog.davidchelimsky.net/files/ZenTest-3.5.2-rspec.patch</a>
+patch -p0 &lt; ZenTest-3.5.2-rspec.patch</p></li>
+<li><p> Build and install the gem</p>
+
+<p>rake gem
+sudo gem install pkg/ZenTest-3.5.2.gem</p></li>
+</ol>
+
+
+<p>Once you&rsquo;ve built and installed the patched gem, you run autotest as normal. Stand in the root of your project and say:</p>
+
+<pre><code>autotest
+</code></pre>
+
+<p>If you have a <code>spec</code> directory at the root of your project, autotest will load up rspec_rails_autotest for Rails projects and rspec_autotest for everything else.</p>
+
+<p>To quote <a href="http://joshknowles.com/2007/4/13/zentest-3-5-rspec-0-9-autospec">Josh Knowles</a>, Happy (Auto)Specing!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/05/01/predicate_matchers/">predicate_matchers</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-05-01T03:00:41+02:00" pubdate data-updated="true">May 1<span>st</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Updated on 5/2/2007</p>
+
+<p>In RSpec-0.8 if you say …</p>
+
+<pre><code>&lt;code&gt;File.should_exist(path)
+&lt;/code&gt;
+</code></pre>
+
+<p>&hellip; the expectation passes if File.exist?(path). Here&rsquo;s how that should look in RSpec-0.9, with the underscore removed:</p>
+
+<pre><code>&lt;code&gt;File.should exist(path)
+&lt;/code&gt;
+</code></pre>
+
+<p>Supporting this for any arbitrary predicate would require more method_missing magic than we were willing to stomach, so we added a means of easily declaring methods like this yourself. We&rsquo;ve supplied #exist out of the box, but you can add your own with a simple declaration.</p>
+
+<p>Here&rsquo;s how you do this for an individual behaviour:</p>
+
+<pre><code>&lt;code&gt;describe Fish do
+predicate_matchers[:swim] = :can_swim?
+it "should swim" do
+  Fish.new.should swim
+end
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>And here&rsquo;s how you define them globally, so they are available in every example in your suite:</p>
+
+<pre><code>&lt;code&gt;Spec::Runner.configure do |config|
+config.predicate_matchers[:swim] = :can_swim?
+end
+&lt;/code&gt;
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/04/27/rspec-0-9-plug-in-any-mock-framework/">rspec 0.9 - plug in any mock framework</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-04-27T07:25:04+02:00" pubdate data-updated="true">Apr 27<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>RSpec-0.9 lets you work with the mock framework of your choice. It not only ships with adapters for mocha and flexmock, but it also provides you an easy entry point to plug in another framework of your choosing &ndash; or even your creation.</p>
+
+<h3>rspec, mocha or flexmock</h3>
+
+<p>RSpec is the default mock framework, so if you want to use RSpec&rsquo;s mock framework you need not set anything up. If you want to use mocha or flexmock, just say</p>
+
+<pre><code>&lt;code&gt;Spec::Runner.configure do |config|
+config.mock_with :mocha
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>or</p>
+
+<pre><code>&lt;code&gt;Spec::Runner.configure do |config|
+config.mock_with :flexmock
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>Of course, if you&rsquo;re using mocha or flexmock you have to install those gems, but you don&rsquo;t need to require them because that is taken care of for you implicitly.</p>
+
+<h3>Other mocking frameworks</h3>
+
+<p>If you have another mocking framework that you like to use, or one that you are developing yourself, you&rsquo;ll need to create an adapter for it like this:</p>
+
+<pre><code>&lt;code&gt;module MyMockFrameworkAdapter
+def setup_mocks_for_rspec
+  # Called before any #before(:each) blocks - use
+  # this to set up any necessary hooks to your system.
+end
+def verify_mocks_for_rspec
+  # Called after any #after(:each) blocks.
+  # NOTE - your mocks should fail by raising an error.
+end
+def teardown_mocks_for_rspec
+  # Called after verify_mocks_for_rspec. This
+  # is guaranteed to run, even if there
+  # are failures.
+end
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>And then include it using the new configuration system:</p>
+
+<pre><code>&lt;code&gt;Spec::Runner.configure do |config|
+config.mock_with MyMockFrameworkAdapter
+end
+&lt;/code&gt;
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/04/04/inferred-controllers-and-helpers-in-spec-rails/">Inferred Controllers and Helpers in Spec::Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-04-04T08:01:30+02:00" pubdate data-updated="true">Apr 4<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Here&rsquo;s a nice little enhancement in Spec::Rails-0.9.</p>
+
+<p>Up until now, controller examples required that the controller be named:</p>
+
+<pre><code>&lt;code&gt;#the old way
+context "Login Controller" do
+controller_name :login
+...
+&lt;/code&gt;
+</code></pre>
+
+<p>You&rsquo;ll still be able to do that, but you&rsquo;ll also be able to do this:</p>
+
+<pre><code>&lt;code&gt;describe LoginController do
+...
+&lt;/code&gt;
+</code></pre>
+
+<p>&hellip; and Spec::Rails will assume that LoginController is what you want to use.</p>
+
+<p>This works for your helper examples as well:</p>
+
+<pre><code>&lt;code&gt;describe PeopleHelper do
+...
+&lt;/code&gt;
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/14/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/12/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec&#8217;s new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'davidchelimskysblog';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

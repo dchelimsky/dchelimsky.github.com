@@ -1,0 +1,390 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>rspec-2.6.0 is released - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="rspec-core-2.6.0 full changelog Enhancements shared_context (Damian Nurzynski) extend groups matching specific metadata with: method definitions &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://dchelimsky.github.io/blog/2011/05/12/rspec-260-is-released">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:dchelimsky.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">rspec-2.6.0 is released</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-12T14:58:12+02:00" pubdate data-updated="true">May 12<span>th</span>, 2011</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>rspec-core-2.6.0</h3>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.5.1...v2.6.0">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li><code>shared_context</code> (Damian Nurzynski)
+
+<ul>
+<li>extend groups matching specific metadata with:
+
+<ul>
+<li>method definitions</li>
+<li>subject declarations</li>
+<li>let/let! declarations</li>
+<li>etc (anything you can do in a group)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>its([:key])</code> works for any subject with #[]. (Peter Jaros)</li>
+<li><code>treat_symbols_as_metadata_keys_with_true_values</code> (Myron Marston)</li>
+<li>Print a deprecation warning when you configure RSpec after defining
+an example.  All configuration should happen before any examples are
+defined. (Myron Marston)</li>
+<li>Pass the exit status of a DRb run to the invoking process. This causes
+specs run via DRb to not just return true or false. (Ilkka Laukkanen)</li>
+<li>Refactoring of <code>ConfigurationOptions#parse_options</code> (Rodrigo Rosenfeld Rosas)</li>
+<li>Report excluded filters in runner output (tip from andyl)</li>
+<li>Clean up messages for filters/tags.</li>
+<li>Restore &mdash;pattern/-P command line option from rspec-1</li>
+<li>Support false as well as true in config.full_backtrace= (Andreas Tolf Tolfsen)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Don&rsquo;t stumble over an exception without a message (Hans Hasselberg)</li>
+<li>Remove non-ascii characters from comments that were choking rcov (Geoffrey
+Byers)</li>
+<li>Fixed backtrace so it doesn&rsquo;t include lines from before the autorun at_exit
+hook (Myron Marston)</li>
+<li>Include RSpec::Matchers when first example group is defined, rather
+than just before running the examples.  This works around an obscure
+bug in ruby 1.9 that can cause infinite recursion. (Myron Marston)</li>
+<li>Don&rsquo;t send <code>example_group_[started|finished]</code> to formatters for empty groups.</li>
+<li>Get specs passing on jruby (Sidu Ponnappa)</li>
+<li>Fix bug where mixing nested groups and outer-level examples gave
+unpredictable :line_number behavior (Artur Małecki)</li>
+<li>Regexp.escape the argument to &mdash;example (tip from Elliot Winkler)</li>
+<li>Correctly pass/fail pending block with message expectations</li>
+<li>CommandLine returns exit status (0/1) instead of true/false</li>
+<li>Create path to formatter output file if it doesn&rsquo;t exist (marekj).</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-expectations-2.6.0</h3>
+
+<p><a href="http://github.com/rspec/rspec-expectations/compare/v2.5.0...v2.6.0">full changelog</a></p>
+
+<ul>
+<li><p>Enhancments</p>
+
+<ul>
+<li><code>change</code> matcher accepts Regexps (Robert Davis)</li>
+<li>better descriptions for have_xxx matchers (Magnus Bergmark)</li>
+<li>range.should cover(*values) (Anders Furseth)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>Removed non-ascii characters that were choking rcov (Geoffrey Byers)</li>
+<li>change matcher dups arrays and hashes so their before/after states can be
+compared correctly.</li>
+<li>Fix the order of inclusion of RSpec::Matchers in
+Test::Unit::TestCase and MiniTest::Unit::TestCase to prevent a
+SystemStackError (Myron Marston)</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-mocks-2.6.0</h3>
+
+<p><a href="http://github.com/rspec/rspec-mocks/compare/v2.5.0...v2.6.0">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>Add support for <code>any_instance.stub</code> and <code>any_instance.should_receive</code> (Sidu
+Ponnappa and Andy Lindeman)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>fix bug in which multiple chains with shared messages ending in hashes
+failed to return the correct value</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>rspec-rails-2.6.0</h3>
+
+<p><a href="http://github.com/rspec/rspec-rails/compare/v2.5.0...v2.6.0">full changelog</a></p>
+
+<ul>
+<li><p>Enhancements</p>
+
+<ul>
+<li>rails 3 shortcuts for routing specs (Joe Fiorini)</li>
+<li>support nested resources in generators (Tim McEwan)</li>
+<li>require &lsquo;rspec/rails/mocks&rsquo; to use <code>mock_model</code> without requiring the whole
+rails framework</li>
+<li>Update the controller spec generated by the rails scaffold generator:
+
+<ul>
+<li>Add documentation to the generated spec</li>
+<li>Use <code>any_instance</code> to avoid stubbing finders</li>
+<li>Use real objects instead of <code>mock_model</code></li>
+</ul>
+</li>
+<li>Update capybara integration to work with capy 0.4 and 1.0.0.beta</li>
+<li>Decorate paths passed to <code>[append|prepend]_view_paths</code> with empty templates
+unless rendering views. (Mark Turner)</li>
+</ul>
+</li>
+<li><p>Bug fixes</p>
+
+<ul>
+<li>fix typo in &ldquo;rake spec:statsetup&rdquo; (Curtis Schofield)</li>
+<li>expose named routes in anonymous controller specs (Andy Lindeman)</li>
+<li>error when generating namespaced scaffold resources (Andy Lindeman)</li>
+<li>Fix load order issue w/ Capybara (oleg dashevskii)</li>
+<li>Fix monkey patches that broke due to internal changes in rails-3.1.0.beta1</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-12T14:58:12+02:00" pubdate data-updated="true">May 12<span>th</span>, 2011</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://dchelimsky.github.io/blog/2011/05/12/rspec-260-is-released/" data-via="dchelimsky" data-counturl="http://dchelimsky.github.io/blog/2011/05/12/rspec-260-is-released/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/05/06/rspec-260rc6-is-released/" title="Previous Post: rspec-2.6.0.rc6 is released!">&laquo; rspec-2.6.0.rc6 is released!</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/05/19/rspec-core-261-is-released/" title="Next Post: rspec-core-2.6.1 is released!">rspec-core-2.6.1 is released! &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'davidchelimskysblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://dchelimsky.github.io/blog/2011/05/12/rspec-260-is-released/';
+        var disqus_url = 'http://dchelimsky.github.io/blog/2011/05/12/rspec-260-is-released/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

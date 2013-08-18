@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>oxymoron: testing behaviour of abstractions - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="The question of how test behaviour implemented in abstract classes came up on the RSpec list yesterday. This is something that comes up periodically &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://dchelimsky.github.io/blog/2007/06/03/oxymoron-testing-behaviour-of-abstractions">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:dchelimsky.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">oxymoron: testing behaviour of abstractions</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-06-03T23:59:17+02:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>The question of how test behaviour implemented in abstract classes came up on the RSpec list yesterday. This is something that comes up periodically, so I thought it worth posting about. Over the years I&rsquo;ve seen and tried a few different approaches to dealing with this problem and I&rsquo;ve come to an approach that feels right to me. It stems from two basic principles:</p>
+
+<ul>
+<li><p>Abstract classes don&rsquo;t have any behaviour</p></li>
+<li><p>Only remove duplication that actually exists</p></li>
+</ul>
+
+
+<h3>Abstract classes don&rsquo;t have any behaviour</h3>
+
+<p>Abstract classes are a structural tool that we can use to share implementation between concrete classes. Sometimes they actually represent abstract types, but all too often they&rsquo;re misused as convenient placeholders for shared implementation. When that happens, their presence clouds meaning.</p>
+
+<p>In statically typed languages like Java and C#, you can spot this misuse by looking at the types being referenced in method signatures. If no methods accept the abstract class, then it isn&rsquo;t really functioning as an abstract type in your system.</p>
+
+<p>This is a bit more subtle in Ruby because we don&rsquo;t have an abstract class construct and we think in duck types instead of static or runtime types. Abstract classes are really more of a convention than a language feature.</p>
+
+<p>Regardless, this rule of thumb steers me away from testing abstract classes directly.</p>
+
+<h3>Only remove duplication that actually exists</h3>
+
+<p>This is a general rule of thumb that I like to apply whether I&rsquo;m dealing with examples or subject code. Only remove <strong>actual</strong> duplication. If you start with something general before you have anything specific, there is a tendency to make assumptions about what the duplication will be, and those assumptions are often misguided.</p>
+
+<p>In terms of abstractions, this rule of thumb guides me to extract abstraction when I see duplication rather than imposing it up front.</p>
+
+<h3>Putting the two together</h3>
+
+<p>The question on the list was specifically about how to test methods that live in in Application in a Ruby on Rails app. For the uninitiated, Application is the base class for all controllers in an MVC framework. Ruby doesn&rsquo;t support abstract classes, so you <strong>can</strong> actually initialize Application, but AFAIK the Rails framework never does.</p>
+
+<p>Based on the two principles, and given that I write executable examples first, I start by describing the behaviour of a concrete controller, developing methods directly on that controller against those examples. When a new controller comes along that should have the same behaviour, I&rsquo;ll often duplicate the examples and the behaviour first and then extract the duplication into shared examples and the Application controller. This way, if there are any differences at all in the expected behaviour (which there often are) it easier to figure out the exact bits that I want to extract.</p>
+
+<p>Once I&rsquo;ve got the abstraction in both the examples and code I can just plug them in to the third, fourth, etc examples.</p>
+
+<h3>Other schools of thought</h3>
+
+<p>There is a runtime cost to pay when you&rsquo;re running the same examples for multiple subclasses of an abstract class. You could argue that this is wasteful because the same implementation is being tested multiple times, which flies in the face of the goal of fast running test suites. This argument might lead you to write tests directly for the abstract class.</p>
+
+<p>I can&rsquo;t really disagree with the performance cost, yet I still prefer to approach it as I do because I find it more clear and less brittle to be describing the behaviour of concrete types rather than the behaviour of abstract types (which doesn&rsquo;t really exist).</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-06-03T23:59:17+02:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2007</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://dchelimsky.github.io/blog/2007/06/03/oxymoron-testing-behaviour-of-abstractions/" data-via="dchelimsky" data-counturl="http://dchelimsky.github.io/blog/2007/06/03/oxymoron-testing-behaviour-of-abstractions/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2007/06/01/web_spec-ghost-of-spec-ui-past/" title="Previous Post: web_spec: ghost of spec:ui past">&laquo; web_spec: ghost of spec:ui past</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2007/06/04/rspec-1-0-belated-thanks/" title="Next Post: RSpec 1.0 - belated thanks">RSpec 1.0 - belated thanks &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

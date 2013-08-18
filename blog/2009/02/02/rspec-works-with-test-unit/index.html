@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>RSpec works with test/unit - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="[Updated to Sept 5, 2009] Did you know that rspec is interoperable with test/unit? spec/rails (formerly rspec_on_rails) has always run on test/unit &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://dchelimsky.github.io/blog/2009/02/02/rspec-works-with-test-unit">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:dchelimsky.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">RSpec works with test/unit</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-02-02T20:36:00+01:00" pubdate data-updated="true">Feb 2<span>nd</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>[Updated to Sept 5, 2009]</p>
+
+<p>Did you know that <a href="http://github.com/dchelimsky/rspec">rspec</a> is interoperable with test/unit?</p>
+
+<p><a href="http://github.com/dchelimsky/rspec-rails">spec/rails</a> (formerly rspec_on_rails) has always run on test/unit and rspec (core) has had t/u interop capability for over a year now.</p>
+
+<p>Take, for example, this test in addition_test.rb:</p>
+
+<pre><code>require 'test/unit'
+
+class TestAddition &lt; Test::Unit::TestCase
+def test_add_1_and_2
+  assert_equal 3, 1 + 2
+end
+end
+
+
+
+
+
+
+
+$ ruby addition_test
+
+
+
+
+
+
+
+Loaded suite /Users/david/projects/ruby/tmp/tur/addition_test
+Started
+.
+Finished in 0.000289 seconds.
+
+1 tests, 1 assertions, 0 failures, 0 errors
+</code></pre>
+
+<p>Now, simply require &lsquo;spec/test/unit&rsquo;:</p>
+
+<pre><code>require 'rubygems'
+require 'spec/test/unit'
+
+class TestAddition &lt; Test::Unit::TestCase
+def test_add_1_and_2
+  assert_equal 3, 1 + 2
+end
+end
+</code></pre>
+
+<p>Run it with the spec command that is installed when you install rspec:</p>
+
+<pre><code>$ spec addition_test
+</code></pre>
+
+<p>And <em>tada</em>!</p>
+
+<pre><code>.
+
+Finished in 0.001451 seconds
+
+1 example, 0 failures
+</code></pre>
+
+<p>RSpec is running your tests!</p>
+
+<!-- more -->
+
+
+<p>So why would you do this? Well, for starters, now you can run this with any of RSpec’s command line options. This prints out the name of each test class and test method:</p>
+
+<pre><code>$ spec addition_test.rb --format specdoc
+
+TestAddition
+- test_add_1_and_2
+
+1 example, 0 failures
+</code></pre>
+
+<p>Try it with html:</p>
+
+<pre><code>$ spec addition_test_with_rspec.rb --format html:report.html
+</code></pre>
+
+<p>Now open up report.html and voila!</p>
+
+<p><img src="http://blog.davidchelimsky.net/wp-content/uploads/2009/06/rspec-results.png" alt="rspec-results" /></p>
+
+<p>Wanna <strong>should</strong> in your tests?</p>
+
+<pre><code>def test_add_1_and_2
+(1 + 2).should == 3
+end
+</code></pre>
+
+<p>Wanna <strong>assert</strong> in your rspec code examples?</p>
+
+<pre><code>describe "adding in Ruby" do
+it "returns 3 for 2 + 1" do
+  assert_equal 3, 1 + 2
+end
+end
+</code></pre>
+
+<p>When you invoke rspec’s test/unit bridge, rspec and test/unit become completely interoperable. This means that most of the extensions and plugins for both libraries are available to you at the same time. I say <em>most</em> because libs that monkey patch their way into internals of either don’t always play nice in this environment.</p>
+
+<p>This also means that transitioning from an existing test/unit suite to an rspec suite is as simple as changing a single require statement and then gradually changing the tests to rspec code examples. You can run them all together during this refactoring, so you don’t have to do this all at once, and you can keep moving on your project with little to no penalty.</p>
+
+<p>So if you’re choosing an alternative framework because you prefer its syntax, more power to you. If you’re choosing it because you understand its internals better, right on! Have at it. But if you’re choosing it only because it plays nice with test/unit and you didn’t know that rspec does as well, well, now you know.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-02-02T20:36:00+01:00" pubdate data-updated="true">Feb 2<span>nd</span>, 2009</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rspec/'>RSpec</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://dchelimsky.github.io/blog/2009/02/02/rspec-works-with-test-unit/" data-via="dchelimsky" data-counturl="http://dchelimsky.github.io/blog/2009/02/02/rspec-works-with-test-unit/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2009/01/29/rspec-book-beta/" title="Previous Post: The RSpec Book is now in beta">&laquo; The RSpec Book is now in beta</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2009/02/13/feedback-on-the-rspec-book-beta/" title="Next Post: Feedback on The RSpec Book (beta)">Feedback on The RSpec Book (beta) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/13/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/08/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/14/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

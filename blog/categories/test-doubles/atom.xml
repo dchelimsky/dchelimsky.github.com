@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Test Doubles | David Chelimsky]]></title>
+  <link href="http://dchelimsky.github.io/blog/categories/test-doubles/atom.xml" rel="self"/>
+  <link href="http://dchelimsky.github.io/"/>
+  <updated>2013-08-18T17:39:18+02:00</updated>
+  <id>http://dchelimsky.github.io/</id>
+  <author>
+    <name><![CDATA[David]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Avoid stubbing methods invoked by a framework]]></title>
+    <link href="http://dchelimsky.github.io/blog/2011/09/23/avoid-stubbing-methods-invoked-by-a-framework/"/>
+    <updated>2011-09-23T01:23:55+02:00</updated>
+    <id>http://dchelimsky.github.io/blog/2011/09/23/avoid-stubbing-methods-invoked-by-a-framework</id>
+    <content type="html"><![CDATA[<p>In a <a href="https://github.com/rspec/rspec-mocks/issues/78">github issue</a> reported to
+the <a href="https://github.com/rspec/rspec-mocks">rspec-mocks</a> project, the user had
+run into a problem in a Rails' controller spec in which an RSpec-generated test
+double didn&rsquo;t behave as expected. What follows is an edited version of the
+issue and my response, with the hope that it reaches a wider audience and/or
+sparks some conversation.</p>
+
+<h2>The reported problem: ActiveSupport::JSON::Encoding::CircularReferenceError using doubles</h2>
+
+<p>This spec &hellip;</p>
+
+<pre><code>require 'spec_helper'
+
+describe ListsController do
+  let(:list) { double("List") }
+
+  describe "GET 'index'" do
+    let(:expected) { [{id: "1", name: "test"}] }
+
+    before do
+      list.stub(:id){ "1" }
+      list.stub(:name){ "test" }
+      List.stub(:select){ [ list ] }
+    end
+
+    it "should return the list of lists" do
+      get :index, format: :json
+      response.body.should == expected.to_json
+    end
+  end
+end
+</code></pre>
+
+<p>&hellip; plus this implementation &hellip;</p>
+
+<pre><code>class ListsController &lt; ApplicationController
+  respond_to :json
+
+  expose(:lists) { List.select("id, name") }
+
+  def index
+    respond_with(lists)
+  end
+end
+</code></pre>
+
+<p>&hellip; produces this failure:</p>
+
+<pre><code>  Failure/Error: get :index, format: :json
+     ActiveSupport::JSON::Encoding::CircularReferenceError:
+       object references itself
+</code></pre>
+
+<h2>The deeper problem: this is a great example of when <em>not</em> to use stubs.</h2>
+
+<p>Here&rsquo;s why: there are three incorrect assumptions hiding behind the stubs!</p>
+
+<ol>
+<li><code>select</code> takes an Array: <code>List.select(["id","name"])</code>, but the example stubs it incorrectly.</li>
+<li>the id is numeric, but the example uses String.</li>
+<li>the json is wrapped: <code>{"list":{"id":1,"name":"test"}}</code>, but the example doesn&rsquo;t wrap it.</li>
+</ol>
+
+
+<p>Even if the stubs were properly aligned with reality, the reason for the error
+is that <code>respond_with(lists)</code> eventually calls <code>as_json</code> on the <code>list</code> object,
+which, in this example, is an RSpec double that doesn&rsquo;t implement <code>as_json</code>.
+We need to either use a <code>stub_model</code> (which does implement <code>as_json</code>), or
+explicitly stub it in the example:</p>
+
+<pre><code>list.stub(:as_json) { { list: {id: 1, name: "test"} } }
+</code></pre>
+
+<p>But I&rsquo;d avoid stubs altogether in this case. Stubs are great for well defined
+(and understood) public APIs <em>which are invoked by the code being specified</em>.
+In this case, we&rsquo;re stubbing an API (<code>as_json</code>) that is invoked by the Rails
+framework, not the code being specified. If the Rails framework ever changes
+how it renders json, this example would continue to pass, but it would be a
+false positive.</p>
+
+<h2>One possible remedy</h2>
+
+<h4>Here&rsquo;s how I&rsquo;d approach this outside-in (based on my own flow, design preferences, and target outcomes. YMMV.)</h4>
+
+<p>Start with a request spec:</p>
+
+<pre><code>require 'spec_helper'
+
+describe "Lists" do
+  describe "GET 'index.json'" do
+    it "returns the list of lists" do
+      list = List.create!(name: "test")
+      get "/lists.json"
+      response.body.should == [{list: {id: list.id, name: "test"}}].to_json
+    end
+  end
+end
+</code></pre>
+
+<p>This shows exactly what to expect, so when working on clients we can refer
+directly to this without having to dig into internals.</p>
+
+<p>Run this and it fails with <code>uninitialized constant List</code>, so generate the list
+resource:</p>
+
+<pre><code>rails generate resource list name:string
+rake db:migrate
+rake db:test:prepare
+</code></pre>
+
+<p>Run it again and it fails with <code>ActionView::MissingTemplate</code>. Now we have a
+couple of choices. The purist view says &ldquo;write a controller spec&rdquo;, but some
+people say controller specs are unnecessary if there are already request specs
+(or cukes) as they just add duplication.</p>
+
+<p>For me, the answer depends upon the complexity of the requirement as it
+compares to what we get for free from Rails. In this case, the only difference
+between the requirement and what Rails gives us for free is that we constrain
+the fields to <code>id</code> and <code>name</code> This is something we can implement in the model,
+so I&rsquo;d just implement this very simple controller code and move on:</p>
+
+<pre><code>class ListsController &lt; ApplicationController
+  respond_to :json
+
+  def index
+    respond_with List.all
+  end
+end
+</code></pre>
+
+<p>Now the request spec fails with:</p>
+
+<pre><code>expected: "[{\"list\":{\"id\":1,\"name\":\"test\"}}]"
+     got: "[{\"list\":{\"created_at\":\"2011-08-27T14:56:19Z\",\"id\":1,\"name\":\"test\",\"updated_at\":\"2011-08-27T14:56:19Z\"}}]"
+</code></pre>
+
+<p>We&rsquo;re getting more key/value pairs than we want. I want the model responsible
+for constraining the keys in the json (Rails implements json transformations in
+the context of the model, so why shouldn&rsquo;t we?), so I&rsquo;d add a model spec:</p>
+
+<pre><code>require 'spec_helper'
+
+describe List do
+  describe "#as_json" do
+    it "constrains keys to id and name" do
+      list = List.new(:name =&gt; "things")
+      list.as_json['list'].keys.should eq(%w[id name])
+    end
+  end
+end
+</code></pre>
+
+<p>This fails with:</p>
+
+<pre><code>expected ["id", "name"]
+     got ["created_at", "name", "updated_at"]
+</code></pre>
+
+<p>I expect to see <code>created_at</code> and <code>updated_at</code>, but I&rsquo;m surprised (initially) to
+see that <code>id</code> is missing. Thinking this through, it makes sense because the
+example generates the <code>list</code> using <code>new</code>, so no <code>id</code> is generated.  To get <code>id</code>
+to show up in the list of keys, we can use <code>create</code> instead of <code>new</code>, or we can
+explicitly set it. I&rsquo;m going to go with setting the id explicitly to avoid the
+db hit, accepting the self-imposed leaky abstraction. It&rsquo;s all trade-offs.</p>
+
+<pre><code>it "constrains fields to id and name" do
+  list = List.new(:name =&gt; "things")
+  list.id = 37
+  list.as_json['list'].keys.should eq(%w[id name])
+end
+</code></pre>
+
+<p>Now it fails with:</p>
+
+<pre><code>expected ["id", "name"]
+     got ["created_at", "id", "name", "updated_at"]
+</code></pre>
+
+<p>Now we can implement the constraint:</p>
+
+<pre><code>class List &lt; ActiveRecord::Base
+  def as_json
+    super({ only: %w[id name]})
+  end
+end
+</code></pre>
+
+<p>Now the model spec passes, but the request spec fails with:</p>
+
+<pre><code>ArgumentError:
+  wrong number of arguments (1 for 0)
+</code></pre>
+
+<p>This is because the <code>as_json</code> implementation fails to honor the <a href="http://api.rubyonrails.org/classes/ActiveModel/Serializers/JSON.html#method-i-as_json">Rails
+API</a>:</p>
+
+<pre><code>as_json(options = nil)
+</code></pre>
+
+<p><code>as_json</code> is called by the Rails framework with an options hash. Had we done
+this without the request spec and weren&rsquo;t aware of this information, we&rsquo;d have
+a bunch of passing specs but the app would blow up. Hooray for testing at
+multiple levels!</p>
+
+<p>So we add a new example to the model spec:</p>
+
+<pre><code>it "honors the submitted options hash" do
+  list = List.new(:name =&gt; "things")
+  list.id = 37
+  list.as_json(:only =&gt; :name)['list'].keys.should eq(%w[name])
+end
+</code></pre>
+
+<p>This fails with <code>wrong number of arguments (1 for 0)</code> as well, so now we adjust
+the model implementation:</p>
+
+<pre><code>def as_json(opts={})
+  super({ only: %w[id name]}.merge(opts))
+end
+</code></pre>
+
+<p>Now the model spec passes again, and so does the request spec! DONE!</p>
+
+<p>The result is a very nice balance of clarity, speed (in spite of the one db hit
+in the request spec) and flexibility. Any new endpoints we add will get the
+same json representation because it is expressed in the model (heeding the
+principle of least surprise). The model spec not only specifies how the model
+should represent itself as json, but it helps to explain how the rails
+framework uses the model. All of this with no stubbing at all, and especially
+no stubbing of APIs our code isn&rsquo;t invoking.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[A case against a case against mocking and stubbing]]></title>
+    <link href="http://dchelimsky.github.io/blog/2008/12/11/a-case-against-a-case-against-mocking-and-stubbing/"/>
+    <updated>2008-12-11T12:08:00+01:00</updated>
+    <id>http://dchelimsky.github.io/blog/2008/12/11/a-case-against-a-case-against-mocking-and-stubbing</id>
+    <content type="html"><![CDATA[<p>In his blog entitled <a href="http://cardarella.blogspot.com/2008/12/case-against-mocking-and-stubbing.html">A case against Mocking and Stubbing</a>, Brian Cardarella says</p>
+
+<blockquote><p><em>since I&rsquo;ve been TATFT with TDD and some BDD I&rsquo;ve come to believe that mocking/stubbing is a horrible idea and it can hurt the development process</em></p></blockquote>
+
+<p>Please take a minute to let that soak in. &ldquo;a horrible idea&rdquo; and &ldquo;can hurt the development process&rdquo;. In fact, please go read the post before you read on. I&rsquo;d rather you read his words before you read my interpretation of them.</p>
+
+<p>Back? Cool. Scary stuff, huh?</p>
+
+<p>But never fear, because it&rsquo;s not about you (unless you are Brian). What he is really saying is this:</p>
+
+<blockquote><p><em>since I&rsquo;ve been TATFT with my own personal approach to testing Rails applications, which is a little bit different from what the TDD/BDD guys are doing and is largely based on Rails conventions which encourage you to couple layers together in your tests, I&rsquo;ve come to believe that mocking and stubbing, two concepts that assist and encourage testing in isolation, which is the opposite of the kind of testing I like to do, is a horrible idea for me and can hurt my own personal development process</em></p></blockquote>
+
+<p>Before I defend my re-phrasing of Brian&rsquo;s statement, let me say that he does have a couple of really good ideas in the post (specifically about the dilemma of databases), and I don&rsquo;t intend to convince you that mocking and stubbing are inherently good ideas that will save the world, or that Brian&rsquo;s process would be improved by adding mocks and stubs to it.</p>
+
+<p>But Brian makes a broad generalization, attacking ideas that many view as inherently useful <em>in the appropriate context</em>, and I feel that the scope of his statement requires a bit of narrowing.</p>
+
+<!-- more -->
+
+
+<h2>Rails testing</h2>
+
+<p>First, the categories and hierarchy of tests that Brian describes suggest that he is writing Rails applications, and that he&rsquo;s using Rails' categorization of tests, but either replacing rails integration tests with a story/feature tool like cucumber or using such a tool to run in-browser tests, or some combination thereof.</p>
+
+<p>Consider that, although Rails sports an MVC framework, there are really six different layers/compontents we&rsquo;re dealing with: routing, views, controllers, models (model objects), persistence management (model classes), and persistent storage (the database).</p>
+
+<p>Stories as a wrapper for rails integration tests exercise the full stack from the router down to the database and back, so it covers all 6 layers.</p>
+
+<p>Rails functional tests typically start from the controller, down to the database, and back up past the controller to the view, so they incorporate 5 layers.</p>
+
+<p>Rails unit tests start from the model classes and objects and go down to the database as well. Even if you don&rsquo;t save the objects, just loading an ActiveRecord model does cause the model class to ask the database for information about its structure. So unless you&rsquo;re explicitly blocking database access with a tool like NullDB or UnitRecord, these unit tests are really fine grained component integration tests (not to be confused with what rails calls integration tests).</p>
+
+<p>So now we have three categories of tests that are all integration tests that operate on anywhere from 3 to 6 component layers per test. Brian states that &ldquo;My functional tests should rely upon the models being written properly,&rdquo; but the same is true of the stories. So now we have stories that depend on everything, and functional tests that depend on everything except the router.</p>
+
+<h2>Mocks and Stubs</h2>
+
+<p>So let&rsquo;s talk about mocks and stubs for a sec.</p>
+
+<p>Stubs are a form of Test Double that stand in for objects or methods that might require non-trivial setups, access expensive services, or even parts of your system that don&rsquo;t yet exist. They exist to help you isolate the object under test, and assist in both fast running tests and quick fault isolation.</p>
+
+<p>Mocks are generally useful in interaction testing. They help you to think about roles and more general types as opposed to specific objects. They are useful in the short term to help you stay focused on the object you&rsquo;re working on now (mocking its collaborators) and discover new interfaces (again by mocking its collaborators) without having to go over and create those. And they are useful in the long term when you have polymorphic collaborators, so you can specify the interactions once, rather than doing state-based testing n times.</p>
+
+<h2>Integration vs Isolation</h2>
+
+<p>Brian&rsquo;s approach to testing is all about integration. Mocking and stubbing is all about isolation. So naturally, these are not a good fit. But that doesn&rsquo;t make mocking or stubbing a bad idea any more than it makes high levels of integration or isolation inherently bad ideas.</p>
+
+<h2>How I approach BDD with Rails</h2>
+
+<p>So let me tell you about my own approach to BDD in contrast, and perhaps this will provide some insight into why the rspec-rails gem/plugin is structured the way it is. Here&rsquo;s how I generally like to develop rails apps (I say &ldquo;like&rdquo;, because this is my general goal, but there are sometimes good reasons to take other approaches):</p>
+
+<ol>
+<li><p> Write scenarios in plain text with cucumber (driven by user stories, organized in features).</p></li>
+<li><p> Write the code for a step (or part of a step), run the feature, and observe the failure.</p></li>
+<li><p> Optionally (yes, it depends &ndash; and why is the topic for another blog) drive out a view with a view spec. When I say &ldquo;drive out,&rdquo; I mean a very granular Red/Green/Refactor cycle that only involves this view, and only enough of this view to support satisfaction of the failing step in the cucumber feature.</p></li>
+<li><p> Drive out a controller action using the same, granular Red/Green/Refactor cycle. And it may not be the entire controller action I think I want, covering all the cases I think I want. Just enough to support satisfaction of the failing step.</p></li>
+<li><p> Drive out the parts of the model that I need to satisfy the failing step, using the same granular R/G/R process.</p></li>
+<li><p> Run the cucumber feature and assess where I am.</p></li>
+</ol>
+
+
+<p>At this point Brian talks about going back and writing a new set of Stories. I, by contrast, go back and write the code for the next step.</p>
+
+<p>Brian likes to paint with oil and work in broad strokes with a thick brush. I tend towards fine pencils with tiny strokes that only look like the thing they are part of when you stand back a few feet. Brian likes a lot of integration. I prefer working on small pieces in isolation, with just enough integration to give me confidence that they&rsquo;ll work together correctly when they get wired up at run time.</p>
+
+<h2>Controllers and Views</h2>
+
+<p>Controller and view specs are run in isolation from each other so that changes to views will not cause my controller specs to fail, and vice versa. Though either might cause the cucumber scenarios to fail. That&rsquo;s a good thing, and I believe that it is the same thing that Brian is looking for from both his stories and his functional tests.</p>
+
+<p>Controller and view specs are also run in isolation from the models as much as possible. I actually don&rsquo;t usually use tools like UnitRecord or NullDB, but that is because most of the apps I write tend to be pretty small (no more than 10 or 20 models). I think if I was on a bigger team writing bigger apps, I might cave in to the pain of slow test runs and introduce those tools.</p>
+
+<p>But the thing that I try to keep the controller and view specs isolated from is not really the database. It&rsquo;s the validation and other business rules expressed in the model. These are not concerns of the controllers.</p>
+
+<h2>Separation of Concerns</h2>
+
+<p>Typically, there are two paths through a controller action: success, or failure. And typically, success or failure is determined by the result of saving or updating the model. Why that save succeeds or fails, the controller doesn&rsquo;t care about. And when model validation rules change, I really don&rsquo;t want to have to go back to my controller specs and start modifying post params to get them to pass.</p>
+
+<p>When model validation rules do change, those changes are first expressed in scenarios. So though application failures won&rsquo;t bubble up from the model specs to the controller and view specs, they <strong>will</strong> bubble up to the cucumber scenarios.</p>
+
+<p>This is clearly a VERY different style from Brian&rsquo;s. Neither is inherently correct or superior. We both operate in our comfort zones. Clearly we both have the same high level goals of delivering quality, maintainable software that meets client need, and being able to do so with a consistent, smooth process that provides a lot of feedback and confidence every step of the way.</p>
+
+<h2>Mocks and stubs are great tools when they are used in the appropriate context</h2>
+
+<p>In the end, mocks and stubs are tools. Just like any other tool in our developer toolkits. They each have a narrow purpose. If you&rsquo;re using stubs to isolate the code you&rsquo;re testing, great! If you&rsquo;re using mocks to discover new interfaces on collaborators, great!</p>
+
+<p>If, however, you&rsquo;re trying to stuff these isolation tools into a process that revolves around multiple levels of integration …. please …. stop. In that context, it&rsquo;s really a horrible idea, and might even hurt your development process.</p>
+]]></content>
+  </entry>
+  
+</feed>
