@@ -1,0 +1,1300 @@
+<!--
+Google IO 2012/2013 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+
+<!--
+NOTES:
+
+* context in code parallel w/ foreign language
+  * i know enough pt where sometimes I can just read
+  * sometimes i have to look up a word
+    * loss of productivity
+
+* operating in one domain within a context
+  * related to single level of abstraction
+  * one domain per context and SLAP relate to High Cohesion
+
+* you wouldn't add an "add" function for +, so where are the boundaries
+
+BIGGER IDEAS
+* generalize smaller bits
+* domain/context
+
+DATA PIPELINES
+
+select, then map vs map, then compact
+
+
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+
+  <style>
+    .tak {
+      text-align: center;
+      margin-top: -150px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .tak h2 {
+      font-size: 90px;
+    }
+
+    .title-slide hgroup p {
+      color: black;
+    }
+    hgroup h2 {
+      line-height: 90px;
+    }
+    pre emph {
+      background-color: #E8E8E8;
+    }
+
+    pre b {
+      font-weight: normal
+    }
+
+    pre.shell {
+      border: solid black 1px;
+      background-color: #eee;
+      color: black;
+      padding: 10px;
+    }
+  </style>
+  <link rel="stylesheet" href="highlight.js/styles/googlecode.css">
+  <script src="highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>  
+
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide fill nobackground" style="background-image: url(images/cumbuco.jpg)">
+    <hgroup>
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 style="color: #336633 ;">How experience with Clojure has impacted my approach to Ruby</h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>This talk is not ...</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>a Clojure demo</li>
+        <li>about "FP in Ruby"
+          <ul>
+            <li> <a href="http://ontwik.com/ruby/better-ruby-through-functional-programming-by-dean-wampler/">http://ontwik.com/ruby/better-ruby-through-functional-programming-by-dean-wampler/</a> </li>
+            <li> <a href="https://leanpub.com/fp-oo">Functional Programming for the Object-Oriented Programmer</a> </li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide class="tak">
+    <hgroup>
+    <h2>¡simplicity!</h2>
+    </hgroup>
+  </slide>
+
+  <slide class="dark quote nobackground">
+    <article class="flexbox vleft">
+      <q>
+        there are two key concepts that drive everything else in Clojure: simplicity and power.
+      </q>
+      <br/>
+      <br/>
+      <br/>
+      <q>
+        a thing is simple if it is not compound
+      </q>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <div class="author">
+        Stuart Halloway and Aaron Bedra, Programming Clojure<br/>
+        <a href="http://pragprog.com/book/shcloj2/programming-clojure">http://pragprog.com/book/shcloj2/programming-clojure</a>
+      </div>
+    </article>
+  </slide>
+
+  <slide class="tak">
+    <hgroup>
+    <h2>(do not) complect</h2>
+    </hgroup>
+  </slide>
+
+  <slide class="tak">
+    <hgroup>
+      <h2>readability</h2>
+      <h3>(not so simple)</h3>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>readability is subjective / requires familiarity</h2>
+    </hgroup>
+    <article>
+      Para falantes de português, este parágrafo é muito legível. Para falantes
+      de català ou espanhol, provavelmente compreensível. Para as pessoas que
+      só falam inglês, não tanto.
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>readability is contextual</h2>
+    </hgroup>
+    <article>
+      <pre><code class="ruby"># Everybody knows what + means, right?
+
+1 + 2
+# => 3
+</code></pre>
+
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>readability is contextual</h2>
+    </hgroup>
+    <article>
+      <pre><code class="ruby"># Everybody knows what + means, right?
+
+1 + 2
+# => 3
+
+ruby + clojure
+# => ???????
+#
+# what is ruby in this context?
+# what is clojure in this context?
+# what does it mean to add them?
+</code></pre>
+
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>simple | readable</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>simple: not compound</li>
+        <li>readable: familiar, context</li>
+      </ul>
+      <br/>
+      <ul>
+        <li>orthogonal concepts
+        <ul>
+          <li>you can have both</li>
+        </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>looks confusing, let's refactor</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+def initialize(inclusion_patterns=nil, exclusion_patterns=DEFAULT_EXCLUSION_PATTERNS.dup)
+  @exclusion_patterns = exclusion_patterns
+  <b>if inclusion_patterns.nil?
+    @inclusion_patterns = matches_an_exclusion_pattern?(Dir.getwd) ?
+                            [Regexp.new(Dir.getwd)] : []
+  else
+    @inclusion_patterns = inclusion_patterns
+  end</b>
+end
+
+def exclude?(line)
+  @inclusion_patterns.none? {|p| p =~ line} and matches_an_exclusion_pattern?(line)
+end
+
+def matches_an_exclusion_pattern?(line)
+  @exclusion_patterns.any? {|p| p =~ line}
+end
+</pre>
+<ul>
+  <li>first: assignment to @inclusion_patterns seems overly verbose</li>
+</ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>collapse assignment to @inclusion_patterns</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+def initialize(<b>inclusion_patterns=nil, exclusion_patterns=DEFAULT_EXCLUSION_PATTERNS.dup</b>)
+  @exclusion_patterns = <b>exclusion_patterns</b>
+  @inclusion_patterns = <b>inclusion_patterns ||</b>
+    (matches_an_exclusion_pattern?(Dir.getwd) ? [Regexp.new(Dir.getwd)] : [])
+end
+
+def exclude?(line)
+  @inclusion_patterns.none? {|p| p =~ line} and matches_an_exclusion_pattern?(line)
+end
+
+def matches_an_exclusion_pattern?(line)
+  @exclusion_patterns.any? {|p| p =~ line}
+end
+</pre>
+<ul>
+  <li>next: handling nils in two different ways</li>
+</ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>align handling of nil args</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+def initialize(<b>inclusion_patterns=nil, exclusion_patterns=nil</b>)
+  <b>@exclusion_patterns = exclusion_patterns ||</b> DEFAULT_EXCLUSION_PATTERNS.dup
+  <b>@inclusion_patterns = inclusion_patterns ||</b>
+    (matches_an_exclusion_pattern?(Dir.getwd) ? [Regexp.new(Dir.getwd)] : [])
+end
+
+def exclude?(line)
+  @inclusion_patterns.none? {|p| p =~ line} and matches_an_exclusion_pattern?(line)
+end
+
+def matches_an_exclusion_pattern?(line)
+  @exclusion_patterns.any? {|p| p =~ line}
+end
+</pre>
+<ul>
+  <li>next: params are not handled in order</li>
+</ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>align the order of assignments and params</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+# boom!
+
+def initialize(inclusion_patterns=nil, exclusion_patterns=nil)
+  <b>@inclusion_patterns = inclusion_patterns ||
+    (matches_an_exclusion_pattern?</b>(Dir.getwd) ? [Regexp.new(Dir.getwd)] : [])
+    <b># &#9650;&#9650;&#9650; has an order dependency on &#9660;&#9660;&#9660;
+  @exclusion_patterns =</b> exclusion_patterns || DEFAULT_EXCLUSION_PATTERNS.dup)
+end
+
+def exclude?(line)
+  @inclusion_patterns.none? {|p| p =~ line} and <b>matches_an_exclusion_pattern?</b>(line)
+end
+
+<b>def matches_an_exclusion_pattern?(line)
+  @exclusion_patterns.any? {|p| p =~ line}
+end</b>
+</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>inline to clarify the order dependency</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+def initialize(<b>inclusion_patterns=nil, exclusion_patterns=nil</b>)
+  <b>@exclusion_patterns = exclusion_patterns</b> || DEFAULT_EXCLUSION_PATTERNS.dup)
+  <b>@inclusion_patterns = inclusion_patterns</b> ||
+    (@exclusion_patterns.any? {|p| p =~ Dir.getwd} ? [Regexp.new(Dir.getwd)] : [])
+end
+
+def exclude?(line)
+  @inclusion_patterns.none? {|p| p =~ line} and matches_an_exclusion_pattern?(line)
+end
+
+def matches_an_exclusion_pattern?(line)
+  @exclusion_patterns.any? {|p| p =~ line}
+end
+</pre>
+<ul>
+  <li>still processing params in reverse order</li>
+</ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>reorder the parameters</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+def initialize(exclusion_patterns=nil, inclusion_patterns=nil)
+  @exclusion_patterns = exclusion_patterns || DEFAULT_EXCLUSION_PATTERNS.dup)
+  @inclusion_patterns = inclusion_patterns ||
+    (@exclusion_patterns.any? {|p| p =~ Dir.getwd} ? [Regexp.new(Dir.getwd)] : [])
+end
+
+<b>def exclude?(line)
+  @inclusion_patterns.none? {|p| p =~ line} and matches_an_exclusion_pattern?(line)
+end</b>
+
+def matches_an_exclusion_pattern?(line)
+  @exclusion_patterns.any? {|p| p =~ line}
+end
+</pre>
+<ul>
+  <li>Next ...
+  <ul>
+    <li>exclude? violates SLAP</li>
+    <li>only one invocation of matches_an_exclusion_pattern?</li>
+  </ul>
+  </li>
+</ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>inline the other invocation</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+def initialize(exclusion_patterns=nil, inclusion_patterns=nil)
+  @exclusion_patterns = exclusion_patterns || DEFAULT_EXCLUSION_PATTERNS.dup)
+  @inclusion_patterns = inclusion_patterns ||
+    (@exclusion_patterns.any? {|p| p =~ Dir.getwd} ? [Regexp.new(Dir.getwd)] : [])
+end
+
+<b>def exclude?(line)
+  @inclusion_patterns.none? {|p| p =~ line} and @exclusion_patterns.any? {|p| p =~ line}
+end</b>
+</pre>
+<ul>
+  <li>still handling ex/in out of order in exclude?</li>
+</ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>align the refs within the method</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+def initialize(exclusion_patterns=nil, inclusion_patterns=nil)
+  @exclusion_patterns = exclusion_patterns || DEFAULT_EXCLUSION_PATTERNS.dup)
+  @inclusion_patterns = inclusion_patterns ||
+    (<b>@exclusion_patterns.any? {|p| p =~ Dir.getwd}</b> ? [Regexp.new(Dir.getwd)] : [])
+end
+
+def exclude?(line)
+  <b>@exclusion_patterns.any? {|p| p =~ line}</b> and @inclusion_patterns.none? {|p| p =~ line}
+end
+</pre>
+    </article>
+    <ul>
+      <li>symmetry!</li>
+      <li>less code</li>
+      <li>simple and readable</li>
+      <li>some, but very little duplication</li>
+    </ul>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>duplication? extract method?</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+# operand operator operand
+
+1 + 2
+37 + 42
+
+add(1,2)
+add(37,42)
+</pre>
+      <pre class="prettyprint">
+# object.method(arg)
+
+special_formatter.format("this string")
+special_formatter.format("that string")
+
+specially_format("this string")
+specially_format("that string")
+</pre>
+    <h2>probably not</h2>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>duplication? extract method?</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+# object.method { |first_operand| first_operand operator second_operand }
+
+@exclusion_patterns.any? <b>{|p| p =~ Dir.getwd}</b>
+@exclusion_patterns.any? <b>{|p| p =~ line}</b>
+
+# extract method wrapping entire expression
+any_exclusion_patterns_match?(Dir.getwd)
+any_exclusion_patterns_match?(line)
+</pre>
+<ul>
+  <li>what value does the extracted method add?</li>
+  <li>is it more intention revealing?
+  <ul>
+    <li>Ruby already lets us express <code>any_exclusion_patterns</code> with <code>@exclusion_patterns.any?</code></li>
+    <li>that leaves <code>match?</code> representing the block content</li>
+  </ul>
+  </li>
+</ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>extract method with reduced scope?</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+def initialize(exclusion_patterns=nil, inclusion_patterns=nil)
+  @exclusion_patterns = exclusion_patterns || DEFAULT_EXCLUSION_PATTERNS.dup)
+  @inclusion_patterns = inclusion_patterns ||
+    (@exclusion_patterns.any?(&match?(Dir.getwd)) ? [Regexp.new(Dir.getwd)] : [])
+end
+
+def exclude?(line)
+  @exclusion_patterns.any?(&match?(line)) && @inclusion_patterns.none?(&match?(line))
+end
+
+def match?(string)
+  lambda {|re| re =~ str}
+end
+</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+    <h2>smaller <font color="green">components</font> are more <font color="green">composable</font></h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+def match?(str)
+  lambda {|re| re =~ str}
+end
+
+# use with any iterator
+
+patterns.any? &match?(str)
+patterns.none? &match?(str)
+patterns.select &match?(str)
+patterns.reject &match?(str)
+</pre>
+    </article>
+    <div>
+    </div>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>which is more readable?</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+@exclusion_patterns.any? {|p| p =~ line}
+
+@exclusion_patterns.any? {|p| p.match(line)}
+
+@exclusion_patterns.any? &match?(line)
+
+any_exclusion_patterns_match?(line)
+</pre>
+<h2>which is simpler?</h2>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>choose simplicity; choose Ruby</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+def initialize(exclusion_patterns=nil, inclusion_patterns=nil)
+  @exclusion_patterns = exclusion_patterns || DEFAULT_EXCLUSION_PATTERNS.dup)
+  @inclusion_patterns = inclusion_patterns ||
+    (@exclusion_patterns.any? {|p| p =~ Dir.getwd} ? [Regexp.new(Dir.getwd)] : [])
+end
+
+def exclude?(line)
+  @exclusion_patterns.any? {|p| p =~ line} and @inclusion_patterns.none? {|p| p =~ line}
+end
+</pre>
+<ul>
+  <li>readable (subjective)
+    <ul>
+      <li>intention revealing (even in the blocks)</li>
+      <li>symmetric</li>
+      <li>SLAP happy</li>
+    </ul>
+  </li>
+  <li>simple (objective)
+    <ul>
+      <li>uses Ruby for domain of computation</li>
+      <li>no unnecessary delegation (to methods that don't really clarify intent)</li>
+    </ul>
+  </li>
+</ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>summary</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>balance readability and simplicity
+          <ul>
+            <li>readability is subjective: depends on familiarity
+              <ul>
+                <li>is this really awkward or do I need more familiarity?</li>
+              </ul>
+            </li>
+            <li>simplicity is objective: not compound</li>
+          </ul>
+        </li>
+        <li>start with Ruby</li>
+        <li>extract methods to
+          <ul>
+            <li>break up long methods</li>
+            <li>reduce duplication</li>
+            <li>clarify confusing code</li>
+            <li>enhance a domain</li>
+          </ul>
+        </li>
+        <li>generalize method extraction by reducing scope
+          <ul>
+            <li>more composable components</li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+  <img src="images/zak.jpg-large">
+  </slide>
+
+  <slide class="tak">
+    <hgroup>
+      <h2>data pipelines</h2>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>data pipelines</h2>
+    </hgroup>
+    <article>
+      <pre><code class="ruby">(1.day + 1.year + 2.months + 2.days).inspect
+# => "1 year, 2 months and 3 days"
+
+# Internally, (1.day + 1.year + 2.months + 2.days) is represented as
+# [[:days, 1], [:years, 1], [:months, 2], [:days, 2]]
+</code></pre>
+    </article>
+  </slide>
+  
+  <slide>
+    <hgroup>
+      <h2>data pipelines</h2>
+    </hgroup>
+    <article>
+      <pre data-lang="clj"><code class="clj">(defn format-duration [parts]
+  (->> parts
+       (map     (partial apply hash-map))
+       (apply   merge-with +)
+       (sort-by order-of-units)
+       (map     format-unit)
+       (map     format-unit-val-pair)
+       (to-sentence)))
+
+(format-duration [[:days 1] [:years 1] [:months 2] [:days 2]])
+; => "1 year, 2 months and 3 days"
+</code></pre>
+    </article>
+    <ul>
+      <li>pipeline composed of small transformations</li>
+    </ul>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>data pipelines</h2>
+    </hgroup>
+    <article>
+      <pre data-lang="clj"><code class="clj">(defn format-duration [parts]
+  (->> parts
+       (map     (partial apply hash-map))
+       (apply   merge-with +)
+       (sort-by (fn [[u _]] (.indexOf [:years, :months :days :hours :minutes :seconds] u)))
+       (map     (fn [[u v]] (if (= 1 v) [v (chop (name u))] [v (name u)])))
+       (map     (partial clojure.string/join " "))
+       (to-sentence)))
+
+(format-duration [[:days 1] [:years 1] [:months 2] [:days 2]])
+; => "1 year, 2 months and 3 days"
+</code></pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>data pipelines</h2>
+    </hgroup>
+    <article>
+      <pre data-lang="clj"><code class="clj">(defn format-duration [parts]
+  (->> parts
+       ; [[:days 1] [:years 1] [:months 2] [:days 2]]
+       (map (partial apply hash-map))
+       ; [{:days 1} {:years 1} {:months 2} {:days 2}]
+       (apply merge-with +)
+       ; {:days 3 :years 1 :months 2}
+       (sort-by (fn [[u _]] (.indexOf [:years :months :days :hours :minutes :seconds] u)))
+       ; [[:years 1] [:months 2] [:days 3]]
+       (map     (fn [[u v]] (if (= 1 v) [v (chop (name u))] [v (name u)])))
+       ; [[1 "year"] [2 "months" 2] [3 "days"]]
+       (map     (partial clojure.string/join " "))
+       ; ["1 year" "2 months" "3 days"]
+       (to-sentence)))
+       ; "1 year, 2 months and 3 days"
+
+(format-duration [[:days 1] [:years 1] [:months 2] [:days 2]])
+</code></pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>data pipelines</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+# Duration#inspect
+
+def inspect
+  consolidated = parts.inject(::Hash.new(0)) { |h,(l,r)| h[l] += r; h }
+  parts = [:years, :months, :days, :minutes, :seconds].map do |length|
+    n = consolidated[length]
+    <b>"#{n} #{n == 1 ? length.to_s.singularize : length.to_s}"</b> if n.nonzero?
+  end.compact
+  parts = <b>["0 seconds"]</b> if parts.empty?
+  parts.to_sentence(:locale => :en)
+end
+</pre>
+<ul>
+  <li>map, then compact
+  <ul>
+    <li>builds a collection including nils, then removes them</li>
+  </ul>
+  </li>
+  <li>special case for "0 seconds"</li>
+  <li>duplicates formatting logic</li>
+</ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>data pipelines</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+# Duration#inspect mid-refactoring
+
+def inspect
+  val_for = parts.inject(::Hash.new(0)) { |h,(l,r)| h[l] += r; h }
+  [:years, :months, :days, :minutes, :seconds].
+    select {|unit| val_for[unit].nonzero? }.
+    map {|unit| [unit, val_for[unit]]}.
+    map {|unit, val| "#{val} #{val == 1 ? unit.to_s.singularize : unit.to_s}"}.
+    tap {|units| units << "0 seconds" if units.empty?}.
+    to_sentence(:locale => :en)
+end
+</pre>
+<ul>
+  <li>reassembled as a series of small transformations</li>
+  <ul>
+    <li>makes it easy to start moving parts around</li>
+  </ul>
+  </li>
+</ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>data pipelines</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+# Duration#inspect refactored
+
+def inspect
+  parts.
+    reduce(::Hash.new(0)) {|h,(unit,val)| h[unit] += val; h}.
+    sort_by {|unit, _ | [:years, :months, :days, :minutes, :seconds].index(unit)}.
+    map     {|unit,val| "#{val} #{val == 1 ? unit.to_s.chop : unit.to_s}"}.
+    to_sentence(:locale => :en)
+end
+</pre>
+    </article>
+<ul>
+  <li>shorter series of small transformations</li>
+  <li>no temp data structure, shadowing, or variable reassignment</li>
+  <li>no special casing for nil or "0 seconds"</li>
+  <li>no duplication of formatting logic</li>
+  <li><code>chop</code> performs 6x better than <code>singularize</code></li>
+</ul>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>data pipelines</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+# Duration#inspect refactored
+
+def inspect
+  parts.
+    # [[:days, 1], [:years, 1], [:months, 2], [:days, 2]]
+    reduce(::Hash.new(0)) {|h,(unit,val)| h[unit] += val; h}.
+    # {:days => 3, :years => 1, :months => 2}
+    sort_by {|unit, _ | [:years, :months, :days, :minutes, :seconds].index(unit)}.
+    # [[:years, 1], [:months, 2], [:days, 3]]
+    map     {|unit,val| "#{val} #{val == 1 ? unit.to_s.chop : unit.to_s}"}.
+    # ["1 year", "2 months", "3 days"]
+    to_sentence(:locale => :en)
+    # "1 year, 2 months and 3 days"
+end
+</pre>
+<ul>
+  <li>shorter series of small transformations</li>
+</ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>true story</h2>
+    </hgroup>
+    <article>
+      <a href="http://contributors.rubyonrails.org/">http://contributors.rubyonrails.org/</a>
+      <br/>
+      <br/>
+      <img src="images/RailsContributors.png">
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>summary (data pipelines)</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+Enumerable.public_instance_methods.sort - Object.new.methods
+# => [:all?, :any?, :chunk, :collect, :collect_concat, :count, :cycle, :detect, :drop,  
+#     :drop_while, :each_cons, :each_entry, :each_slice, :each_with_index,
+#     :each_with_object, :entries, :find, :find_all, :find_index, :first, :flat_map,
+#     :grep, :group_by, :include?, :inject, :lazy, :map, :max, :max_by, :member?, 
+#     :min, :min_by, :minmax, :minmax_by, :none?, :one?,:partition, :reduce, 
+#     :reject, :reverse_each, :select, :slice_before, :sort, :sort_by, :take,
+#     :take_while, :to_a, :zip]
+</pre>
+      <ul>
+        <li><code>Enumerable</code> provides a comprehensive language for data transformations
+        <ul>
+          <li>learn it!</li>
+        </ul>
+        </li>
+        <li>compose pipelines of small transformations to build larger ones
+        <ul>
+          <li>output of one transformation is input to the next</li>
+        </ul>
+        </li>
+        <li>creates ubiquitous language (even across languages)</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide class="tak">
+    <hgroup>
+      <h2>tests</h2>
+    </hgroup>
+  </slide>
+ 
+  <slide>
+    <hgroup>
+      <h2>expectations / no test names</h2>
+    </hgroup>
+    <article>
+      <pre data-lang="clj"><code class="clj">; using <a href="https://github.com/jaycfields/expectations">https://github.com/jaycfields/expectations</a>
+
+(expect "John Doe" (full-name (make-person "John" "Doe")))
+</code></pre>
+      <ul>
+        <li>puts pressure on design</li>
+        <li>works very well when design pressure is heeded</li>
+        <li>harder to understand when design pressure is not heeded
+        <ul>
+          <li>confusing tests get commented</li>
+        </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>RSpec / test names as input and output</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">describe Person do
+  describe "#full_name" do
+    it "concats first and last names" do
+# ...
+</pre>
+      <pre class="shell">
+rspec --format documentation
+
+Person
+  #full_name
+    concats first and last names
+    handles blank first name gracefully
+    handles blank last name gracefully
+    raises when missing both first and last name
+</pre>
+      <ul>
+        <li>easily scan names</li>
+        <li>tells a story</li>
+        <li>exposes missing and duplicate examples</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>expectations/assertions</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+describe Person do
+  it "concats first and last names to provide full_name" do
+    person = Person.new("John", "Doe")
+
+    # rspec-expectations with should
+    person.full_name.should eq "John Doe"
+
+    # rspec-expectations with expect
+    expect(person.full_name).to eq "John Doe"
+
+    # minitest/test
+    assert_equal "John Doe", person.full_name
+
+    # minitest/spec
+    person.full_name.must_equal "John Doe"
+  end
+end
+</pre>
+      <ul>
+        <li>lots of monkey patching and methods to learn</li>
+        <li>lots of debates about words (should, must, expect, etc)</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide class="tak">
+    <hgroup>
+      <h2>wrong!</h2>
+    </hgroup>
+    <article>
+      <a href="https://github.com/sconover/wrong">https://github.com/sconover/wrong</a>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>expectations with wrong</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+describe Person do
+  it "concats first and last names to provide full_name" do
+    person = Person.new("John", "Doe")
+    assert { person.full_name == "John Doe" }
+  end
+end
+</pre>
+<ul>
+  <li>no monkey patching</li>
+  <li>one method: assert</li>
+  <li>no confusion over order of expected and actual</li>
+  <li>provides feedback by eval'ing block content on failure</li>
+</ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>"natural assertions" with rspec-given</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+describe Person do
+  describe "#full_name" do
+    Given(:person) { Person.new("John", "Doe") }
+    Then { person.full_name == "John Doe" }
+  end
+end
+</pre>
+<ul>
+  <li>G/W/T syntax</li>
+  <li>provides good failure messages by parsing block content on failure (using ripper)</li>
+</ul>
+    </article>
+  </slide>
+
+  <slide class="tak">
+    <hgroup>
+      <h2>right direction, but ...</h2>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>rspec-given with many examples</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+describe Person do
+  describe "#full_name" do
+    context "with first and last name supplied" do
+      Given(:person) { Person.new("John", "Doe") }
+      Then { person.full_name == "John Doe" }
+    end
+
+    context "with nil first name" do
+      Given(:person) { Person.new(nil, "Doe") }
+      Then { person.full_name == "Doe" }
+    end
+
+    context "with blank first name" do
+      Given(:person) { Person.new("", "Doe") }
+      Then { person.full_name == "Doe" }
+    end
+
+    context "with a different kind of blank first name" do
+      Given(:person) { Person.new(" ", "Doe") }
+      Then { person.full_name == "Doe" }
+    end
+
+    context "with nil last name" do
+      Given(:person) { Person.new("John", nil) }
+      Then { person.full_name == "John" }
+    end
+
+  end
+end
+</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>rspec + wrong with many examples</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+describe "Person#full_name" do
+  it "concats first and last names" do
+    assert { Person.new("John", "Doe").full_name == "John Doe" }
+  end
+
+  it "handles nils and blanks gracefully" do
+    assert { Person.new(nil, "Doe").full_name == "Doe" }
+    assert { Person.new("",  "Doe").full_name == "Doe" }
+    assert { Person.new(" ", "Doe").full_name == "Doe" }
+    assert { Person.new("John", nil).full_name == "John" }
+    assert { Person.new("John", "" ).full_name == "John" }
+    assert { Person.new("John", " ").full_name == "John" }
+  end
+end
+</pre>
+<ul>
+  <li style="color:green">readable input and output</li>
+  <li style="color:red">violates one expectation per example</li>
+</ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>better?</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+describe "Person#full_name" do
+  it "concats first and last names" do
+    assert { Person.new("John", "Doe").full_name == "John Doe" }
+  end
+
+  it "handles nil or blank first_name gracefully" do
+    assert { Person.new(nil, "Doe").full_name == "Doe" }
+    assert { Person.new("",  "Doe").full_name == "Doe" }
+    assert { Person.new(" ", "Doe").full_name == "Doe" }
+  end
+
+  it "handles nil or blank last_name gracefully" do
+    assert { Person.new("John", nil).full_name == "John" }
+    assert { Person.new("John", "" ).full_name == "John" }
+    assert { Person.new("John", " ").full_name == "John" }
+  end
+end
+</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>better?</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+describe "Person#full_name" do
+  it "concats first and last names" do
+    assert { Person.new("John", "Doe").full_name == "John Doe" }
+  end
+
+  it "handles nils gracefully" do
+    assert { Person.new(nil, "Doe").full_name == "Doe" }
+    assert { Person.new("John", nil).full_name == "John" }
+  end
+
+  it "handles blanks gracefully" do
+    assert { Person.new("",  "Doe").full_name == "Doe" }
+    assert { Person.new(" ", "Doe").full_name == "Doe" }
+    assert { Person.new("John", "" ).full_name == "John" }
+    assert { Person.new("John", " ").full_name == "John" }
+  end
+end
+</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>better?</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+describe "Person#full_name" do
+  it "concats first and last names" do
+    assert { Person.new("John", "Doe").full_name == "John Doe" }
+  end
+
+  it "handles nil first_name gracefully" do
+    assert { Person.new(nil, "Doe").full_name == "Doe" }
+  end
+
+  it "handles nil last_name gracefully" do
+    assert { Person.new("John", nil).full_name == "John" }
+  end
+
+  it "handles blank first_name gracefully" do
+    assert { Person.new("",  "Doe").full_name == "Doe" }
+    assert { Person.new(" ", "Doe").full_name == "Doe" }
+  do
+
+  it "handles blank last_name gracefully" do
+    assert { Person.new("John", "" ).full_name == "John" }
+    assert { Person.new("John", " ").full_name == "John" }
+  end
+end
+</pre>
+    </article>
+  </slide>
+
+  <slide class="tak">
+    <hgroup>
+    <h2 style="position: absolute; top: -20px; width: 90%;">
+      we've <font color="red">complected</font><br/>
+      <font color="green">specific</font>ation</br>
+      with</br>
+      <font color="green">descript</font>ion</br>
+    </h2>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>decouple descriptions from examples</h2>
+    </hgroup>
+    <article>
+      <pre class="prettyprint">
+# DOES NOT EXIST YET. SOMEBODY PLEASE MAKE IT SO!
+
+describe "Person#full_name" do
+  it "concats first and last names" do
+    example { Person.new("John", "Doe").full_name == "John Doe" }
+  end
+
+  it "handles nils and blanks gracefully" do              # description: general
+    example { Person.new(nil, "Doe").full_name == "Doe" }
+    example { Person.new("",  "Doe").full_name == "Doe" } # examples: specific
+    example { Person.new(" ", "Doe").full_name == "Doe" }
+    example { Person.new("John", nil).full_name == "John" }
+    example { Person.new("John", "" ).full_name == "John" }
+    example { Person.new("John", " ").full_name == "John" }
+  end
+end
+</pre>
+      <pre class="shell">
+Person#full_name
+  concats first and last names
+  handles nils and blanks gracefully
+</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>decouple descriptions from examples</h2>
+    </hgroup>
+    <article>
+      <pre class="shell">
+Person#full_name
+  concats first and last names
+    <font color="red">example at ./person_spec.rb:6 (FAILED - 1)</font>
+  handles nils and blanks gracefully
+
+<font color="red">Failures:
+
+  1) Person#full_name
+     Failure/Error: example { assert { person.full_name == "John Doe" } }
+       Expected (person.full_name == "John Doe"), but
+           person.full_name is "JohnDoe"
+     # ./person_spec.rb:6:in `block (3 levels) in &lt;top (required)>'</font>
+</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>summary (testing)</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>test names add value
+        <ul>
+          <li>tradeoff: they're also names, and require thought and maintenance</li>
+        </ul>
+        </li>
+        <li>expectation DSLs require monkey patching and learning a bunch of
+            methods without providing much value in return
+        <ul>
+          <li>use them if you like them, but please, let's stop building new ones</li>
+          <li>this does not include test double frameworks (stubs, mocks, etc)</li>
+        </ul>
+        </li>
+        <li>homework: decouple descriptions from examples</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide class="tak">
+    <hgroup>
+    <h2>conclusion</h2>
+    </hgroup>
+  </slide>
+
+  <slide class="tak">
+    <hgroup>
+    <h2>Ruby is a DSL<br/>for the domain of</br>general programming tasks</h2>
+    </hgroup>
+  </slide>
+
+  <slide class="tak">
+    <hgroup>
+    <h2>readable && simple</h2>
+    </hgroup>
+  </slide>
+
+  <slide class="tak">
+    <hgroup>
+    <h2>if you're writing Ruby and wish to choose simplicity ...</h2>
+    </hgroup>
+  </slide>
+
+  <slide class="tak">
+    <hgroup>
+    <h2>choose Ruby</h2>
+    </hgroup>
+    <article>
+      <br/>
+      <img src="images/Ruby_logo.png">
+    </article>
+  </slide>
+
+  <slide class="thank-you-slide nobackground">
+    <article class="flexbox vleft">
+      <h2>Thank you!</h2>
+    </article>
+    <p data-config-contact>
+      <!-- populated from slide_config.json -->
+    </p>
+  </slide>
+
+  <slide class="backdrop"></slide>
+
+
+</slides>
+
+</body>
+</html>
