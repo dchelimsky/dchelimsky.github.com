@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: RubyConf5k | David Chelimsky]]></title>
-  <link href="http://dchelimsky.github.io/blog/categories/rubyconf5k/atom.xml" rel="self"/>
-  <link href="http://dchelimsky.github.io/"/>
-  <updated>2013-09-16T03:32:17+02:00</updated>
-  <id>http://dchelimsky.github.io/</id>
+  <link href="http://blog.davidchelimsky.net/blog/categories/rubyconf5k/atom.xml" rel="self"/>
+  <link href="http://blog.davidchelimsky.net/"/>
+  <updated>2013-09-16T03:40:52+02:00</updated>
+  <id>http://blog.davidchelimsky.net/</id>
   <author>
     <name><![CDATA[David]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[get off (the couch) with me]]></title>
-    <link href="http://dchelimsky.github.io/blog/2009/09/25/get-off-the-couch-with-me/"/>
+    <link href="http://blog.davidchelimsky.net/blog/2009/09/25/get-off-the-couch-with-me/"/>
     <updated>2009-09-25T19:46:06+02:00</updated>
-    <id>http://dchelimsky.github.io/blog/2009/09/25/get-off-the-couch-with-me</id>
+    <id>http://blog.davidchelimsky.net/blog/2009/09/25/get-off-the-couch-with-me</id>
     <content type="html"><![CDATA[<p>As <a href="http://chadfowler.com/">Chad Fowler</a> points out in his blog about the <a href="http://chadfowler.com/2009/9/25/unofficial-rubyconf-5k">unofficial rubyconf 5k</a>, the whole idea was born out of a conversation he and I were having about his new running habit, and how I&rsquo;d been trying to get back into running for years and never had the right motivation. Well, there is little motivation to get back into it than helping to organize a 5k!</p>
 
 <p>I just started back a little over a week ago and, this week, started the <a href="http://www.coolrunning.com/engine/2/2_3/181.shtml">couch to 5k</a> schedule. For those of you who have never run, or haven&rsquo;t run in years, this schedule is absolutely fantastic.</p>

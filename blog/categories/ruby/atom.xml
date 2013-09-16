@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Ruby | David Chelimsky]]></title>
-  <link href="http://dchelimsky.github.io/blog/categories/ruby/atom.xml" rel="self"/>
-  <link href="http://dchelimsky.github.io/"/>
-  <updated>2013-09-16T03:32:17+02:00</updated>
-  <id>http://dchelimsky.github.io/</id>
+  <link href="http://blog.davidchelimsky.net/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://blog.davidchelimsky.net/"/>
+  <updated>2013-09-16T03:40:52+02:00</updated>
+  <id>http://blog.davidchelimsky.net/</id>
   <author>
     <name><![CDATA[David]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[rspec-expectations-2.9.1 is released!]]></title>
-    <link href="http://dchelimsky.github.io/blog/2012/04/03/rspec-expectations-291-is-released/"/>
+    <link href="http://blog.davidchelimsky.net/blog/2012/04/03/rspec-expectations-291-is-released/"/>
     <updated>2012-04-03T21:18:10+02:00</updated>
-    <id>http://dchelimsky.github.io/blog/2012/04/03/rspec-expectations-291-is-released</id>
+    <id>http://blog.davidchelimsky.net/blog/2012/04/03/rspec-expectations-291-is-released</id>
     <content type="html"><![CDATA[<p>This is a bug-fix only release, and is recommended for everybody using rspec-2.9.</p>
 
 <p><a href="http://github.com/rspec/rspec-expectations/compare/v2.9.0...v2.9.1">full changelog</a></p>
@@ -37,9 +37,9 @@
   
   <entry>
     <title type="html"><![CDATA[rspec-2.9.0 is released!]]></title>
-    <link href="http://dchelimsky.github.io/blog/2012/03/18/rspec-290-is-released/"/>
+    <link href="http://blog.davidchelimsky.net/blog/2012/03/18/rspec-290-is-released/"/>
     <updated>2012-03-18T00:10:59+01:00</updated>
-    <id>http://dchelimsky.github.io/blog/2012/03/18/rspec-290-is-released</id>
+    <id>http://blog.davidchelimsky.net/blog/2012/03/18/rspec-290-is-released</id>
     <content type="html"><![CDATA[<p>rspec-2.9.0 is released wtih lots of bug fixes and a few minor feature improvements as well. Enjoy!</p>
 
 <h3>rspec-core-2.9.0 / 2012-03-17</h3>
@@ -144,9 +144,9 @@ schema format is &ldquo;:sql&rdquo;. (Andrey Voronkov)</li>
   
   <entry>
     <title type="html"><![CDATA[Validations are behavior, associations are structure]]></title>
-    <link href="http://dchelimsky.github.io/blog/2012/02/12/validations-are-behavior-associations-are-structure/"/>
+    <link href="http://blog.davidchelimsky.net/blog/2012/02/12/validations-are-behavior-associations-are-structure/"/>
     <updated>2012-02-12T23:53:27+01:00</updated>
-    <id>http://dchelimsky.github.io/blog/2012/02/12/validations-are-behavior-associations-are-structure</id>
+    <id>http://blog.davidchelimsky.net/blog/2012/02/12/validations-are-behavior-associations-are-structure</id>
     <content type="html"><![CDATA[<h2>TL;DR:</h2>
 
 <ul>
@@ -286,9 +286,9 @@ have you run into situations where you wished you had?</p>
   
   <entry>
     <title type="html"><![CDATA[rspec-rails-2.8.1 is released]]></title>
-    <link href="http://dchelimsky.github.io/blog/2012/01/05/rspec-rails-281-is-released/"/>
+    <link href="http://blog.davidchelimsky.net/blog/2012/01/05/rspec-rails-281-is-released/"/>
     <updated>2012-01-05T06:43:28+01:00</updated>
-    <id>http://dchelimsky.github.io/blog/2012/01/05/rspec-rails-281-is-released</id>
+    <id>http://blog.davidchelimsky.net/blog/2012/01/05/rspec-rails-281-is-released</id>
     <content type="html"><![CDATA[<h2>Bug fix release</h2>
 
 <p>The rails-3.2.0.rc2 release broke <code>stub_model</code> in rspec-rails-2.0.0 > 2.8.0.
@@ -314,9 +314,9 @@ rails-3.2.0.rc2 (or 3.2.0 once it&rsquo;s out).</p>
   
   <entry>
     <title type="html"><![CDATA[RSpec-2.8 is released!]]></title>
-    <link href="http://dchelimsky.github.io/blog/2012/01/05/rspec-28-is-released/"/>
+    <link href="http://blog.davidchelimsky.net/blog/2012/01/05/rspec-28-is-released/"/>
     <updated>2012-01-05T03:38:03+01:00</updated>
-    <id>http://dchelimsky.github.io/blog/2012/01/05/rspec-28-is-released</id>
+    <id>http://blog.davidchelimsky.net/blog/2012/01/05/rspec-28-is-released</id>
     <content type="html"><![CDATA[<p>We released RSpec-2.8.0 today with a host of new features and improvements
 since 2.7. Some of the highlights are described below, but you can see the
 full changelogs at:</p>
@@ -342,7 +342,7 @@ full changelogs at:</p>
 
 
 <p><a href="http://rspec.info">http://rspec.info</a> is now just a one pager (desperate for
-some design love &ndash; volunteers please email <a href="&#109;&#97;&#105;&#x6c;&#x74;&#111;&#58;&#x72;&#115;&#x70;&#101;&#99;&#45;&#117;&#x73;&#x65;&#114;&#115;&#x40;&#x72;&#117;&#98;&#x79;&#x66;&#x6f;&#x72;&#103;&#101;&#x2e;&#111;&#114;&#x67;">&#x72;&#115;&#112;&#101;&#99;&#45;&#x75;&#x73;&#101;&#114;&#x73;&#64;&#114;&#x75;&#x62;&#x79;&#x66;&#x6f;&#114;&#103;&#x65;&#x2e;&#x6f;&#114;&#x67;</a>). All the
+some design love &ndash; volunteers please email <a href="&#109;&#x61;&#105;&#x6c;&#116;&#111;&#x3a;&#114;&#x73;&#x70;&#101;&#99;&#45;&#x75;&#115;&#101;&#x72;&#x73;&#x40;&#x72;&#x75;&#x62;&#121;&#x66;&#x6f;&#x72;&#x67;&#x65;&#46;&#111;&#x72;&#103;">&#x72;&#115;&#x70;&#x65;&#99;&#45;&#117;&#x73;&#101;&#114;&#115;&#64;&#x72;&#117;&#98;&#121;&#x66;&#x6f;&#114;&#103;&#101;&#46;&#x6f;&#114;&#103;</a>). All the
 old pages are redirects to the relevant RDoc at <a href="http://rubydoc.info.">http://rubydoc.info.</a> RSpec-1
 info is still available at <a href="http://old.rspec.info">http://old.rspec.info</a>.</p>
 
