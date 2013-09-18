@@ -666,7 +666,7 @@
     </url>
     <url>
         <loc>http://blog.davidchelimsky.net/blog/archives/</loc>
-        <lastmod>2013-08-18T17:08:24+02:00</lastmod>
+        <lastmod>2013-09-16T16:58:50+02:00</lastmod>
     </url>
     <url>
         <loc>http://blog.davidchelimsky.net/</loc>
@@ -675,5 +675,9 @@
     <url>
         <loc>http://blog.davidchelimsky.net/robots.txt</loc>
         <lastmod>2013-08-17T21:27:50+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://blog.davidchelimsky.net/slides/</loc>
+        <lastmod>2013-09-16T17:03:53+02:00</lastmod>
     </url>
 </urlset>
