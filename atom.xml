@@ -4,7 +4,7 @@
   <title><![CDATA[David Chelimsky]]></title>
   <link href="http://blog.davidchelimsky.net/atom.xml" rel="self"/>
   <link href="http://blog.davidchelimsky.net/"/>
-  <updated>2013-09-18T07:03:12+02:00</updated>
+  <updated>2013-09-18T07:25:11+02:00</updated>
   <id>http://blog.davidchelimsky.net/</id>
   <author>
     <name><![CDATA[David]]></name>
@@ -1256,7 +1256,7 @@ full changelogs at:</p>
 
 
 <p><a href="http://rspec.info">http://rspec.info</a> is now just a one pager (desperate for
-some design love &ndash; volunteers please email <a href="&#x6d;&#97;&#105;&#108;&#116;&#111;&#x3a;&#x72;&#x73;&#x70;&#101;&#99;&#x2d;&#x75;&#x73;&#x65;&#114;&#x73;&#x40;&#114;&#117;&#98;&#121;&#x66;&#x6f;&#114;&#x67;&#x65;&#46;&#111;&#x72;&#x67;">&#114;&#x73;&#112;&#101;&#x63;&#x2d;&#117;&#115;&#101;&#114;&#115;&#x40;&#114;&#x75;&#98;&#121;&#x66;&#111;&#x72;&#x67;&#101;&#x2e;&#111;&#x72;&#x67;</a>). All the
+some design love &ndash; volunteers please email <a href="&#109;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#114;&#115;&#112;&#x65;&#99;&#45;&#117;&#115;&#x65;&#114;&#115;&#64;&#114;&#x75;&#98;&#x79;&#x66;&#x6f;&#114;&#103;&#101;&#x2e;&#111;&#114;&#x67;">&#114;&#x73;&#x70;&#x65;&#x63;&#45;&#x75;&#x73;&#x65;&#x72;&#115;&#x40;&#x72;&#117;&#98;&#121;&#102;&#111;&#114;&#x67;&#101;&#46;&#111;&#x72;&#103;</a>). All the
 old pages are redirects to the relevant RDoc at <a href="http://rubydoc.info.">http://rubydoc.info.</a> RSpec-1
 info is still available at <a href="http://old.rspec.info">http://old.rspec.info</a>.</p>
 
