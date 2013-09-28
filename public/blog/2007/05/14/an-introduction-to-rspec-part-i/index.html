@@ -124,8 +124,8 @@
 <h4>Prerequisites</h4>
 
 <ul>
-<li><p>Ruby 1.8.4 or later</p></li>
-<li><p>The latest RSpec gem (0.9.4 as of this writing).</p></li>
+<li>Ruby 1.8.4 or later</li>
+<li>The latest RSpec gem (0.9.4 as of this writing).</li>
 </ul>
 
 
@@ -148,10 +148,12 @@
 
 <p>Using your favorite editor, create a file in this directory named user_spec.rb and type the following:</p>
 
-<pre><code>&lt;code&gt;describe User do
-end
-&lt;/code&gt;
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>The <code>describe</code> method creates an instance of <code>Behaviour</code>. So &ldquo;describe User&rdquo; is really saying &ldquo;describe the behaviour of the User class&rdquo;. I guess we could have named the method <code>describe_the_behaviour_of</code>, but there is a point at which clarity bumps up against verbosity, and we feel that point is before the first underscore in <code>describe_the_behaviour_of</code>.</p>
 
@@ -172,19 +174,25 @@ end
 
 <p>We haven&rsquo;t even written any examples and already RSpec is telling us what code we need to write. We need to create a User class to resolve this error, so create user.rb with the following:</p>
 
-<pre><code>&lt;code&gt;class User
-end
-&lt;/code&gt;
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>&hellip; and require it in user_spec.rb:</p>
 
-<pre><code>&lt;code&gt;require 'user'
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;user&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
-describe User do
-end
-&lt;/code&gt;
-</code></pre>
 
 <p>Now run the <code>spec</code> command again.</p>
 
@@ -197,12 +205,16 @@ Finished in 6.0e-06 seconds
 
 <p>The output shows that we have no examples yet, so lets add one. We&rsquo;ll start by describing the intent of example without any code.</p>
 
-<pre><code>&lt;code&gt;describe User do
-it "should be in any roles assigned to it" do
-end
-end
-&lt;/code&gt;
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;should be in any roles assigned to it&quot;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>The <code>it</code> method returns an instance of <code>Example</code>. This is a metaphor for an example of the behaviour that we are describing.</p>
 
@@ -224,13 +236,18 @@ Finished in 0.022865 seconds
 
 <p>Now add a Ruby statement that begins to express the described intent.</p>
 
-<pre><code>&lt;code&gt;describe User do
-it "should be in any roles assigned to it" do
-  user.should be_in_role("assigned role")
-end
-end
-&lt;/code&gt;
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;should be in any roles assigned to it&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">user</span><span class="o">.</span><span class="n">should</span> <span class="n">be_in_role</span><span class="p">(</span><span class="s2">&quot;assigned role&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>&hellip; and run the <code>spec</code> command.</p>
 
@@ -255,19 +272,22 @@ Finished in 0.017956 seconds
 
 <p>The output tells us that there is no <code>user</code>, so the next step is to make one:</p>
 
-<pre><code>&lt;code&gt;describe User do
-it "should be in any roles assigned to it" do
-  user = User.new
-  user.should be_in_role("assigned role")
-end
-end
-&lt;/code&gt;
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;should be in any roles assigned to it&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>    <span class="n">user</span><span class="o">.</span><span class="n">should</span> <span class="n">be_in_role</span><span class="p">(</span><span class="s2">&quot;assigned role&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-
-
-
-$ spec user_spec.rb --format specdoc
+<pre><code>$ spec user_spec.rb --format specdoc
 
 User
 - should be in any roles assigned to it (ERROR - 1)
@@ -284,16 +304,18 @@ Finished in 0.020779 seconds
 
 <p>Now we learn that User does not respond to <code>in_role?</code>, so we add that to User:</p>
 
-<pre><code>&lt;code&gt;class User
-def in_role?(role)
-end
-&lt;/code&gt;
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">in_role?</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-
-
-
-$ spec user_spec.rb --format specdoc
+<pre><code>$ spec user_spec.rb --format specdoc
 
 User
 - should be in any roles assigned to it (FAILED - 1)
@@ -312,17 +334,20 @@ Finished in 0.0172110000000001 seconds
 
 <p>To get this to pass, we do the simplest thing that could possibly work:</p>
 
-<pre><code>&lt;code&gt;class User
-def in_role?(role)
-  true
-end
-&lt;/code&gt;
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">in_role?</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+</span><span class='line'>    <span class="kp">true</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-
-
-
-$ spec user_spec.rb --format specdoc
+<pre><code>$ spec user_spec.rb --format specdoc
 
 User
 - should be in any roles assigned to it
@@ -334,31 +359,41 @@ Finished in 0.018173 seconds
 
 <p>That passes, but we&rsquo;re not done yet. Take a look again at the example:</p>
 
-<pre><code>&lt;code&gt;describe User do
-it "should be in any roles assigned to it" do
-  user = User.new
-  user.should be_in_role("assigned role")
-end
-end
-&lt;/code&gt;
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;should be in any roles assigned to it&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>    <span class="n">user</span><span class="o">.</span><span class="n">should</span> <span class="n">be_in_role</span><span class="p">(</span><span class="s2">&quot;assigned role&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>Does that express the described intent? Not fully. The description says that the User &ldquo;should be in any roles assigned to it&rdquo;, but we haven&rsquo;t assigned any roles to it. Let&rsquo;s add that assignment to the example:</p>
 
-<pre><code>&lt;code&gt;describe User do
-it "should be in any roles assigned to it" do
-  user = User.new
-  user.assign_role("assigned role")
-  user.should be_in_role("assigned role")
-end
-end
-&lt;/code&gt;
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;should be in any roles assigned to it&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>    <span class="n">user</span><span class="o">.</span><span class="n">assign_role</span><span class="p">(</span><span class="s2">&quot;assigned role&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">user</span><span class="o">.</span><span class="n">should</span> <span class="n">be_in_role</span><span class="p">(</span><span class="s2">&quot;assigned role&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-
-
-
-$ spec user_spec.rb --format specdoc
+<pre><code>$ spec user_spec.rb --format specdoc
 
 User
 - should be in any roles assigned to it (ERROR - 1)
@@ -375,21 +410,26 @@ Finished in 0.018564 seconds
 
 <p>Following the advice in the output, we now add the <code>assign_role</code> method to <code>User</code>.</p>
 
-<pre><code>&lt;code&gt;class User
-def in_role?(role)
-  true
-end
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">in_role?</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+</span><span class='line'>    <span class="kp">true</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">assign_role</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
-def assign_role(role)
-end
-end
-&lt;/code&gt;
 
-
-
-
-
-$ spec user_spec.rb --format specdoc
+<pre><code>$ spec user_spec.rb --format specdoc
 
 User
 - should be in any roles assigned to it
@@ -407,23 +447,30 @@ Finished in 0.018998 seconds
 
 <p>As things stand now, a <code>User</code> will answer <code>true</code> when you ask it if it is any role, regardless of whether it has been assigned that role. We want the <code>User</code> to tell is it is not in a role which it has not been assigned, so let&rsquo;s add that example:</p>
 
-<pre><code>&lt;code&gt;describe User do
-it "should be in any roles assigned to it" do
-  user = User.new
-  user.assign_role("assigned role")
-  user.should be_in_role("assigned role")
-end
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;should be in any roles assigned to it&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>    <span class="n">user</span><span class="o">.</span><span class="n">assign_role</span><span class="p">(</span><span class="s2">&quot;assigned role&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">user</span><span class="o">.</span><span class="n">should</span> <span class="n">be_in_role</span><span class="p">(</span><span class="s2">&quot;assigned role&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;should NOT be in any roles not assigned to it&quot;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
-it "should NOT be in any roles not assigned to it" do
-end
-end
-&lt;/code&gt;
 
-
-
-
-
-$ spec user_spec.rb --format specdoc
+<pre><code>$ spec user_spec.rb --format specdoc
 
 User
 - should be in any roles assigned to it
@@ -436,24 +483,32 @@ Finished in 0.018231 seconds
 
 <p>Now add a statement to express intent:</p>
 
-<pre><code>&lt;code&gt;describe User do
-it "should be in any roles assigned to it" do
-  user = User.new
-  user.assign_role("assigned role")
-  user.should be_in_role("assigned role")
-end
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;should be in any roles assigned to it&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>    <span class="n">user</span><span class="o">.</span><span class="n">assign_role</span><span class="p">(</span><span class="s2">&quot;assigned role&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">user</span><span class="o">.</span><span class="n">should</span> <span class="n">be_in_role</span><span class="p">(</span><span class="s2">&quot;assigned role&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;should NOT be in any roles not assigned to it&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">user</span><span class="o">.</span><span class="n">should_not</span> <span class="n">be_in_role</span><span class="p">(</span><span class="s2">&quot;unassigned role&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
-it "should NOT be in any roles not assigned to it" do
-  user.should_not be_in_role("unassigned role")
-end
-end
-&lt;/code&gt;
 
-
-
-
-
-$ spec user_spec.rb --format specdoc
+<pre><code>$ spec user_spec.rb --format specdoc
 
 User
 - should be in any roles assigned to it
@@ -471,25 +526,34 @@ Finished in 0.018465 seconds
 
 <p>Now create the <code>User</code>:</p>
 
-<pre><code>&lt;code&gt;describe User do
-it "should be in any roles assigned to it" do
-  user = User.new
-  user.assign_role("assigned role")
-  user.should be_in_role("assigned role")
-end
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;should be in any roles assigned to it&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>    <span class="n">user</span><span class="o">.</span><span class="n">assign_role</span><span class="p">(</span><span class="s2">&quot;assigned role&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">user</span><span class="o">.</span><span class="n">should</span> <span class="n">be_in_role</span><span class="p">(</span><span class="s2">&quot;assigned role&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;should NOT be in any roles not assigned to it&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>    <span class="n">user</span><span class="o">.</span><span class="n">should_not</span> <span class="n">be_in_role</span><span class="p">(</span><span class="s2">&quot;unassigned role&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
-it "should NOT be in any roles not assigned to it" do
-  user = User.new
-  user.should_not be_in_role("unassigned role")
-end
-end
-&lt;/code&gt;
 
-
-
-
-
-$ spec user_spec.rb --format specdoc
+<pre><code>$ spec user_spec.rb --format specdoc
 
 User
 - should be in any roles assigned to it
@@ -509,21 +573,26 @@ Finished in 0.019014 seconds
 
 <p>Doing the simplest thing that could possibly work, we can get the example to pass like so:</p>
 
-<pre><code>&lt;code&gt;class User
-def in_role?(role)
-  role == "assigned role"
-end
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">in_role?</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">role</span> <span class="o">==</span> <span class="s2">&quot;assigned role&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">assign_role</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
-def assign_role(role)
-end
-end
-&lt;/code&gt;
 
-
-
-
-
-$ spec user_spec.rb --format specdoc
+<pre><code>$ spec user_spec.rb --format specdoc
 
 User
 - should be in any roles assigned to it
@@ -536,22 +605,28 @@ Finished in 0.017194 seconds
 
 <p>Everything passes, but now we have duplication between the examples and the subject code. Time to refactor to remove the duplication!</p>
 
-<pre><code>&lt;code&gt;class User
-def in_role?(role)
-  role == @role
-end
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">in_role?</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">role</span> <span class="o">==</span> <span class="vi">@role</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">assign_role</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@role</span> <span class="o">=</span> <span class="n">role</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
-def assign_role(role)
-  @role = role
-end
-end
-&lt;/code&gt;
 
-
-
-
-
-$ spec user_spec.rb --format specdoc
+<pre><code>$ spec user_spec.rb --format specdoc
 
 User
 - should be in any roles assigned to it

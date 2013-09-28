@@ -118,42 +118,51 @@
 
 <p>One example comes from a recent discussion on the RSpec list. The names here have been changed to protect the innocent. Imagine you&rsquo;re writing an app for a Veterinarian&rsquo;s office in which each Pet belongs to a Person. When you&rsquo;re registering a new Pet you want to be able to create the Pet and the Person (pet owner) in one action. So you might have something like this:</p>
 
-<pre><code>&lt;code&gt;
-def create
-@person = Person.new(params[:person])
-@pet = Pet.new(params[:pet])
-@person.pets &lt;&lt; @pet
-@person.save
-end
-&lt;/code&gt;
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">create</span>
+</span><span class='line'>  <span class="vi">@person</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:person</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>  <span class="vi">@pet</span> <span class="o">=</span> <span class="no">Pet</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:pet</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>  <span class="vi">@person</span><span class="o">.</span><span class="n">pets</span> <span class="o">&lt;&lt;</span> <span class="vi">@pet</span>
+</span><span class='line'>  <span class="vi">@person</span><span class="o">.</span><span class="n">save</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>Anybody see the violation of TDA? Anybody smell any Feature Envy? For those who don&rsquo;t, the problem is in this line:</p>
 
-<pre><code>&lt;code&gt;
-@person.pets &lt;&lt; @pet
-&lt;/code&gt;
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vi">@person</span><span class="o">.</span><span class="n">pets</span> <span class="o">&lt;&lt;</span> <span class="vi">@pet</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>The problem is that this controller code now depends on the internal structure of the Person &ndash; the fact that it keeps a collection of Pets. Now imagine that as this app evolved, we realized that we had the relationship backwards. That, since we are a Pet Health Clinic, after all, everything should revolve around the animal, not the owner. This code (and all the other code in the application like it) will have to change.</p>
 
 <p>We can avoid that change, or any other change to how the Person and Pet relate to each other, by adding an add_pet method to Person:</p>
 
-<pre><code>&lt;code&gt;
-@person.add_pet @pet
-&lt;/code&gt;
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vi">@person</span><span class="o">.</span><span class="n">add_pet</span> <span class="vi">@pet</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>Now, if we decided to reverse the relationship, we could do by having the implementation of add_pet to turn around and add the Person to the Pet:</p>
 
-<pre><code>&lt;code&gt;
-class Person &lt; ActiveRecord::Base
-  def add_pet pet
-    pet.add_person(self)
-  end
-end
-&lt;/code&gt;
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Person</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">add_pet</span> <span class="n">pet</span>
+</span><span class='line'>    <span class="n">pet</span><span class="o">.</span><span class="n">add_person</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>Now you could argue that the code that deals w/ People and Pets <strong>should</strong> change to correctly reflect the new model. But by applying Tell, Don&rsquo;t Ask in this case, we can decide when to make that change based on priorities, not based on urgency.</p>
 
