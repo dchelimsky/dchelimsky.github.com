@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rails | David Chelimsky]]></title>
   <link href="http://blog.davidchelimsky.net/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://blog.davidchelimsky.net/"/>
-  <updated>2013-09-18T07:25:11+02:00</updated>
+  <updated>2013-09-28T13:06:41+01:00</updated>
   <id>http://blog.davidchelimsky.net/</id>
   <author>
     <name><![CDATA[David]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[rspec-2.9.0 is released!]]></title>
-    <link href="http://blog.davidchelimsky.net/blog/2012/03/18/rspec-290-is-released/"/>
-    <updated>2012-03-18T00:10:59+01:00</updated>
-    <id>http://blog.davidchelimsky.net/blog/2012/03/18/rspec-290-is-released</id>
+    <link href="http://blog.davidchelimsky.net/blog/2012/03/17/rspec-290-is-released/"/>
+    <updated>2012-03-17T23:10:59+00:00</updated>
+    <id>http://blog.davidchelimsky.net/blog/2012/03/17/rspec-290-is-released</id>
     <content type="html"><![CDATA[<p>rspec-2.9.0 is released wtih lots of bug fixes and a few minor feature improvements as well. Enjoy!</p>
 
 <h3>rspec-core-2.9.0 / 2012-03-17</h3>
@@ -123,7 +123,7 @@ schema format is &ldquo;:sql&rdquo;. (Andrey Voronkov)</li>
   <entry>
     <title type="html"><![CDATA[rspec-rails-2.8.1 is released]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2012/01/05/rspec-rails-281-is-released/"/>
-    <updated>2012-01-05T06:43:28+01:00</updated>
+    <updated>2012-01-05T05:43:28+00:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2012/01/05/rspec-rails-281-is-released</id>
     <content type="html"><![CDATA[<h2>Bug fix release</h2>
 
@@ -151,7 +151,7 @@ rails-3.2.0.rc2 (or 3.2.0 once it&rsquo;s out).</p>
   <entry>
     <title type="html"><![CDATA[rspec-2.7.0 is released!]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2011/10/16/rspec-270-is-released/"/>
-    <updated>2011-10-16T22:28:00+02:00</updated>
+    <updated>2011-10-16T21:28:00+01:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2011/10/16/rspec-270-is-released</id>
     <content type="html"><![CDATA[<p>We&rsquo;re pleased to announce the release of rspec-2.7.0. Release notes for each
 gem are listed below, but here are a couple of highlights:</p>
@@ -339,7 +339,7 @@ misses RSpec&rsquo;s configuration (David Chelimsky)</li>
   <entry>
     <title type="html"><![CDATA[Avoid stubbing methods invoked by a framework]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2011/09/23/avoid-stubbing-methods-invoked-by-a-framework/"/>
-    <updated>2011-09-23T01:23:55+02:00</updated>
+    <updated>2011-09-23T00:23:55+01:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2011/09/23/avoid-stubbing-methods-invoked-by-a-framework</id>
     <content type="html"><![CDATA[<p>In a <a href="https://github.com/rspec/rspec-mocks/issues/78">github issue</a> reported to
 the <a href="https://github.com/rspec/rspec-mocks">rspec-mocks</a> project, the user had
@@ -577,7 +577,7 @@ no stubbing of APIs our code isn&rsquo;t invoking.</p>
   <entry>
     <title type="html"><![CDATA[rspec-rails-2.6.1 is released!]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2011/05/26/rspec-rails-261-is-released/"/>
-    <updated>2011-05-26T04:24:04+02:00</updated>
+    <updated>2011-05-26T03:24:04+01:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2011/05/26/rspec-rails-261-is-released</id>
     <content type="html"><![CDATA[<p>This is a bug fix release that is compatible with the rails-3.0.0 to 3.0.7, 3.0.8.rc1, and 3.1.0.rc1 (it is mostly, but not fully compatible with but not rails-3.1.0.beta1).</p>
 

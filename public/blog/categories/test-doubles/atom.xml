@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Test Doubles | David Chelimsky]]></title>
   <link href="http://blog.davidchelimsky.net/blog/categories/test-doubles/atom.xml" rel="self"/>
   <link href="http://blog.davidchelimsky.net/"/>
-  <updated>2013-09-18T07:25:11+02:00</updated>
+  <updated>2013-09-28T13:06:41+01:00</updated>
   <id>http://blog.davidchelimsky.net/</id>
   <author>
     <name><![CDATA[David]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Avoid stubbing methods invoked by a framework]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2011/09/23/avoid-stubbing-methods-invoked-by-a-framework/"/>
-    <updated>2011-09-23T01:23:55+02:00</updated>
+    <updated>2011-09-23T00:23:55+01:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2011/09/23/avoid-stubbing-methods-invoked-by-a-framework</id>
     <content type="html"><![CDATA[<p>In a <a href="https://github.com/rspec/rspec-mocks/issues/78">github issue</a> reported to
 the <a href="https://github.com/rspec/rspec-mocks">rspec-mocks</a> project, the user had
@@ -254,7 +254,7 @@ no stubbing of APIs our code isn&rsquo;t invoking.</p>
   <entry>
     <title type="html"><![CDATA[A case against a case against mocking and stubbing]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2008/12/11/a-case-against-a-case-against-mocking-and-stubbing/"/>
-    <updated>2008-12-11T12:08:00+01:00</updated>
+    <updated>2008-12-11T11:08:00+00:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2008/12/11/a-case-against-a-case-against-mocking-and-stubbing</id>
     <content type="html"><![CDATA[<p>In his blog entitled <a href="http://cardarella.blogspot.com/2008/12/case-against-mocking-and-stubbing.html">A case against Mocking and Stubbing</a>, Brian Cardarella says</p>
 

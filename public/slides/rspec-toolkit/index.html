@@ -1,0 +1,1148 @@
+<!--
+    Google HTML5 slide template
+
+    Authors: Luke Mahé (code)
+    Marcin Wichary (code and design)
+
+    Dominic Mazzoni (browser compatibility)
+    Charles Chen (ChromeVox support)
+
+    URL: http://code.google.com/p/html5slides/
+
+
+formatters
+- progress
+- documentation
+- profile
+- html
+- json
+- tap
+- instafail
+- nyan
+
+  -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The RSpec Toolkit</title>
+    <meta charset='utf-8'/>
+    <script type='text/javascript' src='html5slides/slides.js'></script>
+    <script type='text/javascript' src='js/jquery-1.7.2.min.js'></script>
+    <script type='text/javascript'>
+      $(document).ready(function() {
+        $('a').attr('target', '_blank');
+      });
+    </script>
+    <style>
+      article.top p,
+      article.top img,
+      article.top h1,
+      article.top pre,
+      article.top ul { position: relative; top: -150px; }
+      .url { font-size: 0.75em; text-align: center }
+      article.takahashi h1 { text-align: center }
+      h1.more-center { position: relative; left: 150px; }
+      .center { text-align: center }
+      .wrap {
+        float: left;
+        position: relative;
+        left: 50%;
+      }
+
+      .content {
+        float: left;
+        position: relative;
+        left: -50%;
+      }
+      .gray { background-color: gray }
+      .shell {
+
+      }
+    </style>
+    <script type="application/javascript">
+
+    </script>
+  </head>
+
+  <body style='display: none'>
+    <section class='slides'>
+
+      <article>
+        <h1>
+          The RSpec Toolkit
+        </h1>
+        <p>
+          David Chelimsky<br/>
+          7 Sept 2012<br/>
+          Windy City Rails
+        </p>
+      </article>
+
+      <article class="center">
+        <br/>
+        <br/>
+        <img src="images/drw.png"/>
+        <br/>
+        <br/>
+        <div class="url">
+          <a href="http://drw.com">http://drw.com</a>
+        </div>
+      </article>
+
+      <article class="center">
+        <br/>
+        <img src="images/rspec-prag.png"/>
+        <br/>
+        <br/>
+        <div class="url">
+          <a href="http://pragprog.com/book/achbd/the-rspec-book"
+>http://pragprog.com/book/achbd/the-rspec-book</a>
+        </div>
+      </article>
+
+      <article style="text-align: center">
+        <br/>
+        <img src="images/micronaut.png"/>
+      </article>
+
+      <article class="top">
+        <br/>
+        <br/>
+        <h1>
+          Each example has its own <span style="color: green;">metadata</span>,
+          and you can add filters or modules to run/disable/enhance examples
+          based on that metadata at run time.
+        </h1>
+      </article>
+
+      <article class="takahashi">
+        <h1>
+          rspec-core-2.0 < micronaut
+        </h1>
+      </article>
+
+      <article>
+        <div style="text-align:center;">
+          <br/>
+          <br/>
+          <br/>
+          <img src="html5slides/images/metadata.png"/>
+        </div>
+      </article>
+
+      <article class="top">
+        <h1>
+          example group metadata
+        </h1>
+        <pre>
+group = describe Something do
+end
+
+pp group.metadata
+
+# {:example_group=>
+#   {:description_args=>[Something],
+#    :caller=> [ ... ]}}
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          example metadata
+        </h1>
+        <pre>
+example = nil
+
+describe Something do
+  example = it "does something" do
+  end
+end
+
+pp example.metadata
+
+# { :example_group => { ... },
+#   :description_args => ["does something"],
+#   :caller=>[ ... ]
+# }
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          metadata - lazy keys
+        </h1>
+        <pre>
+describe Something do
+  it "does something" do
+    # ...
+  end
+end
+
+example.metadata[:file_path]        # path/to/something_spec.rb
+example.metadata[:line_number]      # 2
+example.metadata[:location]         # path/to/something_spec.rb:2
+example.metadata[:description]      # does something
+example.metadata[:full_description] # Something does something
+</pre>
+      </article>
+
+      <article class="takahashi">
+        <h1>
+          metadata in formatters
+        </h1>
+      </article>
+
+      <article>
+        <pre>
+# in any formatter:
+
+def start(example_count); end
+
+def example_group_started(example_group); end
+
+def example_group_finished(example_group); end
+
+def example_started(example); end
+
+def example_passed(example); end
+
+def example_pending(example); end
+
+def example_failed(example); end
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          built-in formatters
+        </h1>
+        <pre>
+--format progress
+--format documentation
+--format html
+--format textmate
+--format json # coming in rspec-2.12
+</pre>
+      </article>
+
+      <article class="top">
+        <h1 class="center">
+          documentation formatter
+        </h1>
+        <pre style="position: relative; top: -165px">
+def example_passed(example)
+  puts example.metadata[:description]
+end
+</pre>
+        <div class="center" style="position: relative; top: -20px">
+          <img src="images/documentation-formatter.png"/>
+        </div>
+      </article>
+
+      <article class="top">
+        <h1 class="center">
+          replay commands (console formatters)
+        </h1>
+        <pre style="position: relative; top: -165px">
+def dump_commands_to_rerun_failed_examples
+  puts "rspec #{example.metadata[:location]}")
+end
+</pre>
+        <div class="center" style="position: relative; top: -20px">
+          <img src="images/ind-spec-commands.png"/>
+        </div>
+      </article>
+
+      <article class="top">
+        <h1 class="center">
+          html formatter
+        </h1>
+        <pre style="position: relative; top: -165px">
+example.metadata[:execution_result][:run_time]
+</pre>
+        <div style="position: relative; top: -20px; left: -20px;">
+          <img src="images/html-formatter.png"/>
+        </div>
+      </article>
+
+      <article class="top">
+        <h1>
+          3rd-party formatters
+        </h1>
+        <pre>
+--require rspec/instafail --format RSpec::Instafail
+--format Fuubar
+--format NyanCatMusicFormatter
+</pre>
+      </article>
+
+      <article class="takahashi" style="background-color: #D8D8D8;">
+        <h1>
+          filters
+        </h1>
+      </article>
+
+      <article class="top">
+        <h1>
+          focus on example
+        </h1>
+        <pre>
+RSpec.configure do |config|
+  config.run_all_when_everything_filtered = true
+  config.filter_run :focus => true
+end
+
+describe Account do
+  it "accepts deposits", :focus => true do
+  end
+
+  it "prevents overdraft" do
+  end
+end
+
+# { :example_group => { ... },
+#   :description_args => ["accepts deposits"],
+#   :focus => true
+# }
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          focus on group
+        </h1>
+        <pre>
+RSpec.configure do |config|
+  config.run_all_when_everything_filtered = true
+  config.filter_run :focus => true
+end
+
+describe Account, :focus => true do
+  it "accepts deposits" do
+  end
+
+  it "prevents overdraft" do
+  end
+end
+
+# { :example_group => {
+#     :description_args => [Account],
+#     :focus => true
+# }}
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          exclusions
+        </h1>
+        <pre>
+RSpec.configure do |config|
+  config.run_all_when_everything_filtered = true
+  config.filter_run_excluding :slow => true
+end
+
+describe Account do
+  it "accepts deposits", :slow => true do
+  end
+
+  it "prevents overdraft" do
+  end
+end
+
+# { :example_group => { ... },
+#   :description_args => ["accepts deposits"],
+#   :slow => true
+# }
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          arbitrary metadata
+        </h1>
+        <pre>
+RSpec.configure do |config|
+  config.filter_run_including :iteration => 1
+end
+
+describe Account do
+  it "accepts deposits", :iteration => 1 do
+  end
+
+  it "prevents overdraft" do
+  end
+end
+
+# { :example_group => { ... },
+#   :description_args => ["accepts deposits"],
+#   :iteration => 1
+# }
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          symbols
+        </h1>
+        <pre>
+RSpec.configure do |config|
+  # this will be the default in rspec-3.0
+  config.treat_symbols_as_metadata_keys_with_true_values = true
+end
+
+describe Account do
+  it "accepts deposits", :foo do
+  end
+
+  it "prevents overdraft" do
+  end
+end
+
+# { :example_group => { ... },
+#   :description_args => ["accepts deposits"],
+#   :foo => true
+# }
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>conditional filters</h1>
+        <pre>
+describe Ruby19OnlyFeature, :if => RUBY_VERSION >= "1.9" do
+  # ...
+end
+
+describe NotOn186, :unless => RUBY_VERSION == "1.8.6" do
+  # ...
+end
+
+describe "generate gold master", :if => ENV['GENERATE'] do
+  # ...
+end
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>before/after hooks</h1>
+        <pre>
+RSpec.configure do |config|
+  config.before(:each, :load_settings) do
+    MyApp::Settings.load # expensive, but memoized
+  end
+end
+
+describe "something that needs settings", :load_settings do
+  # ...
+end
+
+describe "something that doesn't need settings" do
+  # ...
+end
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>specialized groups</h1>
+        <pre>
+# in rspec-rails
+
+RSpec::configure do |c|
+  def c.escaped_path(*parts)
+    Regexp.compile(parts.join('[\\\/]'))
+  end
+
+  c.include RSpec::Rails::RequestExampleGroup,
+    :type => :request,
+    :example_group => {
+      :file_path => c.escaped_path(%w[spec (requests|integration)])
+    }
+
+  c.include RSpec::Rails::ControllerExampleGroup,
+    :type => :controller,
+    :example_group => {
+      :file_path => c.escaped_path(%w[spec controllers])
+    }
+end
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>include helper module</h1>
+        <pre>
+RSpec.configure do |config|
+  config.include FakeFS::SpecHelpers, :fakefs
+end
+
+describe "something that writes files", :fakefs => true do
+  # ...
+end
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          pending
+        </h1>
+        <pre>
+describe Account do
+  it "accepts deposits" do
+  end
+
+  it "prevents overdraft", :pending => true do
+  end
+end
+
+# { :description_args => ["prevents overdraft"],
+#   :pending => true
+# }
+</pre>
+      </article>
+
+      <article class="takahashi" style="background-color: #D8D8D8;">
+        <h1>
+          aliases
+        </h1>
+      </article>
+
+      <article>
+        <pre>
+RSpec.configuration do |c|
+  # these two are built-in
+  c.alias_example_to :focus,   :focus   => true
+  c.alias_example_to :pending, :pending => true
+end
+
+describe Account do
+  # it "accepts deposits", :focus => true do
+  focus "accepts deposits" do
+  end
+
+  # it "prevents overdraft", :pending => true do
+  pending "prevents overdraft" do
+  end
+end
+</pre>
+      </article>
+
+      <article>
+        <pre>
+RSpec.configuration do |c|
+  # ... and so is this
+  c.alias_example_to :xit,
+                     :pending => 'Temporarily disabled with xit'
+end
+
+describe Account do
+  # it "prevents overdraft",
+  #    :pending => 'Temporarily disabled with xit'
+  xit "prevents overdraft" do
+  end
+
+  it "accepts deposits" do
+  end
+end
+</pre>
+      </article>
+
+      <article>
+        <pre>
+RSpec.configuration do |c|
+  # Add your own:
+  c.alias_example_to :next,
+                     :pending => 'Next iteration'
+end
+
+describe Account do
+  it "accepts deposits" do
+  end
+
+  next "prevents overdraft" do
+  end
+end
+</pre>
+      </article>
+
+      <article class="takahashi" style="background-color: #D8D8D8;">
+        <h1>
+          configuration
+        </h1>
+      </article>
+
+      <article class="top">
+        <h1>
+          RSpec.configuration
+        </h1>
+        <pre>
+RSpec.configuration do |c|
+  # attributes
+  c.default_path = "./behavior"
+  c.output_stream = File.new("./rspec.out")
+  c.error_stream = File.new("./rspec.err")
+  c.fail_fast = true
+  # will be default in rspec-3.0
+  c.treat_symbols_as_metadata_keys_with_true_values = true
+
+  # methods
+  c.filter_run           :focus # including
+  c.filter_run_including :focus
+  c.filter_run_excluding :slow
+  c.mock_with :mocha
+  c.expect_with :stdlib
+end
+      </article>
+
+      <article class="top">
+        <h1>
+          command line
+        </h1>
+        <pre>
+# display all command line options
+
+rspec --help
+Usage: rspec [options] [files or directories]
+
+    -I PATH                          Specify PATH to add to $LOAD_PATH (may be used more than once).
+    -r, --require PATH               Require a file.
+    -O, --options PATH               Specify the path to a custom options file.
+        --order TYPE[:SEED]          Run examples by the specified order type.
+                                       [default] files are ordered based on the underlying file
+                                                 system's order
+                                       [rand]    randomize the order of files, groups and examples
+                                       [random]  alias for rand
+                                       [random:SEED] e.g. --order random:123
+        --seed SEED                  Equivalent of --order rand:SEED.
+
+
+      </article>
+
+      <article class="top">
+        <h1>
+          command line - tags
+        </h1>
+        <pre>
+# tag is synonymous w/ filter
+
+rspec --tag focus:true # adds to any hard-coded filters
+rspec --tag ~slow:true # examples _not_ tagged w/ slow:true
+rspec --tag ~slow:true --tag issue:137 # tags are additive
+
+rspec --tag focus
+rspec --tag ~slow
+rspec --tag ~slow --tag issue:137
+      </article>
+
+      <article class="top">
+        <h1>
+          local options: ./.rspec
+        </h1>
+        <pre>
+--color
+--order random
+--format progress
+--profile
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          global options: ~/.rspec
+        </h1>
+        <pre>
+--color
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          "profiles" using --options
+        </h1>
+        <pre>
+# load current-iteration.opts instead of ./.rspec and ~/.rspec
+rspec --options current-iteration.opts
+</pre>
+        <pre>
+# in ./current-iteration.opts
+--tag iteration:27
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>precedence</h1>
+        <ul>
+          <li>command line</li>
+          <li>./.rspec</li>
+          <li>~/.rspec</li>
+          <li>RSpec.configuration</li>
+        </ul>
+        <p style="margin-top: 30px">or, with --options option</p>
+        <ul>
+          <li>command line</li>
+          <li>custom options file</li>
+          <li>RSpec.configuration</li>
+        </ul>
+      </article>
+
+      <article class="top">
+        <h1>pro tip</h1>
+        <p>
+          Keep structural configuration (before/after hooks,
+          includes, etc) in RSpec.configuration and keep run-time
+          configuration (filters, order, fail-fast, etc) on the command
+          line and in options files.
+        </p>
+        <pre>
+# in spec/spec_helper.rb
+RSpec.configuration do |config|
+  config.include FakeFS::SpecHelpers, :fakefs
+
+  # exception to this guideline
+  config.run_all_when_everything_filtered = true
+  config.filter_run_including :focus
+end
+
+# in .rspec
+--color
+--format documentation
+</pre>
+
+      </article>
+
+      <article class="takahashi" style="background-color: #D8D8D8;">
+        <h1>
+          rspec-expectations
+        </h1>
+      </article>
+
+      <article class="top">
+        <h1>
+          basic syntax: should
+        </h1>
+        <pre>
+actual.should matcher
+actual.should matcher, message
+actual.should_not matcher
+actual.should_not matcher, message
+
+#examples
+account.balance.should eq Money.new(1_000_000, :USD)
+account.overdrawn?.should be_false,
+  "expected account not to be overdrawn"
+list.should_not be_empty
+list.should_not be_empty, "expected at least one item"
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          problem
+        </h1>
+        <pre>
+article.comments.should # NoMethodError
+
+# because ActiveRecord::CollectionProxy removes most
+# methods (including should and should_not)
+instance_methods.each { |m|
+  undef_method m unless
+  m.to_s =~ /^(?:nil\?|send|object_id|to_a)$|^__|^respond_to|proxy_/
+ }
+</pre>
+        <div class="url">
+          <a href="https://github.com/rails/rails/blob/v3.2.8/activerecord/lib/active_record/associations/collection_proxy.rb#L39"
+             >https://github.com/rails/rails/blob/v3.2.8/<br/>activerecord/lib/active_record/associations/collection_proxy.rb#L39</a>
+        </div>
+      </article>
+
+      <article class="top">
+        <h1>
+          workaround
+        </h1>
+        <pre>
+# since rspec-expectations-2.11.0
+
+RSpec.configure do |c|
+  c.add_should_and_should_not_to ActiveRecord::CollectionProxy
+end
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          solution: expect [not_]to
+        </h1>
+        <pre>
+# optional syntax since rspec-expectations-2.11.0
+expect(actual).to matcher
+expect(actual).to matcher, message
+expect(actual).not_to matcher
+expect(actual).not_to matcher, message
+
+#examples
+expect(account.balance).to eq Money.new(1_000_000, :USD)
+expect(account.overdrawn?).to be_false,
+  "expected account not to be overdrawn"
+expect(list).not_to be_empty
+expect(list).not_to be_empty, "expected at least one item"
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          operator matchers
+        </h1>
+        <pre>
+actual.should == expected      |   # not supported with expect
+actual.should =~ expected      |   # not supported with expect
+actual.should === expected     |   # not supported with expect
+                               |
+actual.should be < expected    |   expect(actual).to be < expected
+actual.should be <= expected   |   expect(actual).to be <= expected
+actual.should be >= expected   |   expect(actual).to be >= expected
+actual.should be > expected    |   expect(actual).to be > expected
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          block matchers
+        </h1>
+        <pre>
+# underlying
+lambda { ... }.should matcher
+lambda { ... }.should_not matcher
+
+# original "expect" DSL
+expect { ... }.to matcher
+expect { ... }.not_to matcher
+
+# examples
+expect { something }.to raise_exception
+expect { something }.not_to change{Widget.count}
+</pre>
+      </article>
+
+      <article class="takahashi" style="background-color: #D8D8D8;">
+        <h1>
+          subject
+        </h1>
+      </article>
+
+      <article>
+        <pre>
+describe Article do
+  it "validates presence of title" do
+    article = Article.new(:title => nil)
+    article.valid?.should be_false
+    article.errors[:title].should include "can't be blank"
+  end
+end
+</pre>
+      </article>
+
+      <article>
+        <pre>
+describe Article do
+  it "validates presence of title" do
+    article = Article.new(:title => nil)
+    article.valid?.should be_false
+    article.errors[:title].should include "can't be blank"
+  end
+
+  it "validates presence of author" do
+    article = Article.new(:author => nil)
+    article.valid?.should be_false
+    article.errors[:author].should include "can't be blank"
+  end
+end
+</pre>
+      </article>
+
+      <article>
+        <pre>
+describe Article do
+  it "validates presence of title" do
+    described_class.new.should validate_presence_of :title
+  end
+
+  it "validates presence of author" do
+    described_class.new.should validate_presence_of :author
+  end
+end
+</pre>
+      </article>
+
+      <article>
+        <pre>
+describe Article do
+  it { should validate_presence_of :title }
+  it { should validate_presence_of :author }
+end
+</pre>
+        <pre class="shell">
+# output
+Article
+  should validate presence of :title
+  should validate presence of :author
+</pre>
+      </article>
+
+      <article class="center">
+        <img src="images/hammer.jpeg" height="316" width="720">
+      </article>
+
+      <article>
+        <pre>
+describe Article do
+  it { should validate_presence_of :title }  # nail!
+  it { should validate_presence_of :author } # nail!
+
+  it { should have_many :comments }          # screw!
+end
+</pre>
+      </article>
+
+      <article class="takahashi">
+        <h1>
+          validations are behavior<br/>
+          associations are structure
+        </h1>
+      </article>
+
+      <article>
+        <pre>
+describe Article do
+  it { should validate_presence_of :title }
+  it { should validate_presence_of :author }
+
+  it "sorts comments in reverse by default" do
+    article = Article.create!
+    comments = [
+      article.comments.create!,
+      article.comments.create!
+    ]
+    article.comments.should eq comments.reverse
+  end
+</pre>
+      </article>
+
+      <article>
+        <pre>
+describe Account do
+  # good: generic statement about all accounts
+  it { should validate_presence_of :owner }
+
+  # bad: specific statement about a specific account
+  its(:balance) { should eq Money.new(0, :USD) }
+end
+
+# Account
+#   should validate presence of :owner
+#   balance
+#     should eq $0
+</pre>
+      </article>
+
+      <article>
+        <pre>
+describe Account do
+  it { should validate_presence_of :owner }
+
+  # slightly less bad given some context
+  describe "defaults" do
+    its(:balance) { should eq Money.new(0, :USD) }
+  end
+end
+
+# Account
+#   should validate presence of :owner
+#   defaults
+#     balance
+#       should eq $0
+</pre>
+      </article>
+
+      <article>
+        <pre>
+describe Account do
+  it { should validate_presence_of :owner }
+
+  # better: provides necessary context with no less code
+  # but in a simpler, more readable form
+  it "has a default balance of $0" do
+    Account.new.balance.should eq Money.new(0, :USD)
+  end
+end
+
+# Account
+#   should validate presence of :owner
+#   has a default balance of $0
+</pre>
+      </article>
+
+      <article>
+        <pre style="position: relative; top: -30px">
+describe Account do
+  it { should validate_presence_of :owner }
+
+  describe "defaults" do
+    its(:balance) { should eq Money.new(0, :USD) }
+  end
+
+  context "after a deposit" do
+    subject { Account.new.tap { |a| a.deposit Money.new(25, :USD) } }
+    its(:balance) { should eq Money.new(25, :USD) }
+  end
+end
+
+# Account
+#   should validate presence of :owner
+#   defaults
+#     balance
+#       should eq $0
+#   after a deposit
+#     balance
+#       should eq $25
+</pre>
+      </article>
+
+      <article>
+        <pre style="position: relative; top: -30px">
+describe Account do
+  it { should validate_presence_of :owner }
+
+  it "has a default balance of $0" do
+    Account.new.balance.should eq Money.new(0, :USD)
+  end
+
+  it "increases its balance by amount deposited" do
+    account = Account.new
+    account.deposit Money.new(25, :USD)
+    expect(account.balance).to eq Money.new(25, :USD)
+  end
+end
+
+# Account
+#   should validate presence of :owner
+#   has a default balance of $0
+#   increases its balance by amount deposited
+</pre>
+      </article>
+
+      <article class="takahashi" style="background-color: #D8D8D8;">
+        <h1>
+          readability
+        </h1>
+      </article>
+
+      <article class="top">
+        <h1>
+          start simple
+        </h1>
+
+        <pre>
+describe Person do
+  describe "#full_name" do
+    it "concats first_name and last_name" do
+      person = Person.new :first_name => "Ray",
+                          :last_name => "Hightower"
+      expect(person.full_name).to eq "Ray Hightower"
+    end
+  end
+end
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          assert <br/> (if that's how you roll)
+        </h1>
+
+        <pre>
+describe Person do
+  describe "#full_name" do
+    it "concats first_name and last_name" do
+      person = Person.new :first_name => "Ray",
+                          :last_name => "Hightower"
+      assert_equal "Ray Hightower", person.full_name
+    end
+  end
+end
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          pro tip
+        </h1>
+
+        <pre>
+# when you see this:
+assert_equal "Ray", person.first_name
+
+# think this:
+assert_equal_Ray person.first_name
+
+# and you're less likely to do this:
+assert_equal person.first_name, "Ray"
+# => Expected: "Joe"
+# =>   Actual: "Ray"
+
+</pre>
+      </article>
+
+      <article class="top">
+        <h1>
+          wrong
+        </h1>
+        <pre>
+$ gem install wrong
+</pre>
+
+        <pre>
+require 'wrong/adapters/rspec'
+
+describe Person do
+  describe "#full_name" do
+    it "concats first_name and last_name" do
+      person = Person.new :first_name => "Steve",
+                          :last_name => "Conover"
+      expect_that { person.full_name == "Steve Conover" }
+    end
+  end
+end
+</pre>
+        <div class="url" style="position:relative; top: -100px">
+          <a href="https://github.com/sconover/wrong">https://github.com/sconover/wrong</a>
+        </div>
+      </article>
+
+      <article class="top">
+        <h1>
+          tell a story
+        </h1>
+        <pre>
+describe Person do
+  describe "#full_name" do
+    it "concats first_name and last_name"
+    it "ignores a nil first_name"
+    it "ignores a nil last_name"
+  end
+end
+
+# Person
+#   #full_name
+#     concats first_name and last_name
+#     ignores a nil first_name
+#     ignores a nil last_name
+</pre>
+      </article>
+
+      <article class="takahashi">
+        <h1>
+          ?? questions ??
+        </h1>
+      </article>
+
+    </section>
+  </body>
+</html>

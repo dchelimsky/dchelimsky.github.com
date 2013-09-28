@@ -4,7 +4,7 @@
   <title><![CDATA[David Chelimsky]]></title>
   <link href="http://blog.davidchelimsky.net/atom.xml" rel="self"/>
   <link href="http://blog.davidchelimsky.net/"/>
-  <updated>2013-09-18T07:25:11+02:00</updated>
+  <updated>2013-09-28T13:06:41+01:00</updated>
   <id>http://blog.davidchelimsky.net/</id>
   <author>
     <name><![CDATA[David]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Myron Marston and Andy Lindeman are RSpec's new project leads]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/"/>
-    <updated>2012-11-28T18:16:00+01:00</updated>
+    <updated>2012-11-28T17:16:00+00:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads</id>
     <content type="html"><![CDATA[<h2>TL;DR</h2>
 
@@ -106,7 +106,7 @@ pleasure.</p>
   <entry>
     <title type="html"><![CDATA[rspec-2.12 is released]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2012/11/13/rspec-212-is-released/"/>
-    <updated>2012-11-13T05:37:04+01:00</updated>
+    <updated>2012-11-13T04:37:04+00:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2012/11/13/rspec-212-is-released</id>
     <content type="html"><![CDATA[<p>rspec-2.12 is a minor release (per <a href="http://semver.org/">SemVer</a>), which
 includes numerous enhancements and bug fixes. It is fully backward compatible
@@ -296,7 +296,7 @@ original method (Myron Marston).</li>
   <entry>
     <title type="html"><![CDATA[Agile Testing and BDD eXchange 2012 in NYC]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/"/>
-    <updated>2012-09-22T17:04:00+02:00</updated>
+    <updated>2012-09-22T16:04:00+01:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc</id>
     <content type="html"><![CDATA[<p>I&rsquo;m excited to be presenting on Behavior-Driven Objects at the Agile Testing &amp; BDD eXchange in NYC on Monday, October 1st (details below). From the <a href="http://skillsmatter.com/podcast/agile-scrum/david-chelimsky-talk-tbc">conference website</a>:</p>
 
@@ -318,9 +318,9 @@ original method (Myron Marston).</li>
   
   <entry>
     <title type="html"><![CDATA[rspec-2.11 is released!]]></title>
-    <link href="http://blog.davidchelimsky.net/blog/2012/07/08/rspec-211-is-released/"/>
-    <updated>2012-07-08T00:00:42+02:00</updated>
-    <id>http://blog.davidchelimsky.net/blog/2012/07/08/rspec-211-is-released</id>
+    <link href="http://blog.davidchelimsky.net/blog/2012/07/07/rspec-211-is-released/"/>
+    <updated>2012-07-07T23:00:42+01:00</updated>
+    <id>http://blog.davidchelimsky.net/blog/2012/07/07/rspec-211-is-released</id>
     <content type="html"><![CDATA[<p>rspec-2.11.0 is out and filled with a bunch of new features.  Big thanks to all
 who contributed, especially <a href="http://twitter.com/justinko">Justin Ko</a>, <a href="http://alindeman.github.com/">Andy
 Lindeman</a> (the newest addition to the RSpec core
@@ -479,7 +479,7 @@ loads (Andy Lindeman)</li>
   <entry>
     <title type="html"><![CDATA[Spec smell: explicit use of subject]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2012/05/14/spec-smell-explicit-use-of-subject/"/>
-    <updated>2012-05-14T04:13:46+02:00</updated>
+    <updated>2012-05-14T03:13:46+01:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2012/05/14/spec-smell-explicit-use-of-subject</id>
     <content type="html"><![CDATA[<h2>TL;DR</h2>
 
@@ -747,7 +747,7 @@ intention revealing name in standard examples:</p>
   <entry>
     <title type="html"><![CDATA[rspec-mocks and rspec-rails-2.10.1 are released!]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2012/05/05/rspec-mocks-and-rspec-rails-2101-are-released/"/>
-    <updated>2012-05-05T08:34:08+02:00</updated>
+    <updated>2012-05-05T07:34:08+01:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2012/05/05/rspec-mocks-and-rspec-rails-2101-are-released</id>
     <content type="html"><![CDATA[<p>These are patch releases recommended for anybody who has already upgraded to 2.10.</p>
 
@@ -784,7 +784,7 @@ intention revealing name in standard examples:</p>
   <entry>
     <title type="html"><![CDATA[rspec-2.10 is released!]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2012/05/04/rspec-210-is-released/"/>
-    <updated>2012-05-04T03:29:34+02:00</updated>
+    <updated>2012-05-04T02:29:34+01:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2012/05/04/rspec-210-is-released</id>
     <content type="html"><![CDATA[<h3>API Docs (RDoc)</h3>
 
@@ -905,7 +905,7 @@ environment (Nathan Broadbent)</li>
   <entry>
     <title type="html"><![CDATA[rspec-expectations-2.9.1 is released!]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2012/04/03/rspec-expectations-291-is-released/"/>
-    <updated>2012-04-03T21:18:10+02:00</updated>
+    <updated>2012-04-03T20:18:10+01:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2012/04/03/rspec-expectations-291-is-released</id>
     <content type="html"><![CDATA[<p>This is a bug-fix only release, and is recommended for everybody using rspec-2.9.</p>
 
@@ -926,9 +926,9 @@ environment (Nathan Broadbent)</li>
   
   <entry>
     <title type="html"><![CDATA[rspec-2.9.0 is released!]]></title>
-    <link href="http://blog.davidchelimsky.net/blog/2012/03/18/rspec-290-is-released/"/>
-    <updated>2012-03-18T00:10:59+01:00</updated>
-    <id>http://blog.davidchelimsky.net/blog/2012/03/18/rspec-290-is-released</id>
+    <link href="http://blog.davidchelimsky.net/blog/2012/03/17/rspec-290-is-released/"/>
+    <updated>2012-03-17T23:10:59+00:00</updated>
+    <id>http://blog.davidchelimsky.net/blog/2012/03/17/rspec-290-is-released</id>
     <content type="html"><![CDATA[<p>rspec-2.9.0 is released wtih lots of bug fixes and a few minor feature improvements as well. Enjoy!</p>
 
 <h3>rspec-core-2.9.0 / 2012-03-17</h3>
@@ -1034,7 +1034,7 @@ schema format is &ldquo;:sql&rdquo;. (Andrey Voronkov)</li>
   <entry>
     <title type="html"><![CDATA[Validations are behavior, associations are structure]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2012/02/12/validations-are-behavior-associations-are-structure/"/>
-    <updated>2012-02-12T23:53:27+01:00</updated>
+    <updated>2012-02-12T22:53:27+00:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2012/02/12/validations-are-behavior-associations-are-structure</id>
     <content type="html"><![CDATA[<h2>TL;DR:</h2>
 
@@ -1201,7 +1201,7 @@ have you run into situations where you wished you had?</p>
   <entry>
     <title type="html"><![CDATA[rspec-rails-2.8.1 is released]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2012/01/05/rspec-rails-281-is-released/"/>
-    <updated>2012-01-05T06:43:28+01:00</updated>
+    <updated>2012-01-05T05:43:28+00:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2012/01/05/rspec-rails-281-is-released</id>
     <content type="html"><![CDATA[<h2>Bug fix release</h2>
 
@@ -1229,7 +1229,7 @@ rails-3.2.0.rc2 (or 3.2.0 once it&rsquo;s out).</p>
   <entry>
     <title type="html"><![CDATA[RSpec-2.8 is released!]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2012/01/05/rspec-28-is-released/"/>
-    <updated>2012-01-05T03:38:03+01:00</updated>
+    <updated>2012-01-05T02:38:03+00:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2012/01/05/rspec-28-is-released</id>
     <content type="html"><![CDATA[<p>We released RSpec-2.8.0 today with a host of new features and improvements
 since 2.7. Some of the highlights are described below, but you can see the
@@ -1256,7 +1256,7 @@ full changelogs at:</p>
 
 
 <p><a href="http://rspec.info">http://rspec.info</a> is now just a one pager (desperate for
-some design love &ndash; volunteers please email <a href="&#109;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#114;&#115;&#112;&#x65;&#99;&#45;&#117;&#115;&#x65;&#114;&#115;&#64;&#114;&#x75;&#98;&#x79;&#x66;&#x6f;&#114;&#103;&#101;&#x2e;&#111;&#114;&#x67;">&#114;&#x73;&#x70;&#x65;&#x63;&#45;&#x75;&#x73;&#x65;&#x72;&#115;&#x40;&#x72;&#117;&#98;&#121;&#102;&#111;&#114;&#x67;&#101;&#46;&#111;&#x72;&#103;</a>). All the
+some design love &ndash; volunteers please email <a href="&#109;&#x61;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#114;&#115;&#x70;&#x65;&#99;&#45;&#x75;&#x73;&#x65;&#114;&#115;&#64;&#114;&#x75;&#x62;&#x79;&#x66;&#111;&#114;&#103;&#x65;&#x2e;&#x6f;&#114;&#x67;">&#114;&#x73;&#112;&#101;&#99;&#45;&#x75;&#115;&#x65;&#114;&#115;&#x40;&#x72;&#x75;&#98;&#x79;&#102;&#111;&#x72;&#x67;&#x65;&#46;&#x6f;&#114;&#x67;</a>). All the
 old pages are redirects to the relevant RDoc at <a href="http://rubydoc.info.">http://rubydoc.info.</a> RSpec-1
 info is still available at <a href="http://old.rspec.info">http://old.rspec.info</a>.</p>
 
@@ -1328,7 +1328,7 @@ re-implemented every single built-in matcher as a class.</p>
   <entry>
     <title type="html"><![CDATA[rspec-2.8.0.rc1 is released]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2011/11/06/rspec-280rc1-is-released/"/>
-    <updated>2011-11-06T18:02:40+01:00</updated>
+    <updated>2011-11-06T17:02:40+00:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2011/11/06/rspec-280rc1-is-released</id>
     <content type="html"><![CDATA[<p>I just released rspec-2.8.0.rc1, which includes releases of rspec-core,
 rspec-expectations, rspec-mocks, and rspec-rails. Changelogs for each are at:</p>
@@ -1563,7 +1563,7 @@ or two.</p>
   <entry>
     <title type="html"><![CDATA[rspec-core 2.7.1 is released!]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2011/10/20/rspec-core-271-is-released/"/>
-    <updated>2011-10-20T14:13:43+02:00</updated>
+    <updated>2011-10-20T13:13:43+01:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2011/10/20/rspec-core-271-is-released</id>
     <content type="html"><![CDATA[<h3>rspec-core-2.7.1</h3>
 
@@ -1580,7 +1580,7 @@ or two.</p>
   <entry>
     <title type="html"><![CDATA[rspec-2.7.0 is released!]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2011/10/16/rspec-270-is-released/"/>
-    <updated>2011-10-16T22:28:00+02:00</updated>
+    <updated>2011-10-16T21:28:00+01:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2011/10/16/rspec-270-is-released</id>
     <content type="html"><![CDATA[<p>We&rsquo;re pleased to announce the release of rspec-2.7.0. Release notes for each
 gem are listed below, but here are a couple of highlights:</p>
@@ -1768,7 +1768,7 @@ misses RSpec&rsquo;s configuration (David Chelimsky)</li>
   <entry>
     <title type="html"><![CDATA[Avoid stubbing methods invoked by a framework]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2011/09/23/avoid-stubbing-methods-invoked-by-a-framework/"/>
-    <updated>2011-09-23T01:23:55+02:00</updated>
+    <updated>2011-09-23T00:23:55+01:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2011/09/23/avoid-stubbing-methods-invoked-by-a-framework</id>
     <content type="html"><![CDATA[<p>In a <a href="https://github.com/rspec/rspec-mocks/issues/78">github issue</a> reported to
 the <a href="https://github.com/rspec/rspec-mocks">rspec-mocks</a> project, the user had
@@ -2006,7 +2006,7 @@ no stubbing of APIs our code isn&rsquo;t invoking.</p>
   <entry>
     <title type="html"><![CDATA[Stop typing "bundle exec"]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2011/07/18/stop-typing-bundle-exec/"/>
-    <updated>2011-07-18T15:15:26+02:00</updated>
+    <updated>2011-07-18T14:15:26+01:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2011/07/18/stop-typing-bundle-exec</id>
     <content type="html"><![CDATA[<p><a href="http://gembundler.com/">Bundler</a> serves two primary purposes:</p>
 
@@ -2052,7 +2052,7 @@ correct version of rake is loaded.</p>
   <entry>
     <title type="html"><![CDATA[rspec-core-2.6.4 is released!]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2011/06/06/rspec-core-264-is-released/"/>
-    <updated>2011-06-06T13:47:22+02:00</updated>
+    <updated>2011-06-06T12:47:22+01:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2011/06/06/rspec-core-264-is-released</id>
     <content type="html"><![CDATA[<p><a href="http://github.com/rspec/rspec-core/compare/v2.6.3...v2.6.4">full changelog</a></p>
 
@@ -2073,9 +2073,9 @@ of color schemes.</li>
   
   <entry>
     <title type="html"><![CDATA[rake 0.9 and gem version constraints]]></title>
-    <link href="http://blog.davidchelimsky.net/blog/2011/05/29/rake-09-and-gem-version-constraints/"/>
-    <updated>2011-05-29T00:03:57+02:00</updated>
-    <id>http://blog.davidchelimsky.net/blog/2011/05/29/rake-09-and-gem-version-constraints</id>
+    <link href="http://blog.davidchelimsky.net/blog/2011/05/28/rake-09-and-gem-version-constraints/"/>
+    <updated>2011-05-28T23:03:57+01:00</updated>
+    <id>http://blog.davidchelimsky.net/blog/2011/05/28/rake-09-and-gem-version-constraints</id>
     <content type="html"><![CDATA[<p>There&rsquo;s been some confusion surrounding the rake-0.9.0 release, and I&rsquo;d like to
 take the opportunity to clarify some things and hopefully draw attention to gem
 versioning policies and their implications for everybody in the Ruby community.</p>
@@ -2350,7 +2350,7 @@ moving forward?  I look forward to your feedback.</p>
   <entry>
     <title type="html"><![CDATA[rspec-rails-2.6.1 is released!]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2011/05/26/rspec-rails-261-is-released/"/>
-    <updated>2011-05-26T04:24:04+02:00</updated>
+    <updated>2011-05-26T03:24:04+01:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2011/05/26/rspec-rails-261-is-released</id>
     <content type="html"><![CDATA[<p>This is a bug fix release that is compatible with the rails-3.0.0 to 3.0.7, 3.0.8.rc1, and 3.1.0.rc1 (it is mostly, but not fully compatible with but not rails-3.1.0.beta1).</p>
 
