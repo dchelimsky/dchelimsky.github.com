@@ -290,16 +290,20 @@ end
 
   <div class="entry-content"><p>Now that Rails uses Ruby to express database structure (migrations), it seems silly to me that we can&rsquo;t just express that right in the model classes. Something like this:</p>
 
-<pre><code>&lt;code&gt;
-class Person &lt; ActiveRecord::Base
-fields do |f|
-  f.add :first_name, :string
-  f.add :last_name, :string
-end
-end
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Person</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">fields</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">f</span><span class="o">.</span><span class="n">add</span> <span class="ss">:first_name</span><span class="p">,</span> <span class="ss">:string</span>
+</span><span class='line'>    <span class="n">f</span><span class="o">.</span><span class="n">add</span> <span class="ss">:last_name</span><span class="p">,</span> <span class="ss">:string</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>`</p>
 
 <p>Doing this would not only make models more cohesive, but it would make it easier to specify a lot about models without ever touching the database.</p>
 
