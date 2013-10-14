@@ -1,0 +1,532 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>rake 0.9 and gem version constraints - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="There&rsquo;s been some confusion surrounding the rake-0.9.0 release, and I&rsquo;d like to
+take the opportunity to clarify some things and hopefully &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/2011/05/28/rake-09-and-gem-version-constraints">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-43280332-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/slides">Slides</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">rake 0.9 and gem version constraints</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-28T17:03:57-05:00" pubdate data-updated="true">May 28<span>th</span>, 2011</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>There&rsquo;s been some confusion surrounding the rake-0.9.0 release, and I&rsquo;d like to
+take the opportunity to clarify some things and hopefully draw attention to gem
+versioning policies and their implications for everybody in the Ruby community.</p>
+
+<p>First, there are three distinct issues related to the rake release:</p>
+
+<h3>1. Backward-incompatibility</h3>
+
+<p>Rake 0.9 includes backward-incompatible changes. Per the
+<a href="https://github.com/jimweirich/rake/blob/master/CHANGES">changelog</a>:</p>
+
+<pre><code>## Version 0.9.0
+
+* *Incompatible* *change*: Rake DSL commands ('task', 'file', etc.)  are
+  no longer private methods in Object.  If you need to call 'task :xzy' inside
+  your class, include Rake::DSL into the class.  The DSL is still available at
+  the top level scope (via the top level object which extends Rake::DSL).
+</code></pre>
+
+<p>This conflicts with the way Rails, among others, uses Rake, among others.  The
+workaround recommended by <a href="https://twitter.com/dhh">@dhh</a> is to constrain the
+rake version in the Gemfiles in your Rails applications:</p>
+
+<pre><code>gem "rake", "0.8.7"
+</code></pre>
+
+<p>This is a perfectly fine short term solution to keep your applications running,
+but it won&rsquo;t be long before a gem that your Rails application depends on,
+either directly or through the transitive property of dependencies, is going to
+specify any of:</p>
+
+<pre><code>gemspec.add_dependency 'rake', '0.9.0'
+gemspec.add_dependency 'rake', '&gt;= 0.9.0'
+gemspec.add_dependency 'rake', '~&gt; 0.9.0'
+</code></pre>
+
+<p>When that happens, you&rsquo;ll need to loosen the constraint in your app if you want
+to upgrade any of the gems downstream from the gem that introduces this
+dependency. This is not a big deal because you can control the situation
+directly in your own Gemfile in your own application.</p>
+
+<h3>Libraries are not applications</h3>
+
+<p>This advice should <em>not</em>, however, be applied to any gems that depend on Rake.
+Let&rsquo;s say you&rsquo;re using two gems that both provide Rake tasks and therefore
+depend on the rake gem. At some point the maintainer of gem aaa changes the
+constraint to <code>"= 0.8.7"</code>, and the maintainer of gem bbb keeps a looser
+constraint: either <code>"&gt;= 0.8.7"</code> or <code>"~&gt; 0.8.7"</code>. You upgrade to the new version
+of aaa and everything is fine because both constraints are satisfied by
+rake-0.8.7.</p>
+
+<p>A little while down the road, the constraint in bbb changes to <code>"~&gt; 0.9.0"</code>. At
+this point you are unable to have the newest versions of aaa and bbb in the
+same application. This may not seem like a big deal because you can choose to
+not upgrade bbb at this point, but the further upstream the dependency (i.e.
+aaa depends on bbb, which depends on ccc), the more likely you are to be
+constrained in your upgrade choices.</p>
+
+<p>In short, if you are maintaining a gem that applications or other gems depend
+on, you are doing end users a disservice by locking down any upstream
+dependency at one and only one version number.</p>
+
+<p>Now here&rsquo;s the catch: while some gem maintainers follow some sort of standard
+versioning and/or release policy, there are many that don&rsquo;t.  If you put in a
+looser version constraint on a gem whose maintainers introduce breaking changes
+in patch releases, you are also doing your users a disservice. More on this
+later.</p>
+
+<h3>2. Rake is used to run tasks that depend on Rake</h3>
+
+<p>Perhaps you&rsquo;ve run into this interaction (or similar):</p>
+
+<pre><code>$ bundle install
+$ rake db:migrate
+You have already activated rake 0.9.0, but your Gemfile requires rake 0.8.7. Consider using bundle exec.
+</code></pre>
+
+<p>In this case, the application has an explicit dependency on rake-0.8.7, but
+rake-0.9.0 is installed in the shell environment. When you type <code>rake xxx</code>,
+Rubygems activates the 0.9.0 version (the newest version installed), and then
+tries to activate 0.8.7 when the app is running.</p>
+
+<p>This is a catch 22 that we&rsquo;ve been lulled into ignoring by the mere fact that
+there have not been any rake releases for a couple of years (rake-0.9.0 was
+released 2 years and 5 days after rake-0.8.7). We all expect to type <code>rake xxx</code>
+and have it just work. Why not? It&rsquo;s worked thus far, right?</p>
+
+<p>During the two years of rake-0.8.7, Bundler was born. You may remember that the
+Bundler team took a lot of heat during its early days. One of the complaints I
+remember was that people didn&rsquo;t want to have to type <code>bundle exec</code> to run a
+rake task. The result is that pretty much all apps that use Bundler and Rake
+have this in their Rakefiles:</p>
+
+<pre><code>require 'rubygems'
+require 'bundler'
+Bundler.setup
+</code></pre>
+
+<p>This enables us to type <code>rake xxx</code> and let Bundler manage loading every other
+gem besides rake, which is already loaded by Rubygems. So now when we find both
+rake-0.8.7 and 0.9.0 in our gem environment, and the app we&rsquo;re working with depends
+explicitly on 0.8.7, we have (at least) three options:</p>
+
+<h4>a. Tell bundler to install the rake command PROJECT_ROOT/bin</h4>
+
+<pre><code>bundle install --binstubs
+</code></pre>
+
+<p>Now you can run this</p>
+
+<pre><code>bin/rake xxx
+</code></pre>
+
+<h4>b. Explicitly run bundle exec</h4>
+
+<pre><code>bundle exec rake
+</code></pre>
+
+<p>In either of the first two options, Bundler controls the activation of the rake
+gem for you, which allows it to put the correct version on the <code>$LOAD_PATH</code>.</p>
+
+<h4>c. Just remove 0.9 from the current gem environment</h4>
+
+<pre><code>gem uninstall rake
+</code></pre>
+
+<p>This only works if you&rsquo;re using an isolated gemset for the current project
+(e.g. using rvm) or you simply don&rsquo;t need rake-0.9.0 on your system. It also is
+not a very reliable way to deal with this if you have any sort of automated
+build or deployment system that is installing gems into a shared gem
+environment on the build or production servers.</p>
+
+<p>The real problem here is not that we have to type a different command on the
+command line. We humans can adapt and get used to doing that. The deeper
+problem is that there are countless automation scripts out in the wild that
+depend on <code>rake xxx</code>. In order to support both versions of Rake, they will all
+have to be changed to use one of the first two solutions noted above. The cost
+of this is no small chunk of change, but it is nobody&rsquo;s fault but our own for
+failing to recognize the cyclical nature of using a versioned tool to run
+applications that might require a different version.</p>
+
+<h3>3. Not all gems expose their dependencies in a way that Bundler or Rubygems can control them</h3>
+
+<p>On my team at DRW, we tried to constrain our rake dependencies to 0.8.7 as a
+temporary measure, but each time we installed into a new gem environment we
+found that rake-0.9.0 was being installed. It turned out that a gem we depended
+on was installing rake through a back door, and with no version constraint at
+all.  The result was that neither Bundler nor Rubygems had any control over
+this installation relative to our application (Bundler told Rubygems to install
+this gem, and this gem silently installed rake). And, to make things more
+confusing, Bundler reported that it was installing rake-0.8.7 and said nothing
+about 0.9.0.</p>
+
+<p>The maintainer of that gem released new versions right away, so that issue is now
+resolved, but it&rsquo;s entirely possible that other gems you&rsquo;re using are doing the
+same (or similar). Just something to keep your eye out for.</p>
+
+<h3>What can we learn from all of this?</h3>
+
+<p>One issue this exposes is a lack of common understanding and agreement about
+how to manage releases and dependencies. The <a href="http://docs.rubygems.org/read/chapter/7">Rubygems Rational
+Versioning</a> policy and
+<a href="http://semver.org">Semantic Versioning</a> are both very sound approaches that share a common
+scheme for version numbers:</p>
+
+<p>A version has three parts: major, minor, and patch.  For example, release 3.0.0
+is a major release because the first number was incremented from 2 to 3, 3.2.0
+is a minor release because the second number was incremented from 1 to 2, and
+3.2.1 is a patch release because the third number was incremented from 0 to 1.
+Both specs state the following:</p>
+
+<ol>
+<li>Patch releases (3.2.1) should only include bug fixes and internal implementation changes.</li>
+<li>Minor releases (3.2.0) can include bug fixes, internal changes, and new features, but no breaking changes.</li>
+<li>Major releases (3.0.0) can include bug fixes, internal changes, new features, and breaking changes.</li>
+</ol>
+
+
+<p>If everybody adhered to either policy, we&rsquo;d all be able to declare our gem dependencies like this:</p>
+
+<pre><code>spec.add_dependency "foo", "&gt;= 2.3", "&lt; 3.0"
+</code></pre>
+
+<p>&hellip; or the following, oft misunderstood, shortcut for same:</p>
+
+<pre><code>spec.add_dependency "foo", "~&gt; 2.3"
+</code></pre>
+
+<p>This tells Rubygems to install the newest version that is >= 2.3.0, trusting
+that no version 2.y.x will include breaking changes.</p>
+
+<h3>RSpec</h3>
+
+<p>I&rsquo;ll confess that I didn&rsquo;t adhere to either approach with RSpec until the
+rspec-2.0.0 release, last October. I knowingly introduced breaking changes in
+the 1.x series and RSpec likely lost the confidence of a fair sum of users
+during that time.</p>
+
+<p>The good news, vis a vis RSpec, is that we&rsquo;ve been following Rubygems Rational
+Versioning since the rspec-2.0 release.  While we&rsquo;ve had a couple of
+regressions in the process (followed swiftly by patch releases that addressed
+them), there has been only one intentionally breaking change, and that was
+related to integration with another library. That change was announced,
+documented, and I don&rsquo;t recall seeing any issues reported related to it.</p>
+
+<p>We&rsquo;re not doing SemVer yet because it is more strict than RRV, and RSpec does
+not currently meet all of its criteria. I do hope, however, to have RSpec on
+SemVer before the year is out.</p>
+
+<h3>This all sounds great, but &hellip;</h3>
+
+<p>&hellip; the reality is that getting every gem developer to commit to RRV or SemVer
+is very unlikely. What those of us who do <em>can</em> do, however, is try to provide
+a balance of flexibility and safety when we declare upstream dependencies. The
+<a href="https://rubygems.org/gems/rspec-expectations">rspec-expectations</a> gem, for
+example, declares the following runtime dependency:</p>
+
+<pre><code>diff-lcs ~&gt; 1.1.2
+</code></pre>
+
+<p>This expresses an opinion that it is safe for your application (that depends on
+rspec-expectations) to depend on any 1.1.x version of diff-lcs greater than or
+equal to 1.1.2, but it is not safe to depend on 1.2.0.  While this provides a
+high degree of safety, it also provides low flexibility: if any other gem your
+app depends on depends on diff-lcs-1.2 in the future (not likely, since 1.1.2
+was released in 2004, but that&rsquo;s besides the point), you won&rsquo;t be able to use
+it with the current release of rspec-expectations, even if the diff-lcs-2.2
+release does not include any breaking changes.</p>
+
+<p>If diff-lcs was still under regular maintenance, and it&rsquo;s maintainers were
+committed to RRV or SemVer, then rspec-expectations would be able to use this
+dependency instead:</p>
+
+<pre><code>diff-lcs ~&gt; 1.2
+</code></pre>
+
+<p>This would provide significantly more flexibility in rspec-expectations&rsquo;s
+ability to play nice with other gems that also depend on diff-lcs in the same
+applciation over a longer period of time.</p>
+
+<p>Note that every gem page on <a href="http://rubygems.org">rubygems.org</a> now includes a
+recommendation to use the pessamistic constraint using a three-part version
+number (e.g. <code>rake ~&gt; 0.9.0</code>). As just discussed, this provides safety, but
+lacks long term flexibility.</p>
+
+<h3>Depending on rake</h3>
+
+<p>So what should maintainers of gems that depend on rake do now? The likelihood
+is that some end users will constrain their applications to rake <code>0.8.7</code>, and
+others will constrain them to <code>= 0.9.0</code>, <code>~&gt; 0.9.0</code>, or <code>&gt;= 0.9.0</code>. Unless Jim
+Weirich announces that rake will follow RRV or SemVer, we have to allow for the
+possibility that rake <code>0.10.0</code> will introduce new breaking changes. In this
+case, I think the responsible thing to do is make sure our gems work with both
+rake-0.8 and 0.9, and specify the dependency like this:</p>
+
+<pre><code>spec.add_runtime_dependency 'rake', '&gt;= 0.8.7', '&lt; 0.10'
+</code></pre>
+
+<p>Trusting that no rake 0.9.x version will introduce breaking changes, this
+provides the greatest flexibility to end users without exposing them to the
+risk of breaking changes in rake-0.10.0.</p>
+
+<h3>Feedback</h3>
+
+<p>I&rsquo;m curious to hear what you think about all of this. Do you think this all
+makes sense?  Do you think I&rsquo;m over or understating the importance, complexity,
+or severity of these issues?  Do you have a different approach to recommend in
+moving forward?  I look forward to your feedback.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-28T17:03:57-05:00" pubdate data-updated="true">May 28<span>th</span>, 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.davidchelimsky.net/blog/2011/05/28/rake-09-and-gem-version-constraints/" data-via="dchelimsky" data-counturl="http://blog.davidchelimsky.net/blog/2011/05/28/rake-09-and-gem-version-constraints/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/05/25/rspec-rails-261-is-released/" title="Previous Post: rspec-rails-2.6.1 is released!">&laquo; rspec-rails-2.6.1 is released!</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/06/06/rspec-core-264-is-released/" title="Next Post: rspec-core-2.6.4 is released!">rspec-core-2.6.4 is released! &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/12/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/07/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/13/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'davidchelimskysblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.davidchelimsky.net/blog/2011/05/28/rake-09-and-gem-version-constraints/';
+        var disqus_url = 'http://blog.davidchelimsky.net/blog/2011/05/28/rake-09-and-gem-version-constraints/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

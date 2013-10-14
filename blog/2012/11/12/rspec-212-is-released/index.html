@@ -1,0 +1,447 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>rspec-2.12 is released - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="rspec-2.12 is a minor release (per SemVer), which
+includes numerous enhancements and bug fixes. It is fully backward compatible
+with previous rspec-2 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/2012/11/12/rspec-212-is-released">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-43280332-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/slides">Slides</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">rspec-2.12 is released</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-12T22:37:04-06:00" pubdate data-updated="true">Nov 12<span>th</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>rspec-2.12 is a minor release (per <a href="http://semver.org/">SemVer</a>), which
+includes numerous enhancements and bug fixes. It is fully backward compatible
+with previous rspec-2 releases and is a recommended upgrade for all users.</p>
+
+<p>Thanks to all who contributed. Special thanks to Myron Marston and Andy
+Lindeman for their personal contributions to the code as well as a great job
+shepherding pull requests from several new contributors.</p>
+
+<p>UPDATE: If you&rsquo;re an rspec/rails/capybara user, be sure to read <a href="http://alindeman.github.com/2012/11/11/rspec-rails-and-capybara-2.0-what-you-need-to-know.html">Andy Lindeman&rsquo;s blog post on Capybara-2.0 and rspec-rails</a>.</p>
+
+<h2>Docs</h2>
+
+<h3>RDoc</h3>
+
+<ul>
+<li><a href="http://rubydoc.info/gems/rspec-core">http://rubydoc.info/gems/rspec-core</a></li>
+<li><a href="http://rubydoc.info/gems/rspec-expectations">http://rubydoc.info/gems/rspec-expectations</a></li>
+<li><a href="http://rubydoc.info/gems/rspec-mocks">http://rubydoc.info/gems/rspec-mocks</a></li>
+<li><a href="http://rubydoc.info/gems/rspec-rails">http://rubydoc.info/gems/rspec-rails</a></li>
+</ul>
+
+
+<h3>Cucumber features</h3>
+
+<ul>
+<li><a href="http://relishapp.com/rspec/rspec-core">http://relishapp.com/rspec/rspec-core</a></li>
+<li><a href="http://relishapp.com/rspec/rspec-expectations">http://relishapp.com/rspec/rspec-expectations</a></li>
+<li><a href="http://relishapp.com/rspec/rspec-mocks">http://relishapp.com/rspec/rspec-mocks</a></li>
+<li><a href="http://relishapp.com/rspec/rspec-rails">http://relishapp.com/rspec/rspec-rails</a></li>
+</ul>
+
+
+<h2>Release notes</h2>
+
+<h3>rspec-core-2.12.0</h3>
+
+<p><a href="http://github.com/rspec/rspec-core/compare/v2.11.1...v2.12.0">full changelog</a></p>
+
+<p>Enhancements</p>
+
+<ul>
+<li>Add support for custom ordering strategies for groups and examples.
+(Myron Marston)</li>
+<li>JSON Formatter (Alex Chaffee)</li>
+<li>Refactor rake task internals (Sam Phippen)</li>
+<li>Refactor HtmlFormatter (Pete Hodgson)</li>
+<li>Autotest supports a path to Ruby that contains spaces (dsisnero)</li>
+<li>Provide a helpful warning when a shared example group is redefined.
+(Mark Burns).</li>
+<li><code>--default_path</code> can be specified as <code>--default-path</code>. <code>--line_number</code> can be
+specified as <code>--line-number</code>. Hyphens are more idiomatic command line argument
+separators (Sam Phippen).</li>
+<li>A more useful error message is shown when an invalid command line option is
+used (Jordi Polo).</li>
+<li>Add <code>format_docstrings { |str| }</code> config option. It can be used to
+apply formatting rules to example group and example docstrings.
+(Alex Tan)</li>
+<li>Add support for an <code>.rspec-local</code> options file. This is intended to
+allow individual developers to set options in a git-ignored file that
+override the common project options in <code>.rspec</code>. (Sam Phippen)</li>
+<li>Support for mocha 0.13.0. (Andy Lindeman)</li>
+</ul>
+
+
+<p>Bug fixes</p>
+
+<ul>
+<li>Remove override of <code>ExampleGroup#ancestors</code>. This is a core ruby method that
+RSpec shouldn&rsquo;t override. Instead, define <code>ExampleGroup#parent_groups</code>. (Myron
+Marston)</li>
+<li>Limit monkey patching of shared example/context declaration methods
+(<code>shared_examples_for</code>, etc.) to just the objects that need it rather than
+every object in the system (Myron Marston).</li>
+<li>Fix Metadata#fetch to support computed values (Sam Goldman).</li>
+<li>Named subject can now be referred to from within subject block in a nested
+group (tomykaira).</li>
+<li>Fix <code>fail_fast</code> so that it properly exits when an error occurs in a
+<code>before(:all) hook</code> (Bradley Schaefer).</li>
+<li>Make the order spec files are loaded consistent, regardless of the
+order of the files returned by the OS or the order passed at
+the command line (Jo Liss and Sam Phippen).</li>
+<li>Ensure instance variables from <code>before(:all)</code> are always exposed
+from <code>after(:all)</code>, even if an error occurs in <code>before(:all)</code>
+(Sam Phippen).</li>
+<li><code>rspec --init</code> no longer generates an incorrect warning about <code>--configure</code>
+being deprecated (Sam Phippen).</li>
+<li>Fix pluralization of <code>1 seconds</code> (Odin Dutton)</li>
+<li>Fix ANSICON url (Jarmo Pertman)</li>
+<li>Use dup of Time so reporting isn&rsquo;t clobbered by examples that modify Time
+without properly restoring it. (David Chelimsky)</li>
+</ul>
+
+
+<p>Deprecations</p>
+
+<ul>
+<li><code>share_as</code> is no longer needed. <code>shared_context</code> and/or
+<code>RSpec::SharedContext</code> provide better mechanisms (Sam Phippen).</li>
+<li>Deprecate <code>RSpec.configuration</code> with a block (use <code>RSpec.configure</code>).</li>
+</ul>
+
+
+<h3>rspec-expectations-2.12.0</h3>
+
+<p><a href="http://github.com/rspec/rspec-expectations/compare/v2.11.3...v2.12.0">full changelog</a></p>
+
+<p>Enhancements</p>
+
+<ul>
+<li>Colorize diffs if the <code>--color</code> option is configured. (Alex Coplan)</li>
+<li>Include backtraces in unexpected errors handled by <code>raise_error</code>
+matcher (Myron Marston)</li>
+<li>Print a warning when users accidentally pass a non-string argument
+as an expectation message (Sam Phippen)</li>
+<li><code>=~</code> and <code>match_array</code> matchers output a more useful error message when
+the actual value is not an array (or an object that responds to <code>#to_ary</code>)
+(Sam Phippen)</li>
+</ul>
+
+
+<p>Bug fixes</p>
+
+<ul>
+<li>Fix <code>include</code> matcher so that <code>expect({}).to include(:a =&gt; nil)</code>
+fails as it should (Sam Phippen).</li>
+<li>Fix <code>be_an_instance_of</code> matcher so that <code>Class#to_s</code> is used in the
+description rather than <code>Class#inspect</code>, since some classes (like
+<code>ActiveRecord::Base</code>) define a long, verbose <code>#inspect</code>.
+(Tom Stuart)</li>
+</ul>
+
+
+<h3>rspec-mocks-2.12.0</h3>
+
+<p><a href="http://github.com/rspec/rspec-mocks/compare/v2.11.3...v2.12.0">full changelog</a></p>
+
+<p>Enhancements</p>
+
+<ul>
+<li><code>and_raise</code> can accept an exception class and message, more closely
+matching <code>Kernel#raise</code> (e.g., <code>foo.stub(:bar).and_raise(RuntimeError, "message")</code>)
+(Bas Vodde)</li>
+<li>Add <code>and_call_original</code>, which will delegate the message to the
+original method (Myron Marston).</li>
+</ul>
+
+
+<p>Deprecations:</p>
+
+<ul>
+<li>Add deprecation warning when using <code>and_return</code> with <code>should_not_receive</code>
+(Neha Kumari)</li>
+</ul>
+
+
+<h3>rspec-rails-2.12.0</h3>
+
+<p><a href="http://github.com/rspec/rspec-rails/compare/v2.11.4...v2.12.0">full changelog</a></p>
+
+<p>Enhancements</p>
+
+<ul>
+<li>Support validation contexts when using <code>#errors_on</code> (Woody Peterson)</li>
+<li>Include RequestExampleGroup in groups in spec/api</li>
+</ul>
+
+
+<p>Bug fixes</p>
+
+<ul>
+<li>Add <code>should</code> and <code>should_not</code> to <code>CollectionProxy</code> (Rails 3.1+) and
+<code>AssociationProxy</code> (Rails 3.0).  (Myron Marston)</li>
+<li><code>controller.controller_path</code> is set correctly for view specs in Rails 3.1+.
+(Andy Lindeman)</li>
+<li>Generated specs support module namespacing (e.g., in a Rails engine).
+(Andy Lindeman)</li>
+<li><code>render</code> properly infers the view to be rendered in Rails 3.0 and 3.1
+(John Firebaugh)</li>
+<li>AutoTest mappings involving config/ work correctly (Brent J. Nordquist)</li>
+<li>Failures message for <code>be_new_record</code> are more useful (Andy Lindeman)</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-12T22:37:04-06:00" pubdate data-updated="true">Nov 12<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/bdd/'>BDD</a>, <a class='category' href='/blog/categories/rspec/'>RSpec</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.davidchelimsky.net/blog/2012/11/12/rspec-212-is-released/" data-via="dchelimsky" data-counturl="http://blog.davidchelimsky.net/blog/2012/11/12/rspec-212-is-released/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/" title="Previous Post: Agile Testing and BDD eXchange 2012 in NYC">&laquo; Agile Testing and BDD eXchange 2012 in NYC</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/" title="Next Post: Myron Marston and Andy Lindeman are RSpec's new project leads">Myron Marston and Andy Lindeman are RSpec's new project leads &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/12/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/07/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/13/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'davidchelimskysblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.davidchelimsky.net/blog/2012/11/12/rspec-212-is-released/';
+        var disqus_url = 'http://blog.davidchelimsky.net/blog/2012/11/12/rspec-212-is-released/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

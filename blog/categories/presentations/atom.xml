@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Presentations | David Chelimsky]]></title>
   <link href="http://blog.davidchelimsky.net/blog/categories/presentations/atom.xml" rel="self"/>
   <link href="http://blog.davidchelimsky.net/"/>
-  <updated>2013-09-18T07:25:11+02:00</updated>
+  <updated>2013-10-14T06:36:02-05:00</updated>
   <id>http://blog.davidchelimsky.net/</id>
   <author>
     <name><![CDATA[David]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Windy City Rails]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2009/07/18/windy-city-rails/"/>
-    <updated>2009-07-18T09:12:50+02:00</updated>
+    <updated>2009-07-18T02:12:50-05:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2009/07/18/windy-city-rails</id>
     <content type="html"><![CDATA[<p>I&rsquo;m presenting at <a href="http://windycityrails.org/">Windy City Rails</a> in September. This is just the second year of this exciting midwest Rails conference, but the <a href="http://windycityrails.org/schedule">schedule looks most impressive</a>. Talks range from <a href="http://windycityrails.org/sessions#rappin">How To Test Absolutely Anything</a> to <a href="http://windycityrails.org/sessions#wampler">Better Ruby through Functional Programming</a> to a <a href="http://windycityrails.org/sessions#katz">Rails 3 Update</a> from <a href="http://yehudakatz.com/">Yehuda Katz</a>, Rails core&rsquo;s newest member and the man who is bringing the best of Merb to Rails 3.</p>
 
