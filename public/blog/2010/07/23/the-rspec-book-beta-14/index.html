@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>The RSpec Book - Beta 14 - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="The Pragmatic Bookshelf has just released Beta-14 of The RSpec Book. This is the first beta release since we made the rather ambitious decision to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/2010/07/23/the-rspec-book-beta-14">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-43280332-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/slides">Slides</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">The RSpec Book - Beta 14</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-23T20:58:41-05:00" pubdate data-updated="true">Jul 23<span>rd</span>, 2010</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><a href="http://www.pragprog.com/">The Pragmatic Bookshelf</a> has just released Beta-14 of <a href="http://www.pragprog.com/titles/achbd/the-rspec-book">The RSpec Book</a>.</p>
+
+<p>This is the first beta release since we made the rather ambitious decision to update the book for RSpec-2 and Rails-3, and includes updates to the tutorial in Part I of the book, as well as the first chapter in Part III: Code Examples.</p>
+
+<p>We&rsquo;re planning two more beta releases over the next couple of weeks. One to update the rest of Part III, and then a final beta release with Part V (the Rails section) updated to RSpec-2 and Rails-3.</p>
+
+<p>What this means for the short run is that &frac12; of the beta book uses newer gem versions, while the rest uses the old versions. We thought for a long time about whether to delay this beta until it was all up to date, but decided in the end that beta readers had waited long enough&mdash;-now that RSpec 2 and Rails 3 release candidates are just around the corner, we wanted to get this new content out as soon as we could. Keep in mind that this is only for a week or two, while we put the finishing touches on the book.</p>
+
+<p>With that in mind, here is some information that will help you navigate the beta book:</p>
+
+<h3>Ruby 1.8.7</h3>
+
+<p>The code examples in the book were written using Ruby 1.8.7. Most of them, but not all, will work with 1.9.2-rc2.</p>
+
+<h3>Code for the updated chapters in beta-14</h3>
+
+<p>While we&rsquo;re getting these last few beta releases out, the updated chapters all have red headers, like this:</p>
+
+<p><img src="http://blog.davidchelimsky.net/wp-content/uploads/2010/07/screen-shot-2010-07-23-at-75308-pm.png" alt="Updated Section Header" /></p>
+
+<p>The examples in these chapters work with the following gem versions:</p>
+
+<pre><code>rspec-2.0.0.beta.18
+cucumber-0.8.5
+</code></pre>
+
+<h3>Code for the rest of the chapters in beta-14</h3>
+
+<p>The chapters that have not been updated yet have gray headers, like this:</p>
+
+<p><img src="http://blog.davidchelimsky.net/wp-content/uploads/2010/07/screen-shot-2010-07-23-at-75430-pm.png" alt="Non-updated Section Header" /></p>
+
+<p>The examples in these chapters work with the following gem versions:</p>
+
+<pre><code>rspec-1.3.0
+rspec-rails-1.3.2
+rails-2.3.5
+cucumber-0.6.2
+cucumber-rails-0.2.4
+database_cleaner-0.4.3
+webrat-0.7.0
+selenium-client-0.2.18
+</code></pre>
+
+<h3>Reporting Errata</h3>
+
+<h4>Technical errors in the updated chapters</h4>
+
+<p>We are now in the final phases of preparing the book for print. For those of you reading the beta book, we are very interested in <em>technical errata in the updated chapters</em>. If the behaviour of any examples in the updated chapters differs from what the book tells you to expect <em>with the versions listed above</em>, please report that to <a href="http://www.pragprog.com/titles/achbd/errata">http://www.pragprog.com/titles/achbd/errata</a>.</p>
+
+<h4>Copyedit issues</h4>
+
+<p>The book has not been through copyedit yet (that&rsquo;s next), so please don&rsquo;t worry about spelling, grammar, or phrasing. That will all be addressed by our very able copyeditor.</p>
+
+<h4>Typesetting issues</h4>
+
+<p>The book has not been formally typeset yet (that&rsquo;s last), so please don&rsquo;t worry about code examples that span page turns, or issues with syntax highlighting.</p>
+
+<h4>Other technical errors</h4>
+
+<p>If you find that the behaviour works differently with newer Ruby or gem versions than those listed above, please submit bug reports to the appropriate trackers:</p>
+
+<ul>
+<li><a href="http://github.com/rspec/rspec-core">rspec-core (describe/it/etc)</a></li>
+<li><a href="http://github.com/rspec/rspec-expectations">rspec-expectations (should/should_not + matchers)</a></li>
+<li><a href="http://github.com/rspec/rspec-mocks">rspec-mocks</a></li>
+<li><a href="http://github.com/rspec/rspec-rails">rspec-rails</a></li>
+<li><a href="http://rspec.lighthouseapp.com/projects/16211">cucumber</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-23T20:58:41-05:00" pubdate data-updated="true">Jul 23<span>rd</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rspec/'>RSpec</a>, <a class='category' href='/blog/categories/the-rspec-book/'>The RSpec Book</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.davidchelimsky.net/blog/2010/07/23/the-rspec-book-beta-14/" data-via="dchelimsky" data-counturl="http://blog.davidchelimsky.net/blog/2010/07/23/the-rspec-book-beta-14/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2010/07/11/rspec-rails-2-generators-and-rake-tasks-part-ii/" title="Previous Post: rspec-rails-2 generators and rake tasks - part II">&laquo; rspec-rails-2 generators and rake tasks - part II</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/07/29/the-rspec-book-has-entered-the-production-process/" title="Next Post: The RSpec Book has entered the production process!">The RSpec Book has entered the production process! &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/12/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/07/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/13/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'davidchelimskysblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.davidchelimsky.net/blog/2010/07/23/the-rspec-book-beta-14/';
+        var disqus_url = 'http://blog.davidchelimsky.net/blog/2010/07/23/the-rspec-book-beta-14/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

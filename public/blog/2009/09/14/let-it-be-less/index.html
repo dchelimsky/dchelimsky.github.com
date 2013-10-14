@@ -1,0 +1,364 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>let it be @-less - David Chelimsky</title>
+  <meta name="author" content="David">
+
+  
+  <meta name="description" content="If you use RSpec and you&rsquo;re disciplined about the red/green/refactor of Test Driven Development, you probably find yourself doing this from &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/2009/09/14/let-it-be-less">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-43280332-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">David Chelimsky</a></h1>
+  
+    <h2>random thoughtlessness</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.davidchelimsky.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/slides">Slides</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">let it be @-less</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-09-14T20:57:08-05:00" pubdate data-updated="true">Sep 14<span>th</span>, 2009</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>If you use RSpec and you&rsquo;re disciplined about the red/green/refactor of Test Driven Development, you probably find yourself doing this from time to time. We start off with a single example:</p>
+
+<pre><code>describe BowlingGame do
+it "scores all gutters with 0" do
+  game = BowlingGame.new
+  20.times { game.roll(0) }
+  game.score.should == 0
+end
+end
+</code></pre>
+
+<p>Then add second example:</p>
+
+<pre><code>describe BowlingGame do
+it "scores all gutters with 0" do
+  game = BowlingGame.new
+  20.times { game.roll(0) }
+  game.score.should == 0
+end
+
+it "scores all 1's with 20" do
+  game = BowlingGame.new
+  20.times { game.roll(1) }
+  game.score.should == 20
+end
+end
+</code></pre>
+
+<p>Once we get the second example passing, we remove duplication in the examples, typically like this:</p>
+
+<pre><code>describe BowlingGame do
+before(:each) do
+  @game = BowlingGame.new
+end
+
+it "scores all gutters with 0" do
+  20.times { @game.roll(0) }
+  @game.score.should == 0
+end
+
+it "scores all 1's with 20" do
+  20.times { @game.roll(1) }
+  @game.score.should == 20
+end
+end
+</code></pre>
+
+<p>This last step involves copying the first line of each example to a <code>before(:each)</code> block, and then converting the references to <code>game</code> to an instance variable using an <code>@</code> symbol. This is tedious and error prone, but we accept that in the interest of keeping things clean.</p>
+
+<!-- more -->
+
+
+<h3>a convention emerges</h3>
+
+<p>One convention that has emerged over time is to introduce a helper method, like so:</p>
+
+<pre><code>describe BowlingGame do
+def game
+  @game ||= BowlingGame.new
+end
+
+it "scores all gutters with 0" do
+  20.times { game.roll(0) }
+  game.score.should == 0
+end
+
+it "scores all 1's with 20" do
+  20.times { game.roll(1) }
+  game.score.should == 20
+end
+end
+</code></pre>
+
+<p>With the first call to the <code>game</code> method in each example, ruby invokes the right side of the expression and stores it in the <code>@game</code> variable on the left, which is returned to the current and each subsquent caller. This approach takes up the same number of lines as the <code>before(:each)</code> block, but note the lack of <code>@</code> symbols in the examples themselves.</p>
+
+<p>Consider that there will likely be several more examples that have a similar structure, and you can see that the removal of <code>@</code> symbols reduces a fair amount of noise. Not that there&rsquo;s anything inherently wrong or noisy about instance variables, but for many this may just feel cleaner.</p>
+
+<h3>from convention emerges solution</h3>
+
+<p>Thanks to a suggestion from Stuart Halloway, rspec-1.2.9 introduces a new <code>let()</code> method that lets examples move towards @-less-ness by encapsulating the process of caching the instance variable. Here&rsquo;s the previous example using <code>let()</code>:</p>
+
+<pre><code>describe BowlingGame do
+let(:game) { BowlingGame.new }
+
+it "scores all gutters with 0" do
+  20.times { game.roll(0) }
+  game.score.should == 0
+end
+
+it "scores all 1's with 20" do
+  20.times { game.roll(1) }
+  game.score.should == 20
+end
+end
+</code></pre>
+
+<p>The call to <code>let()</code> in this example defines a <code>game</code> method. The first time <code>game</code> is called in each example, it invokes the block, caches the result (an instance of <code>BowlingGame</code>), and returns it. Each subsequent call to <code>game</code> returns the same object, just like the <code>game</code> method in the previous example.</p>
+
+<p>This will, admittedly, not change your life. Nor will it appeal to all of you, though I expect it to appeal to the lispier among you. The thing that I&rsquo;ve noticed is that as more of these appear in a codebase, the more meaning they begin to establish, and it actually helps to compartmentalize this pattern and separate it from other helper methods that might be floating around.</p>
+
+<p>So experiment away and please feel free to provide feedback here or on the <a href="http://rubyforge.org/mailman/listinfo/rspec-users">rspec-users</a> mailing list.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-09-14T20:57:08-05:00" pubdate data-updated="true">Sep 14<span>th</span>, 2009</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rspec/'>RSpec</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.davidchelimsky.net/blog/2009/09/14/let-it-be-less/" data-via="dchelimsky" data-counturl="http://blog.davidchelimsky.net/blog/2009/09/14/let-it-be-less/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2009/09/14/rspec-129rc1-and-rspec-rails-129rc1-have-been-released/" title="Previous Post: rspec-1.2.9.rc1 and rspec-rails-1.2.9.rc1 have been released">&laquo; rspec-1.2.9.rc1 and rspec-rails-1.2.9.rc1 have been released</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2009/09/23/the-rspec-book-beta-10-and-progress-report/" title="Next Post: The RSpec Book -- Beta 10 and Progress Report">The RSpec Book -- Beta 10 and Progress Report &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/myron-marston-and-andy-lindeman-are-rspecs-new-project-leads/">Myron Marston and Andy Lindeman are RSpec's new project leads</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/12/rspec-212-is-released/">rspec-2.12 is released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/22/agile-testing-and-bdd-exchange-2012-in-nyc/">Agile Testing and BDD eXchange 2012 in NYC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/07/rspec-211-is-released/">rspec-2.11 is released!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/13/spec-smell-explicit-use-of-subject/">Spec smell: explicit use of subject</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  
+  <a href="https://github.com/dchelimsky">@dchelimsky</a> on GitHub
+  
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/dchelimsky" data-widget-id="368978242654330880">Tweets by @dchelimsky</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - David -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'davidchelimskysblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.davidchelimsky.net/blog/2009/09/14/let-it-be-less/';
+        var disqus_url = 'http://blog.davidchelimsky.net/blog/2009/09/14/let-it-be-less/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

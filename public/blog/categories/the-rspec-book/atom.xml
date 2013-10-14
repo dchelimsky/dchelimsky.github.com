@@ -4,7 +4,7 @@
   <title><![CDATA[Category: The RSpec Book | David Chelimsky]]></title>
   <link href="http://blog.davidchelimsky.net/blog/categories/the-rspec-book/atom.xml" rel="self"/>
   <link href="http://blog.davidchelimsky.net/"/>
-  <updated>2013-09-28T13:58:13+01:00</updated>
+  <updated>2013-10-14T06:36:02-05:00</updated>
   <id>http://blog.davidchelimsky.net/</id>
   <author>
     <name><![CDATA[David]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[The RSpec Book has entered the production process!]]></title>
-    <link href="http://blog.davidchelimsky.net/blog/2010/07/30/the-rspec-book-has-entered-the-production-process/"/>
-    <updated>2010-07-30T03:28:18+01:00</updated>
-    <id>http://blog.davidchelimsky.net/blog/2010/07/30/the-rspec-book-has-entered-the-production-process</id>
+    <link href="http://blog.davidchelimsky.net/blog/2010/07/29/the-rspec-book-has-entered-the-production-process/"/>
+    <updated>2010-07-29T21:28:18-05:00</updated>
+    <id>http://blog.davidchelimsky.net/blog/2010/07/29/the-rspec-book-has-entered-the-production-process</id>
     <content type="html"><![CDATA[<p>I&rsquo;m thrilled to announce that <a href="http://pragprog.com/titles/achbd/the-rspec-book">The RSpec Book</a> has entered the production process!</p>
 
 <p>For those of you unfamiliar with the publishing industry, as I was before this project, &ldquo;has entered the production process&rdquo; does <em>not</em> mean that it&rsquo;s off to the printer. What it <em>does</em> mean is that it is currently being indexed so readers will be able to find the stuff they&rsquo;re looking for. After indexing it will be copyedited (in which someone with better grammar and spelling than any of the authors possess makes the book more readable) and typeset, and <em>then</em> off to the printer.</p>
@@ -30,9 +30,9 @@
   
   <entry>
     <title type="html"><![CDATA[The RSpec Book - Beta 14]]></title>
-    <link href="http://blog.davidchelimsky.net/blog/2010/07/24/the-rspec-book-beta-14/"/>
-    <updated>2010-07-24T02:58:41+01:00</updated>
-    <id>http://blog.davidchelimsky.net/blog/2010/07/24/the-rspec-book-beta-14</id>
+    <link href="http://blog.davidchelimsky.net/blog/2010/07/23/the-rspec-book-beta-14/"/>
+    <updated>2010-07-23T20:58:41-05:00</updated>
+    <id>http://blog.davidchelimsky.net/blog/2010/07/23/the-rspec-book-beta-14</id>
     <content type="html"><![CDATA[<p><a href="http://www.pragprog.com/">The Pragmatic Bookshelf</a> has just released Beta-14 of <a href="http://www.pragprog.com/titles/achbd/the-rspec-book">The RSpec Book</a>.</p>
 
 <p>This is the first beta release since we made the rather ambitious decision to update the book for RSpec-2 and Rails-3, and includes updates to the tutorial in Part I of the book, as well as the first chapter in Part III: Code Examples.</p>
@@ -109,7 +109,7 @@ selenium-client-0.2.18
   <entry>
     <title type="html"><![CDATA[The RSpec Book -- Beta 10 and Progress Report]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2009/09/23/the-rspec-book-beta-10-and-progress-report/"/>
-    <updated>2009-09-23T14:09:15+01:00</updated>
+    <updated>2009-09-23T08:09:15-05:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2009/09/23/the-rspec-book-beta-10-and-progress-report</id>
     <content type="html"><![CDATA[<p>Beta 10????? When the hell are we going to start chopping down some trees? Well, first, here&rsquo;s what&rsquo;s new in Beta 10 of <a href="http://www.pragprog.com/titles/achbd/the-rspec-book">The RSpec Book</a>:</p>
 
@@ -154,7 +154,7 @@ We&rsquo;ve got two chapters left to write, plus some bookends (and beginnings &
   <entry>
     <title type="html"><![CDATA[The RSpec Book: Beta 8.0]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2009/07/18/the-rspec-book-beta-80/"/>
-    <updated>2009-07-18T07:49:08+01:00</updated>
+    <updated>2009-07-18T01:49:08-05:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2009/07/18/the-rspec-book-beta-80</id>
     <content type="html"><![CDATA[<p><a href="http://pragprog.com/titles/achbd/the-rspec-book">The RSpec Book</a> Beta 8.0 was just released. This release includes a number of fixed <a href="http://pragprog.com/titles/achbd/errata">errata</a> and one new chapter. Yes, only one chapter, but its a doozy:</p>
 
@@ -166,9 +166,9 @@ We&rsquo;ve got two chapters left to write, plus some bookends (and beginnings &
   
   <entry>
     <title type="html"><![CDATA[The RSpec Book: Beta 5.0]]></title>
-    <link href="http://blog.davidchelimsky.net/blog/2009/05/19/the-rspec-book-beta-5-0/"/>
-    <updated>2009-05-19T01:19:39+01:00</updated>
-    <id>http://blog.davidchelimsky.net/blog/2009/05/19/the-rspec-book-beta-5-0</id>
+    <link href="http://blog.davidchelimsky.net/blog/2009/05/18/the-rspec-book-beta-5-0/"/>
+    <updated>2009-05-18T19:19:39-05:00</updated>
+    <id>http://blog.davidchelimsky.net/blog/2009/05/18/the-rspec-book-beta-5-0</id>
     <content type="html"><![CDATA[<p>This release introduces two new chapters:</p>
 
 <p><strong>Writing Software that Matters</strong></p>

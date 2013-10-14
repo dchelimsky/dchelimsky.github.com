@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Cucumber | David Chelimsky]]></title>
   <link href="http://blog.davidchelimsky.net/blog/categories/cucumber/atom.xml" rel="self"/>
   <link href="http://blog.davidchelimsky.net/"/>
-  <updated>2013-09-28T13:58:13+01:00</updated>
+  <updated>2013-10-14T06:36:02-05:00</updated>
   <id>http://blog.davidchelimsky.net/</id>
   <author>
     <name><![CDATA[David]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[RSpec-2.0.0 is released!]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2010/10/10/rspec-200-is-released/"/>
-    <updated>2010-10-10T23:45:54+01:00</updated>
+    <updated>2010-10-10T17:45:54-05:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2010/10/10/rspec-200-is-released</id>
     <content type="html"><![CDATA[<p>This marks the end of a year-long effort that improves RSpec in a number of ways, including <a href="http://blog.davidchelimsky.net/2010/01/25/rspec-20-in-the-works/">modularity, cleaner code, and much better integration with Rails-3 than was possible before</a>.</p>
 
@@ -61,7 +61,7 @@
   <entry>
     <title type="html"><![CDATA[The RSpec Book -- Beta 10 and Progress Report]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2009/09/23/the-rspec-book-beta-10-and-progress-report/"/>
-    <updated>2009-09-23T14:09:15+01:00</updated>
+    <updated>2009-09-23T08:09:15-05:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2009/09/23/the-rspec-book-beta-10-and-progress-report</id>
     <content type="html"><![CDATA[<p>Beta 10????? When the hell are we going to start chopping down some trees? Well, first, here&rsquo;s what&rsquo;s new in Beta 10 of <a href="http://www.pragprog.com/titles/achbd/the-rspec-book">The RSpec Book</a>:</p>
 
@@ -106,7 +106,7 @@ We&rsquo;ve got two chapters left to write, plus some bookends (and beginnings &
   <entry>
     <title type="html"><![CDATA[Windy City Rails]]></title>
     <link href="http://blog.davidchelimsky.net/blog/2009/07/18/windy-city-rails/"/>
-    <updated>2009-07-18T08:12:50+01:00</updated>
+    <updated>2009-07-18T02:12:50-05:00</updated>
     <id>http://blog.davidchelimsky.net/blog/2009/07/18/windy-city-rails</id>
     <content type="html"><![CDATA[<p>I&rsquo;m presenting at <a href="http://windycityrails.org/">Windy City Rails</a> in September. This is just the second year of this exciting midwest Rails conference, but the <a href="http://windycityrails.org/schedule">schedule looks most impressive</a>. Talks range from <a href="http://windycityrails.org/sessions#rappin">How To Test Absolutely Anything</a> to <a href="http://windycityrails.org/sessions#wampler">Better Ruby through Functional Programming</a> to a <a href="http://windycityrails.org/sessions#katz">Rails 3 Update</a> from <a href="http://yehudakatz.com/">Yehuda Katz</a>, Rails core&rsquo;s newest member and the man who is bringing the best of Merb to Rails 3.</p>
 
