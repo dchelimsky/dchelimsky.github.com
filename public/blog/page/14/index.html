@@ -601,7 +601,7 @@ end
 &lt;/code&gt;
 </code></pre>
 
-<p>Then #matches? could assign nil to the attr and expect #valid? to return false and then assign valid_value to the attr and expect #valid? to return true. The failure message could say something like &ldquo;model was not valid even when email was assigned &lsquo;<a href="&#109;&#97;&#x69;&#x6c;&#x74;&#111;&#58;&#97;&#64;&#x62;&#x2e;&#x63;&#x6f;&#x6d;">&#97;&#64;&#98;&#x2e;&#x63;&#x6f;&#x6d;</a>&rsquo;. You must ensure that all required attributes are assigned values before calling #should require.&rdquo;</p>
+<p>Then #matches? could assign nil to the attr and expect #valid? to return false and then assign valid_value to the attr and expect #valid? to return true. The failure message could say something like &ldquo;model was not valid even when email was assigned &lsquo;<a href="&#x6d;&#x61;&#105;&#108;&#x74;&#111;&#58;&#97;&#x40;&#x62;&#46;&#99;&#111;&#x6d;">&#97;&#x40;&#x62;&#46;&#99;&#x6f;&#109;</a>&rsquo;. You must ensure that all required attributes are assigned values before calling #should require.&rdquo;</p>
 
 <p>Making that change would be cake! Again, the point here is to show how easy custom matchers are to implement. Coming up w/ the right syntax and messaging is another problem, but RSpec does its best to stay out of your way as you explore that problem.</p>
 
