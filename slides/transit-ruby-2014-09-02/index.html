@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>slides</title>
+<!-- 2014-09-03 Wed 06:55 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="David Chelimsky" />
+<link rel="stylesheet" type="text/css" href="assets/css/common.css" />
+<link rel="stylesheet" type="text/css" href="assets/css/screen.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="assets/css/projection.css" media="projection" />
+<link rel="stylesheet" type="text/css" href="assets/css/presenter.css" media="presenter" />
+</head>
+<body>
+<div id="content">
+<h1 class="title">slides</h1>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">Transit-Ruby&#xa0;&#xa0;&#xa0;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-1">
+<br/>
+<br/>
+<br/>
+<div align="center">
+David Chelimsky<br/>
+Chicago Ruby Meetup<br/>
+2 September 2014
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">Problem / Goals&#xa0;&#xa0;&#xa0;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>convey values between programs written in different languages
+</li>
+<li>types
+</li>
+<li>optional schema
+</li>
+<li>extensibility
+</li>
+<li>good performance
+</li>
+<li>reach (including browser)
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">Transit&#xa0;&#xa0;&#xa0;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li><a href="https://github.com/cognitect/transit-format">https://github.com/cognitect/transit-format</a>
+</li>
+<li><a href="http://cognitect.github.io/transit-tour/">http://cognitect.github.io/transit-tour/</a>
+</li>
+<li>tag based wire format designed by Rich Hickey
+</li>
+<li>rides on top of JSON and MessagePack (reach, performance)
+</li>
+<li>language-specific implementations from Cognitect (<a href="https://github.com/cognitect/?query=transit">https://github.com/cognitect/?query=transit</a>)
+<ul class="org-ul">
+<li>Ruby, JRuby (this week), Java, Clojure, JavaScript, ClojureScript, Python
+</li>
+</ul>
+</li>
+<li>additional implementations (in various stages of development)
+<ul class="org-ul">
+<li>Erlang, OCaml, Go, Dart, Scala
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">Types&#xa0;&#xa0;&#xa0;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-4">
+<ul class="org-ul">
+<li>ground types (generally represented as/is in JSON or MessagePack)
+<ul class="org-ul">
+<li>scalar
+<ul class="org-ul">
+<li>null, string, boolean, integer, float, byte array,
+</li>
+</ul>
+</li>
+<li>composite
+<ul class="org-ul">
+<li>array, map
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>built-in extension types
+<ul class="org-ul">
+<li>scalar
+<ul class="org-ul">
+<li>keyword, symbol, arbitrary precision integer and decimal, point in
+time, uuid, uri, char, quoted value
+<ul class="org-ul">
+<li>special numbers (NaN, INF, -INF) coming this week
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>composite
+<ul class="org-ul">
+<li>set, list, map w/ composite keys, link
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>custom extensions
+<ul class="org-ul">
+<li>use exactly same mechanism as built-in extension types
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5">transit-ruby&#xa0;&#xa0;&#xa0;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-5">
+<ul class="org-ul">
+<li>gem install transit-ruby
+</li>
+<li><a href="https://github.com/cognitect/transit-ruby">https://github.com/cognitect/transit-ruby</a>
+</li>
+<li><a href="http://rubydoc.info/gems/transit-ruby">http://rubydoc.info/gems/transit-ruby</a>
+</li>
+<li><a href="http://rubygems.org/gems/transit-ruby">http://rubygems.org/gems/transit-ruby</a>
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-ruby">require <span style="color: #00A6A6;">'transit'</span>
+
+<span style="color: #900A0A; font-style: italic;">########################</span>
+
+writer = <span style="color: #ACAC07;">Transit</span>::<span style="color: #ACAC07;">Writer</span>.new(<span style="color: #00A6A6;">:json_verbose</span>, <span style="color: #ACAC07;">STDOUT</span>)
+writer.write({<span style="color: #00A6A6;">:answer</span> =&gt; 42})
+<span style="color: #900A0A; font-style: italic;"># </span><span style="color: #900A0A; font-style: italic;">=&gt; "{\"~:answer\":42}"</span>
+
+reader = <span style="color: #ACAC07;">Transit</span>::<span style="color: #ACAC07;">Reader</span>.new(<span style="color: #00A6A6;">:json</span>, <span style="color: #ACAC07;">StringIO</span>.new(<span style="color: #00A6A6;">"{\"~:answer\":42}"</span>))
+reader.read
+<span style="color: #900A0A; font-style: italic;"># </span><span style="color: #900A0A; font-style: italic;">=&gt; {:answer=&gt;42}</span>
+
+<span style="color: #900A0A; font-style: italic;">########################</span>
+
+writer = <span style="color: #ACAC07;">Transit</span>::<span style="color: #ACAC07;">Writer</span>.new(<span style="color: #00A6A6;">:json</span>, <span style="color: #ACAC07;">STDOUT</span>)
+writer.write({<span style="color: #00A6A6;">:answer</span> =&gt; 42})
+<span style="color: #900A0A; font-style: italic;"># </span><span style="color: #900A0A; font-style: italic;">=&gt; "[\"^ \",\"~:answer\",42]"</span>
+
+reader = <span style="color: #ACAC07;">Transit</span>::<span style="color: #ACAC07;">Reader</span>.new(<span style="color: #00A6A6;">:json</span>, <span style="color: #ACAC07;">StringIO</span>.new(<span style="color: #00A6A6;">"[\"^ \",\"~:answer\",42]"</span>))
+reader.read
+<span style="color: #900A0A; font-style: italic;"># </span><span style="color: #900A0A; font-style: italic;">=&gt; {:answer=&gt;42}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6">Type Mappings&#xa0;&#xa0;&#xa0;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-6">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Transit type</th>
+<th scope="col" class="left">Write accepts</th>
+<th scope="col" class="left">Read returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">null</td>
+<td class="left">nil</td>
+<td class="left">nil</td>
+</tr>
+
+<tr>
+<td class="left">string</td>
+<td class="left">String</td>
+<td class="left">String</td>
+</tr>
+
+<tr>
+<td class="left">boolean</td>
+<td class="left">true, false</td>
+<td class="left">true, false</td>
+</tr>
+
+<tr>
+<td class="left">integer</td>
+<td class="left">Fixnum, Bignum</td>
+<td class="left">Fixnum, Bignum</td>
+</tr>
+
+<tr>
+<td class="left">float</td>
+<td class="left">Float</td>
+<td class="left">Float</td>
+</tr>
+
+<tr>
+<td class="left">keyword</td>
+<td class="left">Symbol</td>
+<td class="left">Symbol</td>
+</tr>
+
+<tr>
+<td class="left">big decimal</td>
+<td class="left">BigDecimal</td>
+<td class="left">BigDecimal</td>
+</tr>
+
+<tr>
+<td class="left">big integer</td>
+<td class="left">Fixnum, Bignum</td>
+<td class="left">Fixnum, Bignum</td>
+</tr>
+
+<tr>
+<td class="left">time</td>
+<td class="left">DateTime, Date, Time</td>
+<td class="left">DateTime</td>
+</tr>
+
+<tr>
+<td class="left">uri</td>
+<td class="left">Addressable::URI, URI</td>
+<td class="left">Addressable::URI</td>
+</tr>
+
+<tr>
+<td class="left">uuid</td>
+<td class="left">Transit::UUID</td>
+<td class="left">Transit::UUID</td>
+</tr>
+
+<tr>
+<td class="left">char</td>
+<td class="left">Transit::TaggedValue</td>
+<td class="left">String</td>
+</tr>
+
+<tr>
+<td class="left">array</td>
+<td class="left">Array</td>
+<td class="left">Array</td>
+</tr>
+
+<tr>
+<td class="left">list</td>
+<td class="left">Transit::TaggedValue</td>
+<td class="left">Array</td>
+</tr>
+
+<tr>
+<td class="left">set</td>
+<td class="left">Set</td>
+<td class="left">Set</td>
+</tr>
+
+<tr>
+<td class="left">map</td>
+<td class="left">Hash</td>
+<td class="left">Hash</td>
+</tr>
+
+<tr>
+<td class="left">bytes</td>
+<td class="left">Transit::ByteArray</td>
+<td class="left">Transit::ByteArray</td>
+</tr>
+
+<tr>
+<td class="left">link</td>
+<td class="left">Transit::Link</td>
+<td class="left">Transit::Link</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-sec-7" class="outline-2">
+<h2 id="sec-7">Special case type mappings&#xa0;&#xa0;&#xa0;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-7">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Transit type</th>
+<th scope="col" class="left">Write accepts</th>
+<th scope="col" class="left">Read returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">point in time</td>
+<td class="left">DateTime, Date, Time</td>
+<td class="left">DateTime</td>
+</tr>
+
+<tr>
+<td class="left">uri</td>
+<td class="left">Addressable::URI, URI</td>
+<td class="left">Addressable::URI</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>Ruby Date, Time, and DateTime all have subtly different semantics
+<ul class="org-ul">
+<li>DateTime is richer and parses Strings faster
+</li>
+</ul>
+</li>
+<li>Addressable::URI supports
+<ul class="org-ul">
+<li>more protocols than URI
+</li>
+<li>UTF-8
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-8" class="outline-2">
+<h2 id="sec-8">Special case type mappings: Transit::Types&#xa0;&#xa0;&#xa0;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-8">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Transit type</th>
+<th scope="col" class="left">Write accepts</th>
+<th scope="col" class="left">Read returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">symbol</td>
+<td class="left">Transit::Symbol</td>
+<td class="left">Transit::Symbol</td>
+</tr>
+
+<tr>
+<td class="left">uuid</td>
+<td class="left">Transit::UUID</td>
+<td class="left">Transit::UUID</td>
+</tr>
+
+<tr>
+<td class="left">bytes</td>
+<td class="left">Transit::ByteArray</td>
+<td class="left">Transit::ByteArray</td>
+</tr>
+
+<tr>
+<td class="left">link</td>
+<td class="left">Transit::Link</td>
+<td class="left">Transit::Link</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>Transit::Symbol is not a Ruby Symbol
+<ul class="org-ul">
+<li>those map to transit Keywords
+</li>
+</ul>
+</li>
+<li>Transit::Link
+<ul class="org-ul">
+<li><a href="http://amundsen.com/media-types/collection/format/#arrays-links">http://amundsen.com/media-types/collection/format/#arrays-links</a>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-9" class="outline-2">
+<h2 id="sec-9">Special case type mappings: TaggedValues&#xa0;&#xa0;&#xa0;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-9">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Transit type</th>
+<th scope="col" class="left">Write accepts</th>
+<th scope="col" class="left">Read returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">char</td>
+<td class="left">Transit::TaggedValue</td>
+<td class="left">String</td>
+</tr>
+
+<tr>
+<td class="left">list</td>
+<td class="left">Transit::TaggedValue</td>
+<td class="left">Array</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-sec-10" class="outline-2">
+<h2 id="sec-10">More on TaggedValues&#xa0;&#xa0;&#xa0;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-10">
+<ul class="org-ul">
+<li>everything is a tagged value in the wire format
+</li>
+<li>implementations handle all the built-in types
+<ul class="org-ul">
+<li>but what about custom types?
+</li>
+</ul>
+</li>
+<li>Transit::TaggedValue is the default when a reader encounters a tag it doesn't understand
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-ruby">require <span style="color: #00A6A6;">'transit'</span>
+require <span style="color: #00A6A6;">'json'</span>
+
+reader = <span style="color: #ACAC07;">Transit</span>::<span style="color: #ACAC07;">Reader</span>.new(<span style="color: #00A6A6;">:json</span>, <span style="color: #ACAC07;">StringIO</span>.new({<span style="color: #00A6A6;">"~#unrecognized-tag"</span> =&gt; [<span style="color: #00A6A6;">:some</span>, <span style="color: #00A6A6;">:data</span>]}.to_json))
+reader.read
+<span style="color: #900A0A; font-style: italic;"># </span><span style="color: #900A0A; font-style: italic;">=&gt; #&lt;Transit::TaggedValue:... @tag="unrecognized-tag", @rep=["some", "data"]&gt;</span>
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>makes everything round-tripable
+</li>
+<li>supports dumb middle-men
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-11" class="outline-2">
+<h2 id="sec-11">Extensibility&#xa0;&#xa0;&#xa0;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-11">
+<ul class="org-ul">
+<li>define a semantic type
+<ul class="org-ul">
+<li>immutable values
+</li>
+<li>language independent
+</li>
+</ul>
+</li>
+<li>choose a tag
+<ul class="org-ul">
+<li>single capital letter for scalars
+</li>
+<li>2 or more chars for composite types
+</li>
+</ul>
+</li>
+<li>implement write and read handlers
+<ul class="org-ul">
+<li>only in the languages that need to write or read
+</li>
+<li>TaggedValues allow you to pass through other implementations
+without handlers
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-12" class="outline-2">
+<h2 id="sec-12">Example&#xa0;&#xa0;&#xa0;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-12">
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span style="color: #900A0A; font-style: italic;"># </span><span style="color: #900A0A; font-style: italic;">semantic type: point</span>
+<span style="color: #900A0A; font-style: italic;"># </span><span style="color: #900A0A; font-style: italic;">tag: "point"</span>
+<span style="color: #900A0A; font-style: italic;"># </span><span style="color: #900A0A; font-style: italic;">rep: [int,int]</span>
+
+require <span style="color: #00A6A6;">'ostruct'</span>
+
+<span style="color: #ACAC07;">Point</span> = <span style="color: #ACAC07;">Struct</span>.new(<span style="color: #00A6A6;">:x</span>,<span style="color: #00A6A6;">:y</span>) <span style="color: #00cd00;">do</span>
+  <span style="color: #00cd00;">def</span> <span style="color: #0000ee;">to_a;</span> [x,y] <span style="color: #00cd00;">end</span>
+<span style="color: #00cd00;">end</span>
+
+<span style="color: #00cd00;">class</span> <span style="color: #ACAC07;">PointWriteHandler</span>
+  <span style="color: #00cd00;">def</span> <span style="color: #0000ee;">tag</span>(_) <span style="color: #00A6A6;">"point"</span> <span style="color: #00cd00;">end</span>
+  <span style="color: #00cd00;">def</span> <span style="color: #0000ee;">rep</span>(p) p.to_a <span style="color: #00cd00;">end</span>
+  <span style="color: #00cd00;">def</span> <span style="color: #0000ee;">string_rep</span>(_) <span style="color: #0000ee;">nil</span> <span style="color: #00cd00;">end</span>
+<span style="color: #00cd00;">end</span>
+
+io = <span style="color: #ACAC07;">StringIO</span>.new(<span style="color: #00A6A6;">''</span>,<span style="color: #00A6A6;">'w+'</span>)
+writer = <span style="color: #ACAC07;">Transit</span>::<span style="color: #ACAC07;">Writer</span>.new(<span style="color: #00A6A6;">:json_verbose</span>, io, <span style="color: #00A6A6;">:handlers</span> =&gt; {<span style="color: #ACAC07;">Point</span> =&gt; <span style="color: #ACAC07;">PointWriteHandler</span>.new})
+writer.write(<span style="color: #ACAC07;">Point</span>.new(37,42))
+io.string
+<span style="color: #900A0A; font-style: italic;"># </span><span style="color: #900A0A; font-style: italic;">=&gt; "{\"~#point\":[37,42]}\n"</span>
+
+<span style="color: #00cd00;">class</span> <span style="color: #ACAC07;">PointReadHandler</span>
+  <span style="color: #00cd00;">def</span> <span style="color: #0000ee;">from_rep</span>(rep)
+    <span style="color: #ACAC07;">Point</span>.new(*rep)
+  <span style="color: #00cd00;">end</span>
+<span style="color: #00cd00;">end</span>
+
+reader = <span style="color: #ACAC07;">Transit</span>::<span style="color: #ACAC07;">Reader</span>.new(<span style="color: #00A6A6;">:json</span>, <span style="color: #ACAC07;">StringIO</span>.new(io.string), <span style="color: #00A6A6;">:handlers</span> =&gt; {<span style="color: #00A6A6;">"point"</span> =&gt; <span style="color: #ACAC07;">PointReadHandler</span>.new})
+reader.read
+<span style="color: #900A0A; font-style: italic;"># </span><span style="color: #900A0A; font-style: italic;">=&gt; #&lt;struct Point x=37, y=42&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-13" class="outline-2">
+<h2 id="sec-13">END</h2>
+<div class="outline-text-2" id="text-13">
+<script type="text/javascript" src="assets/js/org-html-slideshow.js"></script>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: David Chelimsky</p>
+<p class="date">Created: 2014-09-03 Wed 06:55</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.5h)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
