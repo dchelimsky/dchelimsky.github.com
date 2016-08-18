@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>lesson learned - don't fork a moving target - David Chelimsky</title>
+  <title>Nested Example Groups - David Chelimsky</title>
   <meta name="author" content="David">
 
   
-  <meta name="description" content="In rspec-0.8.0, I forked assert_select in order to get the desired rspec syntax and error messages. Yesterday, only a day after the 0.8.1 release, &hellip;">
+  <meta name="description" content="Since rspec first appeared on the scene, users have been asking for nested example groups. Well it has finally arrived. RSpec 1.1.0 will ship with &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/2007/03/02/lesson-learned-dont-fork-a-moving-target">
+  <link rel="canonical" href="http://blog.davidchelimsky.net/blog/2007/11/29/nested-example-groups">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="David Chelimsky" type="application/atom+xml">
@@ -81,7 +81,7 @@
   
   <header>
     
-      <h1 class="entry-title">lesson learned - don't fork a moving target</h1>
+      <h1 class="entry-title">Nested Example Groups</h1>
     
     
       <p class="meta">
@@ -97,22 +97,56 @@
   
 
 
-<time datetime="2007-03-02T10:30:43-06:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2007</time>
+<time datetime="2007-11-29T02:58:18-06:00" pubdate data-updated="true">Nov 29<span>th</span>, 2007</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>In rspec-0.8.0, I forked assert_select in order to get the desired rspec syntax and error messages. Yesterday, only a day after the 0.8.1 release, the specs for &ldquo;response.should have_rjs&rdquo; (rspec&rsquo;s assert_select_rjs port) started failing against edge rails.</p>
+<div class="entry-content"><p>Since rspec first appeared on the scene, users have been asking for nested example groups. Well it has finally arrived. RSpec 1.1.0 will ship with support for nesting, so you&rsquo;ll be able to do things like this:</p>
 
-<p>It didn&rsquo;t take me very long to realize that forking assert_select (and its siblings &ndash; assert_select_rjs, assert_select_email, etc) was a big mistake. The only thing that is really maintainable is a very thin wrapper. As long as the API doesn&rsquo;t change, the wrapper should continue to work correctly.</p>
+<pre><code>&lt;code&gt;
+describe RSpec do
+before(:each) do
+  @rspec = RSpec.new
+end
 
-<p>So I re-wrote have_tag, with_tag (for nested tags), have_rjs, be_feed and send_email to simply delegate off to assert_select &ndash; exactly as i.should have_done in the first place. This rewrite will be released with 0.8.2, probably later today.</p>
+describe "at release 1.0.8" do
+  before(:each) do
+    @rspec.version = "1.0.8"
+  end
 
-<p>Unfortunately, this does introduce a regression. Currently, assert_select_rjs does not support :hide or :effect, so these won&rsquo;t be supported by should have_rjs.</p>
+  it "should not support nested example groups" do
+    @rspec.should_not support_nested_example_groups
+  end
+end
 
-<p>In the short term, you&rsquo;ll still be able to spec :hide and :effect using the now deprecated should_have_rjs, and hopefully we&rsquo;ll be able to come up w/ some solution for should have_rjs(:hide/:effect) before 0.9, when we are slated to remove all the deprecated features.</p>
+describe "at release 1.1.0" do
+  before(:each) do
+    @rspec.version = "1.1.0"
+  end
+
+  it "should support nested example groups" do
+    @rspec.should support_nested_example_groups
+  end
+end
+end
+&lt;/code&gt;
+</code></pre>
+
+<p>This will output:</p>
+
+<pre><code>RSpec at release 1.0.8
+- should not support nested example groups
+
+RSpec at release 1.1.0
+- should support nested example groups
+</code></pre>
+
+<p>If you&rsquo;re using trunk, you can do this now with revision 3009 or later.</p>
+
+<p>Happy nesting!</p>
 </div>
 
 
@@ -135,7 +169,7 @@
   
 
 
-<time datetime="2007-03-02T10:30:43-06:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2007</time>
+<time datetime="2007-11-29T02:58:18-06:00" pubdate data-updated="true">Nov 29<span>th</span>, 2007</time>
       
 
 
@@ -143,7 +177,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.davidchelimsky.net/blog/2007/03/02/lesson-learned-dont-fork-a-moving-target/" data-via="dchelimsky" data-counturl="http://blog.davidchelimsky.net/blog/2007/03/02/lesson-learned-dont-fork-a-moving-target/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.davidchelimsky.net/blog/2007/11/29/nested-example-groups/" data-via="dchelimsky" data-counturl="http://blog.davidchelimsky.net/blog/2007/11/29/nested-example-groups/" >Tweet</a>
   
   
   
@@ -152,10 +186,10 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2007/03/01/spec-expectations-and-test-unit-testcase-together-again-at-last/" title="Previous Post: Spec::Expectations and Test::Unit::TestCase, together again at last">&laquo; Spec::Expectations and Test::Unit::TestCase, together again at last</a>
+        <a class="basic-alignment left" href="/blog/2007/11/06/before_action-after_action/" title="Previous Post: before_action/after_action">&laquo; before_action/after_action</a>
       
       
-        <a class="basic-alignment right" href="/blog/2007/03/10/describe-it-with-rspec/" title="Next Post: Describe it with RSpec">Describe it with RSpec &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2007/12/07/rubyconf-2007-talk/" title="Next Post: RubyConf 2007 Talk">RubyConf 2007 Talk &raquo;</a>
       
     </p>
   </footer>
